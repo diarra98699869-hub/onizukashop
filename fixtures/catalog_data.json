@@ -60,7 +60,7 @@
     "created_at": "2026-11-27T12:18:14.682Z",
     "updated_at": "2026-11-27T12:18:14.682Z",
     "lft": 1,
-    "rght": 4,
+    "rght": 6,
     "tree_id": 3,
     "level": 0
   }
@@ -83,6 +83,28 @@
     "updated_at": "2026-11-27T12:18:14.689Z",
     "lft": 2,
     "rght": 3,
+    "tree_id": 3,
+    "level": 1
+  }
+},
+{
+  "model": "shop.category",
+  "pk": 11,
+  "fields": {
+    "name": "Congélateurs Horizontaux (Coffres)",
+    "slug": "congelateurs-horizontaux",
+    "parent": 9,
+    "image": "",
+    "description": "Sélection de congélateurs coffres horizontaux Fizzen ultra-performants, économiques et tropicalisés.",
+    "icon": "",
+    "meta_title": "",
+    "meta_description": "",
+    "is_active": true,
+    "order": 1,
+    "created_at": "2026-11-27T14:59:16.100Z",
+    "updated_at": "2026-11-27T14:59:16.100Z",
+    "lft": 4,
+    "rght": 5,
     "tree_id": 3,
     "level": 1
   }
@@ -2231,6 +2253,336 @@
   }
 },
 {
+  "model": "shop.product",
+  "pk": 159,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Fizzen 110 Litres Compact",
+    "slug": "congelateur-horizontal-fizzen-110l",
+    "sku": "ONZ-FZ-CH-110L",
+    "category": 11,
+    "brand": 17,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal Fizzen d'une capacité nette de 110 litres, compact et extrêmement économique. Parfait pour les petits commerces, les boutiques de quartier, les bureaux ou les ménages à Bamako recherchant une congélation puissante sans encombrer l'espace. Doté d'une poignée ergonomique avec serrure à clé pour sécuriser vos denrées, d'un panier suspendu métallique amovible pour organiser les petits articles, et d'un thermostat réglable en façade. Moteur tropicalisé conçu pour résister aux climats chauds avec une isolation thermique renforcée assurant le maintien du froid lors des coupures d'électricité. Disponible au Showroom Onizuka Shop au Grand Marché de Bamako (Dibidani).",
+    "specifications": {
+      "Capacité brute / nette": "110 Litres",
+      "Type": "Congélateur coffre horizontal (Chest Freezer)",
+      "Porte / Battant": "1 grand battant relevable avec poignée",
+      "Sécurité": "Serrure intégrée avec double clé",
+      "Rangement": "1 panier panier métallique suspendu amovible",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Gaz réfrigérant": "R600a écologique",
+      "Classe climatique": "T (Tropicalisé spécial Bamako / Afrique de l'Ouest)",
+      "Couleur": "Gris Silver métallisé anti-corrosion",
+      "Contrôle": "Thermostat réglable en façade avec voyants lumineux",
+      "Vidange": "Bouchon de dégivrage frontal pratique"
+    },
+    "price": "132000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T14:59:16.111Z",
+    "updated_at": "2026-11-27T15:00:05.480Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 160,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Fizzen 160 Litres",
+    "slug": "congelateur-horizontal-fizzen-160l",
+    "sku": "ONZ-FZ-CH-160L",
+    "category": 11,
+    "brand": 17,
+    "short_description": "",
+    "description": "Congélateur horizontal coffre Fizzen 160 litres (modèle FZ_AC-160_CH/FR) alliant robustesse et haute efficacité énergétique. Équipé d'un compresseur tropicalisé ultra-performant assurant une descente rapide en température jusqu'à -18°C. Sa carrosserie en acier traité gris métallisé offre une excellente résistance contre l'oxydation. Comprend une poignée de verrouillage avec serrure à clé, un panier intérieur amovible, un thermostat réglable précis et des roulettes de déplacement faciles. Idéal pour conserver viandes, poissons, boissons et sachets d'eau fraîche avec une faible consommation sur le réseau EDM. Garanti et disponible en retrait immédiat à Dibidani ou en livraison partout à Bamako.",
+    "specifications": {
+      "Capacité brute / nette": "160 Litres",
+      "Modèle constructeur": "FZ_AC-160_CH/FR",
+      "Type": "Congélateur coffre horizontal (Chest Freezer)",
+      "Porte / Battant": "1 grand battant avec poignée robuste",
+      "Sécurité": "Serrure avec clé de verrouillage",
+      "Rangement": "Panier intérieur métallique inclus",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé)",
+      "Couleur": "Gris métallisé premium",
+      "Contrôle": "Thermostat mécanique en façade",
+      "Vidange": "Évacuation frontale pour nettoyage aisé"
+    },
+    "price": "177000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T15:00:05.869Z",
+    "updated_at": "2026-11-27T15:00:05.869Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 161,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Fizzen 210 Litres",
+    "slug": "congelateur-horizontal-fizzen-210l",
+    "sku": "ONZ-FZ-CH-210L",
+    "category": 11,
+    "brand": 17,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal Fizzen 210 litres (modèle officiel FZ_AC-210_CH/FR), le format familial et commercial par excellence. Offre un volume intérieur spacieux pour stocker d'importantes réserves alimentaires avec un encombrement maîtrisé au sol. Son compresseur renforcé pour l'Afrique de l'Ouest délivre un froid puissant et constant même lors des fortes chaleurs estivales. Muni d'un battant étanche avec joint thermique antibactérien démontable, d'une serrure à clé de sécurité, d'un panier métallique suspendu et d'un orifice de vidange avant pour un dégivrage sans effort. Retrait au magasin Dibidani ou livraison à domicile sécurisée.",
+    "specifications": {
+      "Capacité brute / nette": "210 Litres",
+      "Modèle constructeur": "FZ_AC-210_CH/FR",
+      "Type": "Congélateur coffre horizontal (Chest Freezer)",
+      "Porte / Battant": "1 grand battant robuste",
+      "Sécurité": "Serrure à clé intégrée",
+      "Rangement": "Panier métallique pour accès rapide",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé spécial Bamako)",
+      "Couleur": "Gris Silver métallisé",
+      "Thermostat": "Réglable multi-positions en façade",
+      "Vidange": "Bouchon de purge en façade"
+    },
+    "price": "205000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T15:00:06.149Z",
+    "updated_at": "2026-11-27T15:00:06.149Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 162,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Fizzen 270 Litres Grand Volume",
+    "slug": "congelateur-horizontal-fizzen-270l",
+    "sku": "ONZ-FZ-CH-270L",
+    "category": 11,
+    "brand": 17,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal Fizzen 270 litres (modèle FZ_AC-270_CH/FR) offrant un confort de stockage optimal pour les familles nombreuses, restaurants, gargotes et commerces d'alimentation générale à Bamako. Sa cuve en aluminium gaufré martelé optimise la conduction thermique pour une surgélation uniforme de tous vos produits. Intègre une poignée extérieure renforcée avec serrure, un panier de rangement compartimenté, des roulettes pour faciliter l'installation et un système d'isolation haute densité conservant la température intérieure durant de longues heures sans électricité. Pièce d'origine Fizzen avec garantie boutique officielle.",
+    "specifications": {
+      "Capacité brute / nette": "270 Litres",
+      "Modèle constructeur": "FZ_AC-270_CH/FR",
+      "Type": "Congélateur coffre horizontal grand format",
+      "Porte / Battant": "1 grand battant avec poignée renforcée",
+      "Sécurité": "Serrure avec clé de sécurité",
+      "Rangement": "Panier métallique suspendu",
+      "Cuve intérieure": "Aluminium martelé haute conductivité thermique",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé)",
+      "Couleur": "Gris Silver élégant",
+      "Thermostat": "Contrôle précis avec indicateurs LED"
+    },
+    "price": "232000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T15:00:06.448Z",
+    "updated_at": "2026-11-27T15:00:06.448Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 163,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Fizzen 350 Litres",
+    "slug": "congelateur-horizontal-fizzen-350l",
+    "sku": "ONZ-FZ-CH-350L",
+    "category": 11,
+    "brand": 17,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal Fizzen 350 litres haute capacité, parfait pour les professionnels de la restauration, les épiceries, les traiteurs et les ménages exigeants. Conçu avec des parois épaissies assurant une isolation frigorifique de tout premier ordre face aux aléas électriques. Son compresseur puissant assure un débit de congélation impressionnant pour préserver les qualités nutritives des aliments les plus fragiles. Présente un panneau de contrôle clair en façade, un système d'évacuation d'eau rapide, une fermeture à clé sécurisée et des finitions soignées en acier laqué gris. Disponible au Grand Marché de Bamako avec service après-vente dédié.",
+    "specifications": {
+      "Capacité brute / nette": "350 Litres",
+      "Type": "Congélateur coffre horizontal grande capacité",
+      "Porte / Battant": "1 large battant avec charnières équilibrées",
+      "Sécurité": "Serrure de sécurité à clé",
+      "Rangement": "Panier amovible inclus",
+      "Cuve": "Revêtement intérieur facile à nettoyer",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé)",
+      "Couleur": "Gris métallisé",
+      "Thermostat": "Réglable en façade",
+      "Mobilité": "Pieds / roulettes robustes"
+    },
+    "price": "274000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T15:00:06.778Z",
+    "updated_at": "2026-11-27T15:00:06.778Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 164,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Fizzen 430 Litres - 2 Battants Indépendants",
+    "slug": "congelateur-horizontal-fizzen-430l",
+    "sku": "ONZ-FZ-CH-430L",
+    "category": 11,
+    "brand": 17,
+    "short_description": "",
+    "description": "Congélateur coffre professionnel Fizzen 430 litres (modèle FZ_AC-430_CH/FR) doté d'une conception ingénieuse à deux battants indépendants. Cette ouverture séparée permet d'accéder à une section sans déperdition d'air froid dans le reste de la cuve, générant d'importantes économies d'énergie électrique. Idéal pour les supérettes, bars, hôtels, boucheries et commerces de gros à Bamako. Chaque battant dispose de sa propre poignée avec serrure à clé individuelle. Intègre un compresseur tropicalisé surdimensionné pour un refroidissement ultrarapide, un panier de tri et un éclairage intérieur pratique. Vendu avec garantie officielle Onizuka Shop.",
+    "specifications": {
+      "Capacité brute / nette": "430 Litres",
+      "Modèle constructeur": "FZ_AC-430_CH/FR",
+      "Type": "Congélateur coffre horizontal double porte (2 battants)",
+      "Portes / Battants": "2 grands battants indépendants étanches",
+      "Sécurité": "Double serrure à clé indépendante",
+      "Rangement": "Panier suspendu et compartiments spacieux",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé usage intensif)",
+      "Couleur": "Gris Silver métallisé anti-traces",
+      "Contrôle": "Thermostat réglable frontal avec témoins de contrôle",
+      "Vidange": "Bouchon de dégivrage frontal"
+    },
+    "price": "374000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T15:00:07.088Z",
+    "updated_at": "2026-11-27T15:00:07.088Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 165,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Fizzen 550 Litres PRO - 2 Battants Géants",
+    "slug": "congelateur-horizontal-fizzen-550l",
+    "sku": "ONZ-FZ-CH-550L",
+    "category": 11,
+    "brand": 17,
+    "short_description": "",
+    "description": "Le fleuron des congélateurs horizontaux Fizzen : modèle géant 550 litres à deux battants indépendants conçu pour les besoins professionnels intensifs et les grandes structures commerciales. Sa cuve immense permet d'entreposer des volumes massifs de vivres, carcasses, poissons, boissons et blocs de glace. Équipé d'un groupe moteur à haute endurance tropicalisée spécialement calibré pour affronter les températures caniculaires sans surchauffe. Double système de fermeture à clé, éclairage intérieur LED automatique, panier suspendu et isolation renforcée garantissant un maintien au froid prolongé. Le meilleur rapport volume / robustesse / prix à Bamako, garanti et suivi par notre service technique à Dibidani.",
+    "specifications": {
+      "Capacité brute / nette": "550 Litres",
+      "Modèle constructeur": "FZ_AC-550_CH/FR",
+      "Type": "Congélateur coffre professionnel 2 battants grand format",
+      "Portes / Battants": "2 très grands battants indépendants",
+      "Sécurité": "Double verrouillage à clé pour chaque battant",
+      "Éclairage": "Éclairage intérieur intégré",
+      "Rangement": "Grand panier suspendu et cuve compartimentable",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé lourd)",
+      "Couleur": "Gris métallisé premium haute résistance",
+      "Thermostat": "Contrôle électronique / mécanique robuste en façade",
+      "Vidange": "Purge de dégivrage intégrée"
+    },
+    "price": "447000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T15:00:07.474Z",
+    "updated_at": "2026-11-27T15:00:07.474Z"
+  }
+},
+{
   "model": "shop.productimage",
   "pk": 254,
   "fields": {
@@ -3482,6 +3834,160 @@
     "alt_text": "Congélateur Vertical Bona 10 Étagères Solaire Direct DC 24V - Vue 5",
     "is_primary": false,
     "order": 4
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 453,
+  "fields": {
+    "product": 159,
+    "image": "products/congelateurs_coffres/fizzen_coffre_110l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 110 Litres Compact - Vue réelle Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 454,
+  "fields": {
+    "product": 159,
+    "image": "products/congelateurs_coffres/fizzen_coffre_110l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 110 Litres Compact - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 455,
+  "fields": {
+    "product": 160,
+    "image": "products/congelateurs_coffres/fizzen_coffre_160l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 160 Litres - Vue réelle Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 456,
+  "fields": {
+    "product": 160,
+    "image": "products/congelateurs_coffres/fizzen_coffre_160l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 160 Litres - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 457,
+  "fields": {
+    "product": 161,
+    "image": "products/congelateurs_coffres/fizzen_coffre_210l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 210 Litres - Vue réelle Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 458,
+  "fields": {
+    "product": 161,
+    "image": "products/congelateurs_coffres/fizzen_coffre_210l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 210 Litres - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 459,
+  "fields": {
+    "product": 162,
+    "image": "products/congelateurs_coffres/fizzen_coffre_270l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 270 Litres Grand Volume - Vue réelle Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 460,
+  "fields": {
+    "product": 162,
+    "image": "products/congelateurs_coffres/fizzen_coffre_270l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 270 Litres Grand Volume - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 461,
+  "fields": {
+    "product": 163,
+    "image": "products/congelateurs_coffres/fizzen_coffre_350l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 350 Litres - Vue réelle Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 462,
+  "fields": {
+    "product": 163,
+    "image": "products/congelateurs_coffres/fizzen_coffre_350l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 350 Litres - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 463,
+  "fields": {
+    "product": 164,
+    "image": "products/congelateurs_coffres/fizzen_coffre_430l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 430 Litres - 2 Battants Indépendants - Vue réelle Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 464,
+  "fields": {
+    "product": 164,
+    "image": "products/congelateurs_coffres/fizzen_coffre_430l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 430 Litres - 2 Battants Indépendants - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 465,
+  "fields": {
+    "product": 165,
+    "image": "products/congelateurs_coffres/fizzen_coffre_550l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 550 Litres PRO - 2 Battants Géants - Vue réelle Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 466,
+  "fields": {
+    "product": 165,
+    "image": "products/congelateurs_coffres/fizzen_coffre_550l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal Fizzen 550 Litres PRO - 2 Battants Géants - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 1
   }
 }
 ]

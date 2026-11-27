@@ -2192,14 +2192,28 @@ def catalog_config_view(request):
 
             elif action == 'delete_category':
                 cat_obj = get_object_or_404(Category, id=request.POST.get('category_id'))
-                p_count = cat_obj.products.count()
-                if p_count > 0:
-                    messages.error(request, f"Impossible de supprimer « {cat_obj.name} » : {p_count} produit(s) y sont rattachés. Déplacez-les d'abord.")
+                desc = cat_obj.get_descendants(include_self=True)
+                total_prods = Product.objects.filter(category__in=desc).count()
+                children_count = cat_obj.children.count()
+                if total_prods > 0 or children_count > 0:
+                    messages.error(request, f"Impossible de supprimer « {cat_obj.name} » : {total_prods} produit(s) ou {children_count} sous-rayon(s) y sont rattachés. Déplacez-les ou modifiez-les d'abord.")
                 else:
                     cname = cat_obj.name
                     cat_obj.delete()
                     _clear_cat_cache()
                     messages.success(request, f"Rayon « {cname} » supprimé.")
+                active_tab = 'categories'
+
+            elif action == 'reorder_category':
+                cat_obj = get_object_or_404(Category, id=request.POST.get('category_id'))
+                direction = request.POST.get('direction')
+                if direction == 'up':
+                    cat_obj.order = max(0, cat_obj.order - 1)
+                elif direction == 'down':
+                    cat_obj.order = cat_obj.order + 1
+                cat_obj.save(update_fields=['order'])
+                _clear_cat_cache()
+                messages.success(request, f"Position du rayon « {cat_obj.name} » ajustée à #{cat_obj.order}.")
                 active_tab = 'categories'
 
             # --- B. MARQUES ---
@@ -2367,7 +2381,23 @@ def catalog_config_view(request):
 
         return redirect(f"/gestion/catalogue-config/?tab={active_tab}")
 
-    categories = Category.objects.select_related('parent').annotate(prod_count=Count('products')).order_by('order', 'name')
+    raw_categories = Category.objects.select_related('parent').prefetch_related('children').order_by('order', 'name')
+    categories = []
+    root_categories = []
+    root_idx = 1
+    for c in raw_categories:
+        desc = c.get_descendants(include_self=True)
+        c.direct_count = c.products.count()
+        c.total_count = Product.objects.filter(category__in=desc).count()
+        c.children_count = c.children.count()
+        c.can_delete = (c.total_count == 0 and c.children_count == 0)
+        c.is_root = (c.parent_id is None)
+        if c.is_root:
+            c.menu_position = root_idx
+            root_idx += 1
+            root_categories.append(c)
+        categories.append(c)
+
     brands = Brand.objects.annotate(prod_count=Count('products')).order_by('name')
     coupons = Coupon.objects.order_by('-created_at')
     reviews = Review.objects.select_related('product', 'user').order_by('-created_at')[:50]
@@ -2376,6 +2406,7 @@ def catalog_config_view(request):
     context = {
         'active_tab': active_tab,
         'categories': categories,
+        'root_categories': root_categories,
         'brands': brands,
         'coupons': coupons,
         'reviews': reviews,

@@ -1,7 +1,7 @@
 {% extends "backoffice/base.html" %}
 {% load humanize %}
 
-{% block title %}Rayons, Marques, Codes Promo &amp; Avis • Gestion Onizuka{% endblock %}
+{% block title %}Architecture Catalogue & Promotions • Direction Onizuka{% endblock %}
 
 {% block content %}
 <div
@@ -43,163 +43,320 @@
   }"
 >
 
-  <!-- EN-TÊTE -->
-  <div class="bg-white rounded-2xl border border-slate-200/80 p-3.5 sm:p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-    <div>
-      <h1 class="text-base sm:text-xl font-black text-slate-950 font-heading">Rayons, Marques, Codes Promo &amp; Avis</h1>
-      <p class="text-xs text-slate-500">Contrôlez chaque détail de l'architecture catalogue, des promotions et des fournisseurs</p>
+  <!-- EN-TÊTE PRINCIPAL AVEC EXPLICATION CLAIRE -->
+  <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="space-y-1">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-amber-400 text-slate-950 font-black text-sm">📁</span>
+        <h1 class="text-base sm:text-xl font-black text-slate-950 font-heading">Organisation Catalogue & Promotions</h1>
+      </div>
+      <p class="text-xs text-slate-500 max-w-2xl leading-relaxed">
+        Personnalisez les rayons visibles par vos clients sur <strong>onizukashop.com</strong>, gérez les marques officielles, créez des codes promo pour vos ventes WhatsApp et modérez les avis.
+      </p>
     </div>
-    <a href="{% url 'backoffice:products' %}" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold self-start sm:self-auto">
-      ← Retour aux produits
-    </a>
+    <div class="flex items-center gap-2 shrink-0">
+      <a href="{% url 'shop:home' %}" target="_blank" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center gap-1.5 transition">
+        <span>Boutique publique ↗</span>
+      </a>
+      <a href="{% url 'backoffice:products' %}" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition">
+        ← Produits
+      </a>
+    </div>
   </div>
 
-  <!-- BARRE D'ONGLETS -->
-  <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs">
+  <!-- BARRE D'ONGLETS PÉDAGOGIQUE -->
+  <div class="flex items-center gap-2 overflow-x-auto no-scrollbar text-xs">
     <button
       type="button"
       @click="tab = 'categories'"
-      class="px-3.5 py-2.5 rounded-xl font-extrabold whitespace-nowrap cursor-pointer transition"
-      :class="tab === 'categories' ? 'bg-slate-950 text-amber-400 shadow-xs' : 'bg-white border border-slate-200 text-slate-700'"
-    >1. Rayons &amp; Catégories ({{ categories.count }})</button>
+      class="px-4 py-3 rounded-2xl font-black whitespace-nowrap cursor-pointer transition flex items-center gap-2 shadow-xs"
+      :class="tab === 'categories' ? 'bg-slate-950 text-amber-400 ring-2 ring-amber-400/20' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'"
+    >
+      <span>📂</span>
+      <span>1. Rayons &amp; Catégories</span>
+      <span class="px-2 py-0.5 rounded-full text-[10px] font-mono" :class="tab === 'categories' ? 'bg-amber-400/20 text-amber-300' : 'bg-slate-100 text-slate-600'">{{ categories.count }}</span>
+    </button>
 
     <button
       type="button"
       @click="tab = 'brands'"
-      class="px-3.5 py-2.5 rounded-xl font-extrabold whitespace-nowrap cursor-pointer transition"
-      :class="tab === 'brands' ? 'bg-slate-950 text-amber-400 shadow-xs' : 'bg-white border border-slate-200 text-slate-700'"
-    >2. Marques ({{ brands.count }})</button>
+      class="px-4 py-3 rounded-2xl font-black whitespace-nowrap cursor-pointer transition flex items-center gap-2 shadow-xs"
+      :class="tab === 'brands' ? 'bg-slate-950 text-amber-400 ring-2 ring-amber-400/20' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'"
+    >
+      <span>🏷️</span>
+      <span>2. Marques Officielles</span>
+      <span class="px-2 py-0.5 rounded-full text-[10px] font-mono" :class="tab === 'brands' ? 'bg-amber-400/20 text-amber-300' : 'bg-slate-100 text-slate-600'">{{ brands.count }}</span>
+    </button>
 
     <button
       type="button"
       @click="tab = 'coupons'"
-      class="px-3.5 py-2.5 rounded-xl font-extrabold whitespace-nowrap cursor-pointer transition"
-      :class="tab === 'coupons' ? 'bg-slate-950 text-amber-400 shadow-xs' : 'bg-white border border-slate-200 text-slate-700'"
-    >3. Codes Promo ({{ coupons.count }})</button>
+      class="px-4 py-3 rounded-2xl font-black whitespace-nowrap cursor-pointer transition flex items-center gap-2 shadow-xs"
+      :class="tab === 'coupons' ? 'bg-slate-950 text-amber-400 ring-2 ring-amber-400/20' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'"
+    >
+      <span>🎟️</span>
+      <span>3. Codes Promo</span>
+      <span class="px-2 py-0.5 rounded-full text-[10px] font-mono" :class="tab === 'coupons' ? 'bg-amber-400/20 text-amber-300' : 'bg-slate-100 text-slate-600'">{{ coupons.count }}</span>
+    </button>
 
     <button
       type="button"
       @click="tab = 'reviews'"
-      class="px-3.5 py-2.5 rounded-xl font-extrabold whitespace-nowrap cursor-pointer transition"
-      :class="tab === 'reviews' ? 'bg-slate-950 text-amber-400 shadow-xs' : 'bg-white border border-slate-200 text-slate-700'"
-    >4. Avis Clients ({{ reviews.count }})</button>
+      class="px-4 py-3 rounded-2xl font-black whitespace-nowrap cursor-pointer transition flex items-center gap-2 shadow-xs"
+      :class="tab === 'reviews' ? 'bg-slate-950 text-amber-400 ring-2 ring-amber-400/20' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'"
+    >
+      <span>⭐</span>
+      <span>4. Avis &amp; Témoignages</span>
+      <span class="px-2 py-0.5 rounded-full text-[10px] font-mono" :class="tab === 'reviews' ? 'bg-amber-400/20 text-amber-300' : 'bg-slate-100 text-slate-600'">{{ reviews.count }}</span>
+    </button>
 
     <button
       type="button"
       @click="tab = 'suppliers'"
-      class="px-3.5 py-2.5 rounded-xl font-extrabold whitespace-nowrap cursor-pointer transition"
-      :class="tab === 'suppliers' ? 'bg-slate-950 text-amber-400 shadow-xs' : 'bg-white border border-slate-200 text-slate-700'"
-    >5. Fournisseurs ({{ suppliers.count }})</button>
+      class="px-4 py-3 rounded-2xl font-black whitespace-nowrap cursor-pointer transition flex items-center gap-2 shadow-xs"
+      :class="tab === 'suppliers' ? 'bg-slate-950 text-amber-400 ring-2 ring-amber-400/20' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'"
+    >
+      <span>🏢</span>
+      <span>5. Fournisseurs / Grossistes</span>
+      <span class="px-2 py-0.5 rounded-full text-[10px] font-mono" :class="tab === 'suppliers' ? 'bg-amber-400/20 text-amber-300' : 'bg-slate-100 text-slate-600'">{{ suppliers.count }}</span>
+    </button>
   </div>
 
   <!-- =================================================================== -->
   <!-- ONGLET 1 : RAYONS & CATÉGORIES                                      -->
   <!-- =================================================================== -->
-  <div x-show="tab === 'categories'" class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-    <form method="POST" enctype="multipart/form-data" class="lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm space-y-3 text-xs">
-      {% csrf_token %}
-      <input type="hidden" name="action" value="save_category">
-      <input type="hidden" name="tab" value="categories">
-      <input type="hidden" name="category_id" :value="catEdit.id">
-
-      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-        <h2 class="font-heading font-black text-sm text-slate-950" x-text="catEdit.id ? 'Modifier le rayon' : '+ Nouveau rayon'"></h2>
-        <button type="button" x-show="catEdit.id" @click="resetCat()" class="text-[11px] font-bold text-amber-600 underline cursor-pointer">Nouveau</button>
-      </div>
-
-      <div>
-        <label class="block font-bold text-slate-700 mb-1">Nom du rayon *</label>
-        <input type="text" name="name" x-model="catEdit.name" required placeholder="Ex: Climatiseurs, Salons, Solaire..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold">
-      </div>
-
-      <div class="grid grid-cols-2 gap-2.5">
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Rayon parent</label>
-          <select name="parent_id" x-model="catEdit.parent_id" class="w-full px-2.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs">
-            <option value="">(Rayon principal)</option>
-            {% for c in categories %}
-            <option value="{{ c.id }}">{{ c.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Ordre d'affichage</label>
-          <input type="number" name="order" x-model="catEdit.order" min="0" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 font-mono text-xs">
+  <div x-show="tab === 'categories'" class="space-y-4">
+    <!-- BANDEAU PÉDAGOGIQUE & EXPLICATION CLAIRE -->
+    <div class="bg-gradient-to-r from-amber-50 via-amber-50/70 to-slate-50 border border-amber-200/90 rounded-2xl p-4 text-xs text-slate-900 shadow-xs">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 rounded-xl bg-amber-400 text-slate-950 font-black flex items-center justify-center text-lg shrink-0 shadow-xs">
+            💡
+          </div>
+          <div class="space-y-1">
+            <h3 class="font-black text-slate-950 text-sm">Comment fonctionne l'organisation de vos rayons ?</h3>
+            <p class="text-slate-600 text-xs leading-relaxed max-w-3xl">
+              • <strong>Grands Rayons Principaux :</strong> Ils forment les boutons du menu tout en haut de votre boutique publique (ex: <em>Climatiseurs</em>, <em>Réfrigérateurs &amp; Congélateurs</em>).<br>
+              • <strong>Sous-rayons :</strong> Ils permettent de classer avec précision vos appareils (ex: <em>Congélateurs Verticaux</em> et <em>Congélateurs Horizontaux Coffres</em> sont rangés sous <em>Réfrigérateurs &amp; Congélateurs</em>).<br>
+              • <strong>Position (0, 1, 2...) :</strong> 0 s'affiche tout premier à gauche, 1 au milieu, 2 à droite.
+            </p>
+          </div>
         </div>
       </div>
 
-      <div>
-        <label class="block font-bold text-slate-700 mb-1">Image / Icône du rayon (optionnel)</label>
-        <input type="file" name="image" accept="image/*" class="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-900 file:text-white file:font-bold">
+      <!-- SIMULATION EN DIRECT DU MENU PUBLIC -->
+      <div class="mt-3.5 pt-3 border-t border-amber-200/60">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[10px] font-black uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+            <span>🌐</span> Aperçu en direct du menu sur le site (Ordre d'affichage) :
+          </span>
+          <a href="{% url 'shop:home' %}" target="_blank" class="text-[10px] font-bold text-amber-800 hover:text-amber-950 underline">
+            Ouvrir la boutique en direct ↗
+          </a>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          {% for r in root_categories %}
+          <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-2xs">
+            <span class="w-4 h-4 rounded-full bg-amber-400 text-slate-950 font-black text-[10px] flex items-center justify-center">
+              {{ forloop.counter }}
+            </span>
+            <span class="font-black text-slate-900 text-xs">{{ r.name }}</span>
+            <span class="px-1.5 py-0.2 rounded bg-amber-50 text-amber-900 text-[10px] font-extrabold font-mono">
+              {{ r.total_count }} art.
+            </span>
+            {% if r.children_count > 0 %}
+            <span class="text-[10px] text-slate-400">({{ r.children_count }} ss-rayons)</span>
+            {% endif %}
+          </div>
+          {% empty %}
+          <span class="text-xs text-slate-400">Aucun rayon configuré</span>
+          {% endfor %}
+        </div>
       </div>
+    </div>
 
-      <div>
-        <label class="block font-bold text-slate-700 mb-1">Description courte</label>
-        <textarea name="description" x-model="catEdit.description" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs"></textarea>
-      </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+      <!-- FORMULAIRE CRÉATION / ÉDITION -->
+      <form method="POST" enctype="multipart/form-data" class="lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm space-y-3.5 text-xs">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="save_category">
+        <input type="hidden" name="tab" value="categories">
+        <input type="hidden" name="category_id" :value="catEdit.id">
 
-      <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
-        <input type="checkbox" name="is_active" x-model="catEdit.is_active" class="w-4 h-4 rounded text-amber-500">
-        <span class="font-bold text-slate-800">Rayon actif et visible en boutique</span>
-      </label>
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+            <h2 class="font-heading font-black text-sm text-slate-950" x-text="catEdit.id ? 'Modifier ce rayon' : '+ Nouveau rayon'"></h2>
+          </div>
+          <button type="button" x-show="catEdit.id" @click="resetCat()" class="text-[11px] font-bold text-amber-600 hover:text-amber-700 underline cursor-pointer">
+            Annuler / Nouveau
+          </button>
+        </div>
 
-      <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs cursor-pointer">
-        <span x-text="catEdit.id ? 'Enregistrer les modifications' : 'Créer le rayon'"></span>
-      </button>
-    </form>
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Nom du rayon visible par les clients *</label>
+          <input type="text" name="name" x-model="catEdit.name" required placeholder="Ex: Climatiseurs, Téléviseurs, Solaire..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20">
+          <span class="block text-[10px] text-slate-400 mt-1">C'est le nom qui sera affiché en gros sur le site public.</span>
+        </div>
 
-    <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs">
-          <thead>
-            <tr class="bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase">
-              <th class="py-3 px-4">Rayon</th>
-              <th class="py-3 px-3">Parent</th>
-              <th class="py-3 px-3 text-center">Ordre</th>
-              <th class="py-3 px-3 text-center">Produits</th>
-              <th class="py-3 px-3 text-center">Statut</th>
-              <th class="py-3 px-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100">
-            {% for c in categories %}
-            <tr class="hover:bg-slate-50/70">
-              <td class="py-2.5 px-4 font-bold text-slate-900">
-                {{ c.name }}
-                <span class="block text-[10px] font-mono text-slate-400">/{{ c.slug }}/</span>
-              </td>
-              <td class="py-2.5 px-3 text-slate-600">{{ c.parent.name|default:"—" }}</td>
-              <td class="py-2.5 px-3 text-center font-mono">{{ c.order }}</td>
-              <td class="py-2.5 px-3 text-center font-bold">{{ c.prod_count }}</td>
-              <td class="py-2.5 px-3 text-center">
-                <form method="POST" class="inline">
-                  {% csrf_token %}
-                  <input type="hidden" name="action" value="toggle_category">
-                  <input type="hidden" name="category_id" value="{{ c.id }}">
-                  <button type="submit" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold cursor-pointer {% if c.is_active %}bg-emerald-50 text-emerald-700 border border-emerald-200{% else %}bg-slate-100 text-slate-500{% endif %}">
-                    {% if c.is_active %}Actif{% else %}Masqué{% endif %}
-                  </button>
-                </form>
-              </td>
-              <td class="py-2.5 px-4 text-right whitespace-nowrap space-x-1">
-                <button
-                  type="button"
-                  @click="loadCat('{{ c.id }}', '{{ c.name|escapejs }}', '{{ c.parent_id|default:'' }}', {{ c.order }}, '{{ c.description|escapejs }}', {{ c.is_active|yesno:'true,false' }})"
-                  class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-extrabold text-[11px] cursor-pointer"
-                >Modifier</button>
-                {% if c.prod_count == 0 %}
-                <form method="POST" class="inline" onsubmit="return confirm('Supprimer ce rayon vide ?')">
-                  {% csrf_token %}
-                  <input type="hidden" name="action" value="delete_category">
-                  <input type="hidden" name="category_id" value="{{ c.id }}">
-                  <button type="submit" class="px-2 py-1 rounded-lg bg-rose-50 text-rose-700 font-bold text-[11px] cursor-pointer">×</button>
-                </form>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Rangement (Parent)</label>
+            <select name="parent_id" x-model="catEdit.parent_id" class="w-full px-2.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold">
+              <option value="">★ Grand Rayon Principal</option>
+              {% for c in categories %}
+                {% if c.is_root %}
+                <option value="{{ c.id }}">↳ Sous-rayon de {{ c.name }}</option>
                 {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+              {% endfor %}
+            </select>
+            <span class="block text-[10px] text-slate-400 mt-0.5">Laissez « Grand Rayon » pour le menu haut.</span>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Position / Ordre</label>
+            <input type="number" name="order" x-model="catEdit.order" min="0" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 font-mono text-xs font-bold text-center">
+            <span class="block text-[10px] text-slate-400 mt-0.5">0 = 1er à gauche, 1 = 2ème...</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Image / Bannière illustrative (optionnel)</label>
+          <input type="file" name="image" accept="image/*" class="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-slate-900 file:text-white file:font-bold file:cursor-pointer">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Description d'accueil (optionnel)</label>
+          <textarea name="description" x-model="catEdit.description" rows="2" placeholder="Ex: Découvrez notre sélection de congélateurs et réfrigérateurs tropicalisés..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs"></textarea>
+        </div>
+
+        <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100/70 transition">
+          <input type="checkbox" name="is_active" x-model="catEdit.is_active" class="w-4 h-4 rounded text-amber-500 focus:ring-0">
+          <div>
+            <span class="font-bold text-slate-900 block text-xs">Rayon actif et public</span>
+            <span class="text-[10px] text-slate-500 block">Décocher pour masquer temporairement ce rayon du site.</span>
+          </div>
+        </label>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs cursor-pointer shadow-sm transition">
+          <span x-text="catEdit.id ? '💾 Enregistrer les modifications' : '+ Créer ce rayon'"></span>
+        </button>
+      </form>
+
+      <!-- TABLEAU DES RAYONS EXISTANTS -->
+      <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div class="p-3.5 border-b border-slate-100 flex items-center justify-between">
+          <h3 class="font-heading font-black text-xs text-slate-950 uppercase tracking-wider">
+            Rayons enregistrés sur la boutique ({{ categories|length }})
+          </h3>
+          <span class="text-[11px] text-slate-400">Modifier, ordonner ou consulter les rayons</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                <th class="py-3 px-4">Nom du Rayon</th>
+                <th class="py-3 px-3">Type &amp; Rangement</th>
+                <th class="py-3 px-3 text-center">Position</th>
+                <th class="py-3 px-3 text-center">Articles en Vente</th>
+                <th class="py-3 px-3 text-center">Visibilité</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              {% for c in categories %}
+              <tr class="hover:bg-slate-50/70 transition {% if not c.is_root %}bg-slate-50/30{% endif %}">
+                <td class="py-3 px-4">
+                  <div class="flex items-center gap-2">
+                    {% if not c.is_root %}
+                    <span class="text-slate-300 text-sm ml-2">↳</span>
+                    {% endif %}
+                    <div>
+                      <div class="font-black text-slate-950 text-xs sm:text-sm">{{ c.name }}</div>
+                      <div class="text-[10px] font-mono text-slate-400">/catalogue/{{ c.slug }}/</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3">
+                  {% if c.parent %}
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[10px] font-bold border border-slate-200">
+                    <span>↳ Sous-rayon de</span> <strong>{{ c.parent.name }}</strong>
+                  </span>
+                  {% else %}
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-950 border border-amber-200/90 text-[10px] font-black">
+                    <span>★ Rayon Principal #{{ c.menu_position }}</span>
+                  </span>
+                  {% if c.children_count > 0 %}
+                  <span class="block text-[10px] text-slate-400 mt-0.5">Contient {{ c.children_count }} sous-rayon(s)</span>
+                  {% endif %}
+                  {% endif %}
+                </td>
+                <td class="py-3 px-3 text-center font-mono">
+                  <div class="inline-flex items-center gap-1">
+                    <form method="POST" class="inline">
+                      {% csrf_token %}
+                      <input type="hidden" name="action" value="reorder_category">
+                      <input type="hidden" name="direction" value="up">
+                      <input type="hidden" name="category_id" value="{{ c.id }}">
+                      <button type="submit" class="w-5 h-5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-black flex items-center justify-center cursor-pointer" title="Monter dans la liste">▲</button>
+                    </form>
+                    <span class="px-2 py-0.5 rounded bg-slate-100 text-xs font-bold text-slate-800">#{{ c.order }}</span>
+                    <form method="POST" class="inline">
+                      {% csrf_token %}
+                      <input type="hidden" name="action" value="reorder_category">
+                      <input type="hidden" name="direction" value="down">
+                      <input type="hidden" name="category_id" value="{{ c.id }}">
+                      <button type="submit" class="w-5 h-5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-black flex items-center justify-center cursor-pointer" title="Descendre dans la liste">▼</button>
+                    </form>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-center">
+                  {% if c.children_count > 0 %}
+                    <span class="font-black text-sm text-slate-950">{{ c.total_count }}</span>
+                    <span class="text-[10px] text-slate-400 block">au total (avec ss-rayons)</span>
+                  {% else %}
+                    <span class="font-extrabold text-xs {% if c.direct_count > 0 %}text-slate-900{% else %}text-slate-400{% endif %}">
+                      {{ c.direct_count }}
+                    </span>
+                    <span class="text-[10px] text-slate-400 block">produits</span>
+                  {% endif %}
+                </td>
+                <td class="py-3 px-3 text-center">
+                  <form method="POST" class="inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="toggle_category">
+                    <input type="hidden" name="category_id" value="{{ c.id }}">
+                    <button type="submit" class="px-2.5 py-1 rounded-full text-[10px] font-extrabold cursor-pointer transition {% if c.is_active %}bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100{% else %}bg-slate-100 text-slate-500 hover:bg-slate-200{% endif %}" title="Cliquer pour changer la visibilité">
+                      {% if c.is_active %}✓ Visible en ligne{% else %}✕ Masqué{% endif %}
+                    </button>
+                  </form>
+                </td>
+                <td class="py-3 px-4 text-right whitespace-nowrap space-x-1">
+                  <!-- LIEN DIRECT POUR VOIR LE RAYON EN BOUTIQUE -->
+                  <a href="/catalogue/{{ c.slug }}/" target="_blank" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] inline-flex items-center gap-1 transition" title="Ouvrir ce rayon sur le site public">
+                    <span>👁️ Voir</span>
+                  </a>
+                  <button
+                    type="button"
+                    @click="loadCat('{{ c.id }}', '{{ c.name|escapejs }}', '{{ c.parent_id|default:'' }}', {{ c.order }}, '{{ c.description|escapejs }}', {{ c.is_active|yesno:'true,false' }})"
+                    class="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-[11px] cursor-pointer transition"
+                  >Modifier</button>
+
+                  {% if c.can_delete %}
+                  <form method="POST" class="inline" onsubmit="return confirm('Supprimer ce rayon vide ?')">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="delete_category">
+                    <input type="hidden" name="category_id" value="{{ c.id }}">
+                    <button type="submit" class="px-2 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-[11px] cursor-pointer" title="Supprimer ce rayon vide">✕</button>
+                  </form>
+                  {% else %}
+                  <span class="inline-block px-1.5 py-1 text-slate-300 text-xs cursor-not-allowed" title="Contient des articles ou sous-rayons. Ne peut pas être supprimé.">🔒</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -207,86 +364,99 @@
   <!-- =================================================================== -->
   <!-- ONGLET 2 : MARQUES OFFICIELLES                                      -->
   <!-- =================================================================== -->
-  <div x-show="tab === 'brands'" x-cloak class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-    <form method="POST" enctype="multipart/form-data" class="lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm space-y-3 text-xs">
-      {% csrf_token %}
-      <input type="hidden" name="action" value="save_brand">
-      <input type="hidden" name="tab" value="brands">
-      <input type="hidden" name="brand_id" :value="brandEdit.id">
-
-      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-        <h2 class="font-heading font-black text-sm text-slate-950" x-text="brandEdit.id ? 'Modifier la marque' : '+ Nouvelle marque'"></h2>
-        <button type="button" x-show="brandEdit.id" @click="resetBrand()" class="text-[11px] font-bold text-amber-600 underline cursor-pointer">Nouvelle</button>
+  <div x-show="tab === 'brands'" x-cloak class="space-y-3">
+    <!-- ENCART D'AIDE PRATIQUE -->
+    <div class="bg-indigo-50/70 border border-indigo-200/80 rounded-2xl p-3.5 sm:p-4 text-xs text-indigo-950 flex items-start gap-2.5">
+      <span class="text-base sm:text-lg">💡</span>
+      <div class="space-y-0.5">
+        <p class="font-bold">À quoi servent les marques ?</p>
+        <p class="text-indigo-800 text-[11px] leading-relaxed">
+          Elles permettent à vos clients de filtrer instantanément par marque préférée (ex: <em>Sharp, Fizzen, LG, Samsung, Solstar, Bona...</em>). En désactivant une marque ici, tous ses produits restent dans la boutique mais son nom n'apparaît plus dans les filtres rapides.
+        </p>
       </div>
+    </div>
 
-      <div>
-        <label class="block font-bold text-slate-700 mb-1">Nom de la marque *</label>
-        <input type="text" name="name" x-model="brandEdit.name" required placeholder="Ex: Fizzen, Samsung, Sharp, Roch, Hyundai..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold">
-      </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+      <form method="POST" enctype="multipart/form-data" class="lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm space-y-3 text-xs">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="save_brand">
+        <input type="hidden" name="tab" value="brands">
+        <input type="hidden" name="brand_id" :value="brandEdit.id">
 
-      <div>
-        <label class="block font-bold text-slate-700 mb-1">Logo (optionnel)</label>
-        <input type="file" name="logo" accept="image/*" class="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-900 file:text-white file:font-bold">
-      </div>
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <h2 class="font-heading font-black text-sm text-slate-950" x-text="brandEdit.id ? 'Modifier la marque' : '+ Nouvelle marque'"></h2>
+          <button type="button" x-show="brandEdit.id" @click="resetBrand()" class="text-[11px] font-bold text-amber-600 underline cursor-pointer">Nouvelle</button>
+        </div>
 
-      <div>
-        <label class="block font-bold text-slate-700 mb-1">Description</label>
-        <textarea name="description" x-model="brandEdit.description" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs"></textarea>
-      </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nom de la marque *</label>
+          <input type="text" name="name" x-model="brandEdit.name" required placeholder="Ex: Fizzen, Bona, Sharp, LG..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold">
+        </div>
 
-      <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
-        <input type="checkbox" name="is_active" x-model="brandEdit.is_active" class="w-4 h-4 rounded text-amber-500">
-        <span class="font-bold text-slate-800">Marque active dans les filtres</span>
-      </label>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Logo officiel (optionnel)</label>
+          <input type="file" name="logo" accept="image/*" class="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-slate-900 file:text-white file:font-bold">
+        </div>
 
-      <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs cursor-pointer">
-        <span x-text="brandEdit.id ? 'Enregistrer la marque' : 'Ajouter la marque'"></span>
-      </button>
-    </form>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Description courte</label>
+          <textarea name="description" x-model="brandEdit.description" rows="2" placeholder="Ex: Fabricant réputé d'appareils solaires autonomes..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs"></textarea>
+        </div>
 
-    <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs">
-          <thead>
-            <tr class="bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase">
-              <th class="py-3 px-4">Marque</th>
-              <th class="py-3 px-3 text-center">Produits</th>
-              <th class="py-3 px-3 text-center">Statut</th>
-              <th class="py-3 px-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100">
-            {% for b in brands %}
-            <tr class="hover:bg-slate-50/70">
-              <td class="py-2.5 px-4 font-bold text-slate-900">{{ b.name }}</td>
-              <td class="py-2.5 px-3 text-center font-bold">{{ b.prod_count }}</td>
-              <td class="py-2.5 px-3 text-center">
-                <form method="POST" class="inline">
-                  {% csrf_token %}
-                  <input type="hidden" name="action" value="toggle_brand">
-                  <input type="hidden" name="brand_id" value="{{ b.id }}">
-                  <button type="submit" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold cursor-pointer {% if b.is_active %}bg-emerald-50 text-emerald-700 border border-emerald-200{% else %}bg-slate-100 text-slate-500{% endif %}">
-                    {% if b.is_active %}Active{% else %}Inactive{% endif %}
-                  </button>
-                </form>
-              </td>
-              <td class="py-2.5 px-4 text-right whitespace-nowrap space-x-1">
-                <button
-                  type="button"
-                  @click="loadBrand('{{ b.id }}', '{{ b.name|escapejs }}', '{{ b.description|escapejs }}', {{ b.is_active|yesno:'true,false' }})"
-                  class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-extrabold text-[11px] cursor-pointer"
-                >Modifier</button>
-                <form method="POST" class="inline" onsubmit="return confirm('Supprimer cette marque ?')">
-                  {% csrf_token %}
-                  <input type="hidden" name="action" value="delete_brand">
-                  <input type="hidden" name="brand_id" value="{{ b.id }}">
-                  <button type="submit" class="px-2 py-1 rounded-lg bg-rose-50 text-rose-700 font-bold text-[11px] cursor-pointer">×</button>
-                </form>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+        <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+          <input type="checkbox" name="is_active" x-model="brandEdit.is_active" class="w-4 h-4 rounded text-amber-500">
+          <span class="font-bold text-slate-800">Marque active et affichée dans les filtres</span>
+        </label>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs cursor-pointer">
+          <span x-text="brandEdit.id ? 'Enregistrer la marque' : 'Ajouter la marque'"></span>
+        </button>
+      </form>
+
+      <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase">
+                <th class="py-3 px-4">Marque</th>
+                <th class="py-3 px-3 text-center">Produits en stock</th>
+                <th class="py-3 px-3 text-center">Visibilité</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              {% for b in brands %}
+              <tr class="hover:bg-slate-50/70">
+                <td class="py-3 px-4 font-black text-slate-900 text-sm">{{ b.name }}</td>
+                <td class="py-3 px-3 text-center font-black text-slate-800 text-xs">{{ b.prod_count }}</td>
+                <td class="py-3 px-3 text-center">
+                  <form method="POST" class="inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="toggle_brand">
+                    <input type="hidden" name="brand_id" value="{{ b.id }}">
+                    <button type="submit" class="px-2.5 py-1 rounded-full text-[10px] font-extrabold cursor-pointer {% if b.is_active %}bg-emerald-50 text-emerald-700 border border-emerald-200{% else %}bg-slate-100 text-slate-500{% endif %}">
+                      {% if b.is_active %}✓ Active{% else %}✕ Masquée{% endif %}
+                    </button>
+                  </form>
+                </td>
+                <td class="py-3 px-4 text-right whitespace-nowrap space-x-1">
+                  <button
+                    type="button"
+                    @click="loadBrand('{{ b.id }}', '{{ b.name|escapejs }}', '{{ b.description|escapejs }}', {{ b.is_active|yesno:'true,false' }})"
+                    class="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-[11px] cursor-pointer"
+                  >Modifier</button>
+                  <form method="POST" class="inline" onsubmit="return confirm('Supprimer cette marque ?')">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="delete_brand">
+                    <input type="hidden" name="brand_id" value="{{ b.id }}">
+                    <button type="submit" class="px-2 py-1 rounded-lg bg-rose-50 text-rose-700 font-bold text-[11px] cursor-pointer" title="Supprimer">✕</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -294,109 +464,124 @@
   <!-- =================================================================== -->
   <!-- ONGLET 3 : CODES PROMO & REMISES                                    -->
   <!-- =================================================================== -->
-  <div x-show="tab === 'coupons'" x-cloak class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-    <form method="POST" class="lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm space-y-3 text-xs">
-      {% csrf_token %}
-      <input type="hidden" name="action" value="save_coupon">
-      <input type="hidden" name="tab" value="coupons">
-      <input type="hidden" name="coupon_id" :value="couponEdit.id">
-
-      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-        <h2 class="font-heading font-black text-sm text-slate-950" x-text="couponEdit.id ? 'Modifier le code promo' : '+ Créer un code promo'"></h2>
-        <button type="button" x-show="couponEdit.id" @click="resetCoupon()" class="text-[11px] font-bold text-amber-600 underline cursor-pointer">Nouveau</button>
+  <div x-show="tab === 'coupons'" x-cloak class="space-y-3">
+    <!-- ENCART D'AIDE PRATIQUE -->
+    <div class="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-3.5 sm:p-4 text-xs text-emerald-950 flex items-start gap-2.5">
+      <span class="text-base sm:text-lg">💡</span>
+      <div class="space-y-0.5">
+        <p class="font-bold">Comment créer une promotion efficace ?</p>
+        <p class="text-emerald-800 text-[11px] leading-relaxed">
+          Créez un mot clé court (ex: <strong>PROMO5</strong> ou <strong>BAMAKO10</strong>). Vous pouvez accorder soit un <strong>pourcentage</strong> (ex: -5%), soit un <strong>montant direct en FCFA</strong> (ex: -10 000 FCFA). Partagez ce code dans vos statuts WhatsApp pour inciter les clients à commander immédiatement !
+        </p>
       </div>
+    </div>
 
-      <div>
-        <label class="block font-bold text-slate-700 mb-1">Code Promo (sans espaces) *</label>
-        <input type="text" name="code" x-model="couponEdit.code" required placeholder="Ex: ONIZUKA10, TABASKI, VIP50" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-black font-mono uppercase">
-      </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+      <form method="POST" class="lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm space-y-3 text-xs">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="save_coupon">
+        <input type="hidden" name="tab" value="coupons">
+        <input type="hidden" name="coupon_id" :value="couponEdit.id">
 
-      <div class="grid grid-cols-2 gap-2.5">
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Type de remise</label>
-          <select name="discount_type" x-model="couponEdit.discount_type" class="w-full px-2.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold">
-            <option value="percentage">Pourcentage (%)</option>
-            <option value="fixed">Montant fixe (FCFA)</option>
-          </select>
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <h2 class="font-heading font-black text-sm text-slate-950" x-text="couponEdit.id ? 'Modifier le code promo' : '+ Nouveau Code Promo'"></h2>
+          <button type="button" x-show="couponEdit.id" @click="resetCoupon()" class="text-[11px] font-bold text-amber-600 underline cursor-pointer">Nouveau</button>
         </div>
+
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Valeur *</label>
-          <input type="number" name="discount_value" x-model="couponEdit.discount_value" min="1" required class="w-full px-3 py-2.5 rounded-xl border border-slate-200 font-mono font-black text-xs">
+          <label class="block font-bold text-slate-700 mb-1">Code Promo à taper par le client *</label>
+          <input type="text" name="code" x-model="couponEdit.code" required placeholder="Ex: TABASKI, VIP2026, ONIZUKA10" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-black font-mono uppercase">
         </div>
-      </div>
 
-      <div class="grid grid-cols-2 gap-2.5">
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Panier minimum (FCFA)</label>
-          <input type="number" name="min_order_amount" x-model="couponEdit.min_order_amount" min="0" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 font-mono text-xs">
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Type de réduction</label>
+            <select name="discount_type" x-model="couponEdit.discount_type" class="w-full px-2.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold">
+              <option value="percentage">Pourcentage (%)</option>
+              <option value="fixed">Montant fixe (FCFA)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Valeur de la réduction *</label>
+            <input type="number" name="discount_value" x-model="couponEdit.discount_value" min="1" required class="w-full px-3 py-2.5 rounded-xl border border-slate-200 font-mono font-black text-xs">
+          </div>
         </div>
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Utilisations max</label>
-          <input type="number" name="max_uses" x-model="couponEdit.max_uses" min="1" placeholder="Illimité" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 font-mono text-xs">
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Montant minimum d'achat</label>
+            <input type="number" name="min_order_amount" x-model="couponEdit.min_order_amount" min="0" placeholder="0 FCFA" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 font-mono text-xs">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Nombre d'utilisations max</label>
+            <input type="number" name="max_uses" x-model="couponEdit.max_uses" min="1" placeholder="Illimité" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 font-mono text-xs">
+          </div>
         </div>
-      </div>
 
-      <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
-        <input type="checkbox" name="is_active" x-model="couponEdit.is_active" class="w-4 h-4 rounded text-amber-500">
-        <span class="font-bold text-slate-800">Code promo actif immédiatement</span>
-      </label>
+        <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+          <input type="checkbox" name="is_active" x-model="couponEdit.is_active" class="w-4 h-4 rounded text-amber-500">
+          <span class="font-bold text-slate-800">Code promo actif utilisable dès maintenant</span>
+        </label>
 
-      <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs cursor-pointer">
-        Enregistrer le code promo
-      </button>
-    </form>
+        <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs cursor-pointer">
+          Enregistrer le code promo
+        </button>
+      </form>
 
-    <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs">
-          <thead>
-            <tr class="bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase">
-              <th class="py-3 px-4">Code</th>
-              <th class="py-3 px-3">Réduction</th>
-              <th class="py-3 px-3">Min. Panier</th>
-              <th class="py-3 px-3 text-center">Utilisé</th>
-              <th class="py-3 px-3 text-center">Statut</th>
-              <th class="py-3 px-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100">
-            {% for cp in coupons %}
-            <tr class="hover:bg-slate-50/70">
-              <td class="py-2.5 px-4 font-mono font-black text-slate-950">{{ cp.code }}</td>
-              <td class="py-2.5 px-3 font-extrabold text-emerald-700">
-                {% if cp.discount_type == 'percentage' %}-{{ cp.discount_value }}%{% else %}-{{ cp.discount_value|floatformat:0|intcomma }} F{% endif %}
-              </td>
-              <td class="py-2.5 px-3 font-mono text-slate-600">{{ cp.min_order_amount|floatformat:0|intcomma }} F</td>
-              <td class="py-2.5 px-3 text-center font-mono">{{ cp.current_uses }}{% if cp.max_uses %} / {{ cp.max_uses }}{% endif %}</td>
-              <td class="py-2.5 px-3 text-center">
-                <form method="POST" class="inline">
-                  {% csrf_token %}
-                  <input type="hidden" name="action" value="toggle_coupon">
-                  <input type="hidden" name="coupon_id" value="{{ cp.id }}">
-                  <button type="submit" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold cursor-pointer {% if cp.is_active %}bg-emerald-50 text-emerald-700 border border-emerald-200{% else %}bg-slate-100 text-slate-500{% endif %}">
-                    {% if cp.is_active %}Actif{% else %}Inactif{% endif %}
-                  </button>
-                </form>
-              </td>
-              <td class="py-2.5 px-4 text-right whitespace-nowrap space-x-1">
-                <button
-                  type="button"
-                  @click="loadCoupon('{{ cp.id }}', '{{ cp.code|escapejs }}', '{{ cp.discount_type }}', {{ cp.discount_value|floatformat:0 }}, {{ cp.min_order_amount|floatformat:0 }}, '{{ cp.max_uses|default:'' }}', {{ cp.is_active|yesno:'true,false' }})"
-                  class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-extrabold text-[11px] cursor-pointer"
-                >Modifier</button>
-                <form method="POST" class="inline" onsubmit="return confirm('Supprimer ce code promo ?')">
-                  {% csrf_token %}
-                  <input type="hidden" name="action" value="delete_coupon">
-                  <input type="hidden" name="coupon_id" value="{{ cp.id }}">
-                  <button type="submit" class="px-2 py-1 rounded-lg bg-rose-50 text-rose-700 font-bold text-[11px] cursor-pointer">×</button>
-                </form>
-              </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="6" class="py-8 text-center text-slate-400">Aucun code promo créé pour le moment.</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase">
+                <th class="py-3 px-4">Code Promo</th>
+                <th class="py-3 px-3">Montant de la remise</th>
+                <th class="py-3 px-3">Panier minimum</th>
+                <th class="py-3 px-3 text-center">Utilisations</th>
+                <th class="py-3 px-3 text-center">Statut</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              {% for cp in coupons %}
+              <tr class="hover:bg-slate-50/70">
+                <td class="py-3 px-4 font-mono font-black text-slate-950 text-sm tracking-wider">{{ cp.code }}</td>
+                <td class="py-3 px-3 font-black text-emerald-700 text-xs">
+                  {% if cp.discount_type == 'percentage' %}-{{ cp.discount_value }}%{% else %}-{{ cp.discount_value|floatformat:0|intcomma }} FCFA{% endif %}
+                </td>
+                <td class="py-3 px-3 font-mono text-slate-600">
+                  {% if cp.min_order_amount > 0 %}{{ cp.min_order_amount|floatformat:0|intcomma }} FCFA{% else %}Sans minimum{% endif %}
+                </td>
+                <td class="py-3 px-3 text-center font-mono font-bold">{{ cp.current_uses }}{% if cp.max_uses %} / {{ cp.max_uses }}{% endif %}</td>
+                <td class="py-3 px-3 text-center">
+                  <form method="POST" class="inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="toggle_coupon">
+                    <input type="hidden" name="coupon_id" value="{{ cp.id }}">
+                    <button type="submit" class="px-2.5 py-1 rounded-full text-[10px] font-extrabold cursor-pointer {% if cp.is_active %}bg-emerald-50 text-emerald-700 border border-emerald-200{% else %}bg-slate-100 text-slate-500{% endif %}">
+                      {% if cp.is_active %}✓ Actif{% else %}✕ Inactif{% endif %}
+                    </button>
+                  </form>
+                </td>
+                <td class="py-3 px-4 text-right whitespace-nowrap space-x-1">
+                  <button
+                    type="button"
+                    @click="loadCoupon('{{ cp.id }}', '{{ cp.code|escapejs }}', '{{ cp.discount_type }}', {{ cp.discount_value|floatformat:0 }}, {{ cp.min_order_amount|floatformat:0 }}, '{{ cp.max_uses|default:'' }}', {{ cp.is_active|yesno:'true,false' }})"
+                    class="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-[11px] cursor-pointer"
+                  >Modifier</button>
+                  <form method="POST" class="inline" onsubmit="return confirm('Supprimer ce code promo ?')">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="delete_coupon">
+                    <input type="hidden" name="coupon_id" value="{{ cp.id }}">
+                    <button type="submit" class="px-2 py-1 rounded-lg bg-rose-50 text-rose-700 font-bold text-[11px] cursor-pointer" title="Supprimer">✕</button>
+                  </form>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="6" class="py-8 text-center text-slate-400">Aucun code promo créé pour le moment.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -404,144 +589,174 @@
   <!-- =================================================================== -->
   <!-- ONGLET 4 : MODÉRATION DES AVIS CLIENTS                              -->
   <!-- =================================================================== -->
-  <div x-show="tab === 'reviews'" x-cloak class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
-        <thead>
-          <tr class="bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase">
-            <th class="py-3 px-4">Produit</th>
-            <th class="py-3 px-3">Client</th>
-            <th class="py-3 px-3">Note</th>
-            <th class="py-3 px-3">Commentaire</th>
-            <th class="py-3 px-3 text-center">Visibilité</th>
-            <th class="py-3 px-4 text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100">
-          {% for rev in reviews %}
-          <tr class="hover:bg-slate-50/70">
-            <td class="py-2.5 px-4 font-bold text-slate-900 max-w-[200px] truncate">{{ rev.product.name }}</td>
-            <td class="py-2.5 px-3 text-slate-700">{{ rev.user.get_full_name|default:rev.user.username }}</td>
-            <td class="py-2.5 px-3 font-bold text-amber-500">{{ rev.rating }} / 5 ★</td>
-            <td class="py-2.5 px-3 text-slate-600 max-w-md">
-              {% if rev.title %}<strong class="text-slate-900">{{ rev.title }} :</strong> {% endif %}{{ rev.body }}
-            </td>
-            <td class="py-2.5 px-3 text-center">
-              <form method="POST" class="inline">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="toggle_review">
-                <input type="hidden" name="review_id" value="{{ rev.id }}">
-                <button type="submit" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold cursor-pointer {% if rev.is_approved %}bg-emerald-50 text-emerald-700 border border-emerald-200{% else %}bg-amber-50 text-amber-800{% endif %}">
-                  {% if rev.is_approved %}Publié{% else %}Masqué{% endif %}
-                </button>
-              </form>
-            </td>
-            <td class="py-2.5 px-4 text-right">
-              <form method="POST" class="inline" onsubmit="return confirm('Supprimer cet avis ?')">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="delete_review">
-                <input type="hidden" name="review_id" value="{{ rev.id }}">
-                <button type="submit" class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 font-bold text-[11px] cursor-pointer">Supprimer</button>
-              </form>
-            </td>
-          </tr>
-          {% empty %}
-          <tr><td colspan="6" class="py-10 text-center text-slate-400">Aucun avis client enregistré pour le moment.</td></tr>
-          {% endfor %}
-        </tbody>
-      </table>
+  <div x-show="tab === 'reviews'" x-cloak class="space-y-3">
+    <!-- ENCART D'AIDE PRATIQUE -->
+    <div class="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-3.5 sm:p-4 text-xs text-blue-950 flex items-start gap-2.5">
+      <span class="text-base sm:text-lg">⭐</span>
+      <div class="space-y-0.5">
+        <p class="font-bold">Contrôle des avis et témoignages clients</p>
+        <p class="text-blue-800 text-[11px] leading-relaxed">
+          Lorsqu'un acheteur note un produit sur le site, son avis apparaît ici. Vous pouvez cliquer sur <strong>« Publié »</strong> pour l'afficher sur la fiche du produit ou <strong>« Masqué »</strong> pour le garder confidentiel.
+        </p>
+      </div>
     </div>
-  </div>
 
-  <!-- =================================================================== -->
-  <!-- ONGLET 5 : FOURNISSEURS MAGASIN                                     -->
-  <!-- =================================================================== -->
-  <div x-show="tab === 'suppliers'" x-cloak class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-    <form method="POST" class="lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm space-y-3 text-xs">
-      {% csrf_token %}
-      <input type="hidden" name="action" value="save_supplier">
-      <input type="hidden" name="tab" value="suppliers">
-      <input type="hidden" name="supplier_id" :value="supEdit.id">
-
-      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-        <h2 class="font-heading font-black text-sm text-slate-950" x-text="supEdit.id ? 'Modifier le fournisseur' : '+ Nouveau fournisseur'"></h2>
-        <button type="button" x-show="supEdit.id" @click="resetSup()" class="text-[11px] font-bold text-amber-600 underline cursor-pointer">Nouveau</button>
-      </div>
-
-      <div>
-        <label class="block font-bold text-slate-700 mb-1">Société / Fournisseur *</label>
-        <input type="text" name="name" x-model="supEdit.name" required placeholder="Ex: Importateur Fizzen Bamako..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold">
-      </div>
-
-      <div class="grid grid-cols-2 gap-2.5">
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Nom du contact</label>
-          <input type="text" name="contact_name" x-model="supEdit.contact_name" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
-        </div>
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Téléphone</label>
-          <input type="tel" name="phone" x-model="supEdit.phone" placeholder="+223..." class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono text-xs">
-        </div>
-      </div>
-
-      <div>
-        <label class="block font-bold text-slate-700 mb-1">Email</label>
-        <input type="email" name="email" x-model="supEdit.email" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
-      </div>
-
-      <div>
-        <label class="block font-bold text-slate-700 mb-1">Adresse / Entrepôt</label>
-        <input type="text" name="address" x-model="supEdit.address" placeholder="Ex: Zone Industrielle Sotuba, Dubaï..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
-      </div>
-
-      <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
-        <input type="checkbox" name="is_active" x-model="supEdit.is_active" class="w-4 h-4 rounded text-amber-500">
-        <span class="font-bold text-slate-800">Fournisseur actif</span>
-      </label>
-
-      <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs cursor-pointer">
-        Enregistrer le fournisseur
-      </button>
-    </form>
-
-    <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left text-xs">
           <thead>
             <tr class="bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase">
-              <th class="py-3 px-4">Fournisseur</th>
-              <th class="py-3 px-3">Contact</th>
-              <th class="py-3 px-3">Téléphone</th>
-              <th class="py-3 px-3">Adresse</th>
+              <th class="py-3 px-4">Produit concerné</th>
+              <th class="py-3 px-3">Client</th>
+              <th class="py-3 px-3">Note</th>
+              <th class="py-3 px-3">Commentaire du client</th>
+              <th class="py-3 px-3 text-center">Visibilité sur le site</th>
               <th class="py-3 px-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
-            {% for s in suppliers %}
+            {% for rev in reviews %}
             <tr class="hover:bg-slate-50/70">
-              <td class="py-2.5 px-4 font-bold text-slate-900">{{ s.name }}</td>
-              <td class="py-2.5 px-3 text-slate-600">{{ s.contact_name|default:"—" }}</td>
-              <td class="py-2.5 px-3 font-mono text-slate-700">{{ s.phone|default:"—" }}</td>
-              <td class="py-2.5 px-3 text-slate-500">{{ s.address|default:"—" }}</td>
-              <td class="py-2.5 px-4 text-right whitespace-nowrap space-x-1">
-                <button
-                  type="button"
-                  @click="loadSup('{{ s.id }}', '{{ s.name|escapejs }}', '{{ s.contact_name|escapejs }}', '{{ s.phone|escapejs }}', '{{ s.email|escapejs }}', '{{ s.address|escapejs }}', {{ s.is_active|yesno:'true,false' }})"
-                  class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-extrabold text-[11px] cursor-pointer"
-                >Modifier</button>
-                <form method="POST" class="inline" onsubmit="return confirm('Supprimer ce fournisseur ?')">
+              <td class="py-3 px-4 font-bold text-slate-900 max-w-[200px] truncate">{{ rev.product.name }}</td>
+              <td class="py-3 px-3 text-slate-700">{{ rev.user.get_full_name|default:rev.user.username }}</td>
+              <td class="py-3 px-3 font-bold text-amber-500">{{ rev.rating }} / 5 ★</td>
+              <td class="py-3 px-3 text-slate-600 max-w-md">
+                {% if rev.title %}<strong class="text-slate-900">{{ rev.title }} :</strong> {% endif %}{{ rev.body }}
+              </td>
+              <td class="py-3 px-3 text-center">
+                <form method="POST" class="inline">
                   {% csrf_token %}
-                  <input type="hidden" name="action" value="delete_supplier">
-                  <input type="hidden" name="supplier_id" value="{{ s.id }}">
-                  <button type="submit" class="px-2 py-1 rounded-lg bg-rose-50 text-rose-700 font-bold text-[11px] cursor-pointer">×</button>
+                  <input type="hidden" name="action" value="toggle_review">
+                  <input type="hidden" name="review_id" value="{{ rev.id }}">
+                  <button type="submit" class="px-2.5 py-1 rounded-full text-[10px] font-extrabold cursor-pointer transition {% if rev.is_approved %}bg-emerald-50 text-emerald-700 border border-emerald-200{% else %}bg-amber-50 text-amber-800{% endif %}">
+                    {% if rev.is_approved %}✓ Publié sur le site{% else %}✕ Masqué{% endif %}
+                  </button>
+                </form>
+              </td>
+              <td class="py-3 px-4 text-right">
+                <form method="POST" class="inline" onsubmit="return confirm('Supprimer cet avis ?')">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="delete_review">
+                  <input type="hidden" name="review_id" value="{{ rev.id }}">
+                  <button type="submit" class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 font-bold text-[11px] cursor-pointer">Supprimer</button>
                 </form>
               </td>
             </tr>
             {% empty %}
-            <tr><td colspan="5" class="py-8 text-center text-slate-400">Aucun fournisseur enregistré.</td></tr>
+            <tr><td colspan="6" class="py-10 text-center text-slate-400">Aucun avis client enregistré pour le moment.</td></tr>
             {% endfor %}
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- ONGLET 5 : FOURNISSEURS / GROSSISTES                                -->
+  <!-- =================================================================== -->
+  <div x-show="tab === 'suppliers'" x-cloak class="space-y-3">
+    <!-- ENCART D'AIDE PRATIQUE -->
+    <div class="bg-purple-50/70 border border-purple-200/80 rounded-2xl p-3.5 sm:p-4 text-xs text-purple-950 flex items-start gap-2.5">
+      <span class="text-base sm:text-lg">🏢</span>
+      <div class="space-y-0.5">
+        <p class="font-bold">Votre carnet d'adresses Fournisseurs (Privé Direction)</p>
+        <p class="text-purple-800 text-[11px] leading-relaxed">
+          Enregistrez ici les coordonnées de vos grossistes, importateurs et partenaires à Bamako (Dibidani, Grand Marché, Zone Industrielle). Ces informations sont strictement confidentielles et réservées à votre gestion interne.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+      <form method="POST" class="lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm space-y-3 text-xs">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="save_supplier">
+        <input type="hidden" name="tab" value="suppliers">
+        <input type="hidden" name="supplier_id" :value="supEdit.id">
+
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <h2 class="font-heading font-black text-sm text-slate-950" x-text="supEdit.id ? 'Modifier le fournisseur' : '+ Nouveau fournisseur'"></h2>
+          <button type="button" x-show="supEdit.id" @click="resetSup()" class="text-[11px] font-bold text-amber-600 underline cursor-pointer">Nouveau</button>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nom de l'entreprise / Grossiste *</label>
+          <input type="text" name="name" x-model="supEdit.name" required placeholder="Ex: Import Électro Bamako, Dépôt Central Dibidani..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Nom du contact</label>
+            <input type="text" name="contact_name" x-model="supEdit.contact_name" placeholder="Ex: Oumar Traoré" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Téléphone direct</label>
+            <input type="text" name="phone" x-model="supEdit.phone" placeholder="+223 ..." class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs font-mono">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Email</label>
+          <input type="email" name="email" x-model="supEdit.email" placeholder="contact@..." class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Adresse / Magasin à Bamako</label>
+          <textarea name="address" x-model="supEdit.address" rows="2" placeholder="Ex: Grand Marché, Rue 355 Dibidani, Bamako" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs"></textarea>
+        </div>
+
+        <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+          <input type="checkbox" name="is_active" x-model="supEdit.is_active" class="w-4 h-4 rounded text-amber-500">
+          <span class="font-bold text-slate-800">Fournisseur en activité</span>
+        </label>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs cursor-pointer">
+          <span x-text="supEdit.id ? 'Enregistrer les coordonnées' : 'Ajouter le fournisseur'"></span>
+        </button>
+      </form>
+
+      <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase">
+                <th class="py-3 px-4">Fournisseur</th>
+                <th class="py-3 px-3">Contact</th>
+                <th class="py-3 px-3">Téléphone</th>
+                <th class="py-3 px-3">Adresse</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              {% for s in suppliers %}
+              <tr class="hover:bg-slate-50/70">
+                <td class="py-3 px-4 font-black text-slate-900 text-sm">{{ s.name }}</td>
+                <td class="py-3 px-3 text-slate-700 font-bold">{{ s.contact_name|default:"—" }}</td>
+                <td class="py-3 px-3 font-mono font-bold text-slate-900">
+                  {% if s.phone %}
+                  <a href="tel:{{ s.phone }}" class="text-amber-600 hover:underline">{{ s.phone }}</a>
+                  {% else %}—{% endif %}
+                </td>
+                <td class="py-3 px-3 text-slate-500">{{ s.address|default:"—" }}</td>
+                <td class="py-3 px-4 text-right whitespace-nowrap space-x-1">
+                  <button
+                    type="button"
+                    @click="loadSup('{{ s.id }}', '{{ s.name|escapejs }}', '{{ s.contact_name|default:''|escapejs }}', '{{ s.phone|default:''|escapejs }}', '{{ s.email|default:''|escapejs }}', '{{ s.address|default:''|escapejs }}', {{ s.is_active|yesno:'true,false' }})"
+                    class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-extrabold text-[11px] cursor-pointer"
+                  >Modifier</button>
+                  <form method="POST" class="inline" onsubmit="return confirm('Supprimer ce fournisseur ?')">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="delete_supplier">
+                    <input type="hidden" name="supplier_id" value="{{ s.id }}">
+                    <button type="submit" class="px-2 py-1 rounded-lg bg-rose-50 text-rose-700 font-bold text-[11px] cursor-pointer">✕</button>
+                  </form>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="5" class="py-8 text-center text-slate-400">Aucun fournisseur enregistré pour le moment.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
