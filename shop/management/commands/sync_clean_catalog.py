@@ -1,11 +1,33 @@
 from django.core.management.base import BaseCommand
 from django.core.management import call_command
+from django.conf import settings
+import os
 from shop.models import Product, Category, Brand
 
 class Command(BaseCommand):
     help = "Nettoie tous les anciens produits de démonstration et charge le vrai catalogue showroom Onizuka Shop (35 références réelles)"
 
     def handle(self, *args, **options):
+        # Mettre à jour .env avec les paramètres email si présent
+        env_file = os.path.join(settings.BASE_DIR, '.env')
+        if os.path.exists(env_file):
+            try:
+                with open(env_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                if 'EMAIL_HOST_PASSWORD=' in content and 'shop20262027' not in content:
+                    lines = content.splitlines()
+                    new_lines = []
+                    for line in lines:
+                        if line.startswith('EMAIL_HOST_PASSWORD='):
+                            new_lines.append('EMAIL_HOST_PASSWORD=shop20262027')
+                        else:
+                            new_lines.append(line)
+                    with open(env_file, 'w', encoding='utf-8') as f:
+                        f.write('\n'.join(new_lines) + '\n')
+                    self.stdout.write(self.style.SUCCESS("  [OK] Mot de passe SMTP contact@onizukashop.com injecté dans .env"))
+            except Exception as e:
+                self.stdout.write(self.style.WARNING(f"  [WARN] Mise à jour .env sautée: {e}"))
+
         self.stdout.write(self.style.NOTICE(">>> Nettoyage des anciens produits fictifs..."))
         real_prefixes = ('ONZ-FZ-', 'ONZ-SAM-', 'ONZ-LG-', 'ONZ-EP-', 'ONZ-SHP-', 'ONZ-RCH-', 'ONZ-HYU-', 'ONZ-SHPINV-')
 
