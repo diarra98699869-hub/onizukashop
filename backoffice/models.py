@@ -132,6 +132,13 @@ class ShopSetting(models.Model):
         default="",
         help_text="Code meta name='facebook-domain-verification' fourni par Meta Business Suite"
     )
+    google_site_verification = models.CharField(
+        "Code de vérification Google Search Console",
+        max_length=100,
+        blank=True,
+        default="",
+        help_text="Code meta name='google-site-verification' fourni par Google Search Console pour l'indexation"
+    )
 
     updated_at = models.DateTimeField(auto_now=True)
 

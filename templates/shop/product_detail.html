@@ -28,6 +28,78 @@
   <meta property="product:condition" content="new">
   <meta property="product:availability" content="{% if product.is_in_stock %}in stock{% else %}out of stock{% endif %}">
   <meta property="product:brand" content="{{ product.brand.name|default:'ONIZUKA SHOP' }}">
+
+  <!-- Données Structurées Google Schema.org (Product Rich Snippets + BreadcrumbList) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}#product",
+        "name": "{{ product.name|escapejs }}",
+        "sku": "{{ product.sku|default:product.id|escapejs }}",
+        "mpn": "{{ product.sku|default:product.id|escapejs }}",
+        "description": "{{ product.short_description|default:product.description|striptags|truncatewords:40|escapejs }}",
+        {% if product.primary_image %}
+        "image": [
+          "{{ request.scheme }}://{{ request.get_host }}{{ product.primary_image.large.url|default:product.primary_image.image.url }}"
+        ],
+        {% endif %}
+        "brand": {
+          "@type": "Brand",
+          "name": "{{ product.brand.name|default:'ONIZUKA SHOP'|escapejs }}"
+        },
+        "offers": {
+          "@type": "Offer",
+          "url": "{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}",
+          "priceCurrency": "XOF",
+          "price": "{{ product.current_price|floatformat:0 }}",
+          "priceValidUntil": "2027-12-31",
+          "itemCondition": "https://schema.org/NewCondition",
+          "availability": "{% if product.is_in_stock %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+          "seller": {
+            "@type": "Organization",
+            "name": "ONIZUKA SHOP"
+          }
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Accueil",
+            "item": "{{ request.scheme }}://{{ request.get_host }}/"
+          },
+          {% if product.category %}
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "{{ product.category.name|escapejs }}",
+            "item": "{{ request.scheme }}://{{ request.get_host }}{{ product.category.get_absolute_url }}"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "{{ product.name|escapejs }}",
+            "item": "{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}"
+          }
+          {% else %}
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "{{ product.name|escapejs }}",
+            "item": "{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}"
+          }
+          {% endif %}
+        ]
+      }
+    ]
+  }
+  </script>
 {% endblock %}
 
 {% block content %}

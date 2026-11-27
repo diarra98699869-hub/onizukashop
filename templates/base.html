@@ -3,8 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>{% block title %}{{ page_title|default:"Onizouka Shop • Électroménager, Meubles & Déco à Bamako" }}{% endblock %}</title>
-  <meta name="description" content="{% block meta_description %}{{ meta_description|default:"Onizouka Shop au Grand Marché de Bamako : Électroménager, Meubles, Décoration, Climatiseurs, Frigos et Smart TV. Vidéos réelles, livraison 24h et commande WhatsApp." }}{% endblock %}">
+  <title>{% block title %}{{ page_title|default:"ONIZUKA SHOP • Électroménager, Climatiseurs & Déco à Bamako" }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ meta_description|default:"ONIZUKA SHOP au Grand Marché de Bamako (Dibidani) : Climatiseurs Inverter, Réfrigérateurs, Ventilateurs Solaires Rechargeables et Électroménager certifié. Livraison 24h et garantie officielle." }}{% endblock %}">
+  <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="keywords" content="Onizuka Shop, onizukashop.com, climatiseur Bamako, climatiseur inverter Mali, Sharp Inverter Bamako, LG Dual Inverter Bamako, Fizzen Bamako, ventilateur solaire rechargeable Mali, réfrigérateur Bamako, Dibidani Grand Marché, électroménager Mali">
+
+  <!-- Référencement Géolocalisé (Local SEO Bamako, Mali) -->
+  <meta name="geo.region" content="ML-BKO">
+  <meta name="geo.placename" content="Bamako">
+  <meta name="geo.position" content="12.6392;-7.9982">
+  <meta name="ICBM" content="12.6392, -7.9982">
+
+  {% if shop_settings.google_site_verification %}
+  <meta name="google-site-verification" content="{{ shop_settings.google_site_verification }}">
+  {% endif %}
 
   <!-- PWA Pro & Capacitor Mobile Native Meta -->
   <link rel="manifest" href="{% url 'shop:pwa_manifest' %}">
@@ -131,6 +144,63 @@
   <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script defer src="{% static 'js/capacitor-bridge.js' %}?v=20261127.1"></script>
+
+  <!-- Données Structurées Google Schema.org (LocalBusiness + WebSite Sitelinks Searchbox) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ElectronicsStore",
+        "@id": "{{ request.scheme }}://{{ request.get_host }}/#store",
+        "name": "ONIZUKA SHOP",
+        "alternateName": ["Onizouka Shop Bamako", "Onizuka Shop Mali"],
+        "url": "{{ request.scheme }}://{{ request.get_host }}/",
+        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo_horizontal.png' %}",
+        "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo_official.jpg' %}",
+        "description": "Boutique d'électroménager premium, climatiseurs inverter, réfrigérateurs et ventilateurs solaires rechargeables au Grand Marché de Bamako (Dibidani).",
+        "telephone": "+22392673799",
+        "priceRange": "$$",
+        "currenciesAccepted": "XOF",
+        "paymentAccepted": "Cash on delivery, Orange Money, Wave",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Grand Marché de Bamako, Dibidani",
+          "addressLocality": "Bamako",
+          "addressRegion": "Bamako",
+          "addressCountry": "ML"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 12.6392,
+          "longitude": -7.9982
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            "opens": "08:00",
+            "closes": "19:00"
+          }
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "{{ request.scheme }}://{{ request.get_host }}/#website",
+        "url": "{{ request.scheme }}://{{ request.get_host }}/",
+        "name": "ONIZUKA SHOP",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "{{ request.scheme }}://{{ request.get_host }}/recherche/?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    ]
+  }
+  </script>
 
   {% block extra_head %}{% endblock %}
 </head>

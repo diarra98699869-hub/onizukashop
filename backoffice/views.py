@@ -356,7 +356,11 @@ def order_invoice_view(request, order_id):
         Order.objects.select_related('user').prefetch_related('items__product'),
         id=order_id,
     )
-    return render(request, 'backoffice/order_invoice.html', {'order': order})
+    return render(request, 'backoffice/order_invoice.html', {
+        'order': order,
+        'settings': ShopSetting.get_settings(),
+        'is_client_view': False,
+    })
 
 
 @staff_required

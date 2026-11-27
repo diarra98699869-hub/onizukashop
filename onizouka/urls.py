@@ -20,8 +20,19 @@ def serve_media(request, path):
     raise Http404("Media not found")
 
 from django.urls import re_path
+from django.contrib.sitemaps.views import sitemap
+from shop.sitemaps import ProductSitemap, CategorySitemap, StaticViewSitemap
+from shop.views import robots_txt
+
+sitemaps = {
+    'produits': ProductSitemap,
+    'categories': CategorySitemap,
+    'pages': StaticViewSitemap,
+}
 
 urlpatterns = [
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('robots.txt', robots_txt, name='robots_txt'),
     re_path(r'^media/(?P<path>.*)$', serve_media, name='serve_media'),
     path('admin/', admin.site.urls),
     path('gestion/', include('backoffice.urls', namespace='backoffice')),

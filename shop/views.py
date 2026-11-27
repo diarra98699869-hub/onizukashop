@@ -6,7 +6,7 @@ homepage, catalog, product_detail, search, category
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q, Avg, Count, Min, Max
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -1029,6 +1029,23 @@ self.addEventListener('fetch', (event) => {
     response['Service-Worker-Allowed'] = '/'
     response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     return response
+
+
+def robots_txt(request):
+    """Génère le fichier robots.txt conforme aux exigences Google Search Console & Bing"""
+    lines = [
+        "User-agent: *",
+        "Allow: /",
+        "Disallow: /gestion/",
+        "Disallow: /admin/",
+        "Disallow: /compte/",
+        "Disallow: /panier/checkout/",
+        "Disallow: /paiement/",
+        "",
+        f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml",
+    ]
+    return HttpResponse("\n".join(lines), content_type='text/plain; charset=utf-8')
+
 
 
 

@@ -231,6 +231,50 @@
       </div>
     </section>
 
+    <!-- 6. RÉFÉRENCEMENT GOOGLE (SEO) & GOOGLE SEARCH CONSOLE -->
+    <section id="seo" class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-2xs space-y-3.5 scroll-mt-24">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <h2 class="font-heading font-black text-sm sm:text-base text-slate-950">6. Référencement Google (SEO) &amp; Indexation</h2>
+        <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-extrabold">Google Search</span>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Code de Vérification Google Search Console (balise HTML)</label>
+        {{ form.google_site_verification }}
+        <p class="text-[11px] text-slate-500 mt-1">Collez ici le code fourni par Google Search Console (ex: <code>google-site-verification=abc...</code> ou juste la clé).</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+        <div class="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200/70 text-xs space-y-1.5" x-data="{ copied: false }">
+          <div class="flex items-center justify-between gap-2">
+            <span class="font-bold text-slate-800">Plan du site (Sitemap XML) :</span>
+            <button
+              type="button"
+              @click="navigator.clipboard.writeText('{{ request.scheme }}://{{ request.get_host }}/sitemap.xml'); copied = true; setTimeout(() => copied = false, 2000)"
+              class="px-2 py-0.5 rounded-lg bg-white border border-slate-300 font-bold text-[10px] cursor-pointer"
+            >
+              <span x-text="copied ? 'Copié ✓' : 'Copier'">Copier</span>
+            </button>
+          </div>
+          <p class="font-mono text-[11px] text-emerald-800 break-all">{{ request.scheme }}://{{ request.get_host }}/sitemap.xml</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1.5" x-data="{ copied: false }">
+          <div class="flex items-center justify-between gap-2">
+            <span class="font-bold text-slate-800">Directives Robots (robots.txt) :</span>
+            <button
+              type="button"
+              @click="navigator.clipboard.writeText('{{ request.scheme }}://{{ request.get_host }}/robots.txt'); copied = true; setTimeout(() => copied = false, 2000)"
+              class="px-2 py-0.5 rounded-lg bg-white border border-slate-300 font-bold text-[10px] cursor-pointer"
+            >
+              <span x-text="copied ? 'Copié ✓' : 'Copier'">Copier</span>
+            </button>
+          </div>
+          <p class="font-mono text-[11px] text-slate-700 break-all">{{ request.scheme }}://{{ request.get_host }}/robots.txt</p>
+        </div>
+      </div>
+    </section>
+
     <div class="hidden lg:flex justify-end pt-2">
       <button type="submit" class="px-6 py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs shadow-xs cursor-pointer">
         Enregistrer tous les paramètres

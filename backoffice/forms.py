@@ -251,7 +251,7 @@ class ShopSettingForm(forms.ModelForm):
             'default_min_stock_alert', 'block_order_on_out_of_stock',
             'email_notifications_active', 'whatsapp_notifications_active',
             'flash_sale_active', 'flash_sale_title', 'flash_sale_subtitle', 'flash_sale_end_date',
-            'meta_pixel_id', 'meta_domain_verification'
+            'meta_pixel_id', 'meta_domain_verification', 'google_site_verification'
         ]
         widgets = {
             'site_name': forms.TextInput(attrs={'class': INPUT_CLS + ' font-semibold'}),
@@ -284,6 +284,7 @@ class ShopSettingForm(forms.ModelForm):
             ),
             'meta_pixel_id': forms.TextInput(attrs={'class': INPUT_CLS + ' font-mono', 'placeholder': 'Ex: 123456789012345'}),
             'meta_domain_verification': forms.TextInput(attrs={'class': INPUT_CLS + ' font-mono', 'placeholder': 'Ex: 1a2b3c4d5e6f7g8h9i0j'}),
+            'google_site_verification': forms.TextInput(attrs={'class': INPUT_CLS + ' font-mono', 'placeholder': 'Ex: google-site-verification=abc123xyz...'}),
         }
 
 
