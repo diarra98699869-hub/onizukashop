@@ -2509,79 +2509,89 @@ def _build_sample_order_for_preview():
 @staff_required
 def email_template_preview_view(request, template_key):
     """Renvoie le rendu HTML exact d'un des 7 templates d'email pour aperçu visuel en direct (iframe)."""
-    from .models import ShopSetting
-    shop_settings = ShopSetting.get_settings()
-    sample_order = _build_sample_order_for_preview()
+    try:
+        from .models import ShopSetting
+        shop_settings = ShopSetting.get_settings()
+        sample_order = _build_sample_order_for_preview()
 
-    if template_key == 'order_confirmation':
-        return render(request, 'emails/order_confirmation.html', {
-            'order': sample_order,
-            'settings': shop_settings,
-            'custom_intro': shop_settings.email_confirmation_intro,
-        })
-    elif template_key == 'order_status_update':
-        return render(request, 'emails/order_status_update.html', {
-            'order': sample_order,
-            'settings': shop_settings,
-            'custom_intro': shop_settings.email_status_intro,
-        })
-    elif template_key == 'order_payment_reminder':
-        return render(request, 'emails/order_payment_reminder.html', {
-            'order': sample_order,
-            'settings': shop_settings,
-            'custom_intro': shop_settings.email_payment_reminder_intro,
-        })
-    elif template_key == 'abandoned_cart_reminder':
-        sample_products = list(Product.objects.filter(is_active=True)[:2])
+        if template_key == 'order_confirmation':
+            return render(request, 'emails/order_confirmation.html', {
+                'order': sample_order,
+                'settings': shop_settings,
+                'custom_intro': getattr(shop_settings, 'email_confirmation_intro', ''),
+            })
+        elif template_key == 'order_status_update':
+            return render(request, 'emails/order_status_update.html', {
+                'order': sample_order,
+                'settings': shop_settings,
+                'custom_intro': getattr(shop_settings, 'email_status_intro', ''),
+            })
+        elif template_key == 'order_payment_reminder':
+            return render(request, 'emails/order_payment_reminder.html', {
+                'order': sample_order,
+                'settings': shop_settings,
+                'custom_intro': getattr(shop_settings, 'email_payment_reminder_intro', ''),
+            })
+        elif template_key == 'abandoned_cart_reminder':
+            sample_products = list(Product.objects.filter(is_active=True)[:2])
 
-        class _DummyCartItem:
-            def __init__(self, p):
-                self.product = p
-                self.quantity = 1
-            def get_subtotal(self):
-                return self.product.current_price
+            class _DummyCartItem:
+                def __init__(self, p):
+                    self.product = p
+                    self.quantity = 1
+                def get_subtotal(self):
+                    return getattr(self.product, 'current_price', 100000)
 
-        class _DummyCart:
-            def __init__(self, prods):
-                self._items = [_DummyCartItem(p) for p in prods]
-            def get_items_count(self):
-                return len(self._items)
-            def get_total(self):
-                return sum(i.get_subtotal() for i in self._items)
-            def get_whatsapp_cart_url(self):
-                return f"https://wa.me/{shop_settings.whatsapp_raw}"
+            class _DummyCart:
+                def __init__(self, prods):
+                    self._items = [_DummyCartItem(p) for p in prods]
+                def get_items_count(self):
+                    return len(self._items)
+                def get_total(self):
+                    return sum(i.get_subtotal() for i in self._items)
+                def get_whatsapp_cart_url(self):
+                    return f"https://wa.me/{getattr(shop_settings, 'whatsapp_raw', '22392673799')}"
 
-        dummy_cart = _DummyCart(sample_products)
-        return render(request, 'emails/abandoned_cart_reminder.html', {
-            'cart': dummy_cart,
-            'items': dummy_cart._items,
-            'client_name': 'Moussa Diarra',
-            'settings': shop_settings,
-            'promo_code': shop_settings.email_promo_code_reminder or 'BAMAKO5',
-            'custom_intro': shop_settings.email_cart_reminder_intro,
-        })
-    elif template_key == 'admin_new_order_alert':
-        return render(request, 'emails/admin_new_order_alert.html', {
-            'order': sample_order,
-            'settings': shop_settings,
-        })
-    elif template_key == 'admin_low_stock_alert':
-        low_prods = list(Product.objects.filter(is_active=True).order_by('stock')[:4])
-        return render(request, 'emails/admin_low_stock_alert.html', {
-            'products': low_prods,
-            'settings': shop_settings,
-        })
-    elif template_key == 'admin_contact_message':
-        return render(request, 'emails/admin_contact_message.html', {
-            'name': 'Amadou Coulibaly',
-            'phone': '+223 79 44 55 66',
-            'email': 'amadou.coulibaly@bamako.ml',
-            'subject': 'Demande de devis 5 Climatiseurs Sharp Inverter 1.5 CV',
-            'message': 'Bonjour Onizuka Shop,\nNous souhaitons équiper nos bureaux à ACI 2000 avec 5 climatiseurs Sharp Inverter 1.5 CV et installation complète. Pouvez-vous nous rappeler ?',
-            'settings': shop_settings,
-        })
+            dummy_cart = _DummyCart(sample_products)
+            return render(request, 'emails/abandoned_cart_reminder.html', {
+                'cart': dummy_cart,
+                'items': dummy_cart._items,
+                'client_name': 'Moussa Diarra',
+                'settings': shop_settings,
+                'promo_code': getattr(shop_settings, 'email_promo_code_reminder', '') or 'BAMAKO5',
+                'custom_intro': getattr(shop_settings, 'email_cart_reminder_intro', ''),
+            })
+        elif template_key == 'admin_new_order_alert':
+            return render(request, 'emails/admin_new_order_alert.html', {
+                'order': sample_order,
+                'settings': shop_settings,
+            })
+        elif template_key == 'admin_low_stock_alert':
+            low_prods = list(Product.objects.filter(is_active=True).order_by('stock')[:4])
+            return render(request, 'emails/admin_low_stock_alert.html', {
+                'products': low_prods,
+                'settings': shop_settings,
+            })
+        elif template_key == 'admin_contact_message':
+            return render(request, 'emails/admin_contact_message.html', {
+                'name': 'Amadou Coulibaly',
+                'phone': '+223 79 44 55 66',
+                'email': 'amadou.coulibaly@bamako.ml',
+                'subject': 'Demande de devis 5 Climatiseurs Sharp Inverter 1.5 CV',
+                'message': 'Bonjour Onizuka Shop,\nNous souhaitons équiper nos bureaux à ACI 2000 avec 5 climatiseurs Sharp Inverter 1.5 CV et installation complète. Pouvez-vous nous rappeler ?',
+                'settings': shop_settings,
+            })
 
-    return HttpResponse("Template inconnu", status=404)
+        return HttpResponse("Template inconnu", status=404)
+    except Exception as e:
+        import traceback
+        logger.exception("Erreur aperçu email (%s): %s", template_key, e)
+        return HttpResponse(
+            f"<div style='padding:20px;font-family:sans-serif;color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;border-radius:12px;'>"
+            f"<h3>Aperçu temporairement indisponible pour ce template</h3>"
+            f"<p><strong>Détail :</strong> {e}</p>"
+            f"</div>"
+        )
 
 
 @staff_required
@@ -2593,273 +2603,283 @@ def emails_center_view(request):
     3. Rappels de Finalisation (Commandes en attente de paiement Orange Money/Wave & Paniers abandonnés, relance 1-clic Email + WhatsApp)
     4. Journal d'envoi des Emails (Historique complet des emails envoyés, ignorés ou échoués)
     """
-    from .models import ShopSetting, EmailLog
-    from orders.models import Cart
-    from orders.emails import (
-        send_order_confirmation_email,
-        send_order_status_update_email,
-        send_order_payment_reminder_email,
-        send_abandoned_cart_reminder_email,
-        send_admin_order_alert,
-        send_low_stock_alert_email,
-        send_contact_message_email,
-    )
+    try:
+        from .models import ShopSetting, EmailLog
+        from orders.models import Cart
+        from orders.emails import (
+            send_order_confirmation_email,
+            send_order_status_update_email,
+            send_order_payment_reminder_email,
+            send_abandoned_cart_reminder_email,
+            send_admin_order_alert,
+            send_low_stock_alert_email,
+            send_contact_message_email,
+        )
 
-    shop_settings = ShopSetting.get_settings()
-    active_tab = (request.GET.get('tab') or request.POST.get('tab') or 'conditions').strip()
+        shop_settings = ShopSetting.get_settings()
+        active_tab = (request.GET.get('tab') or request.POST.get('tab') or 'conditions').strip()
 
-    if request.method == 'POST':
-        action = (request.POST.get('action') or '').strip()
+        if request.method == 'POST':
+            action = (request.POST.get('action') or '').strip()
 
-        def _flush_settings_cache():
-            try:
-                from django.core.cache import cache
-                cache.delete('shop_settings_cached')
-            except Exception:
-                pass
+            def _flush_settings_cache():
+                try:
+                    from django.core.cache import cache
+                    cache.delete('shop_settings_cached')
+                except Exception:
+                    pass
 
-        # --- A. SAUVEGARDE DES CONDITIONS D'ENVOI & ALERTES ---
-        if action == 'save_conditions':
-            shop_settings.email_notifications_active = request.POST.get('email_notifications_active') == 'on'
-            shop_settings.send_order_confirmation_email = request.POST.get('send_order_confirmation_email') == 'on'
-            shop_settings.send_order_status_email = request.POST.get('send_order_status_email') == 'on'
-            shop_settings.send_payment_reminder_email = request.POST.get('send_payment_reminder_email') == 'on'
-            shop_settings.send_cart_abandon_reminder_email = request.POST.get('send_cart_abandon_reminder_email') == 'on'
-            shop_settings.send_admin_new_order_alert = request.POST.get('send_admin_new_order_alert') == 'on'
-            shop_settings.send_admin_low_stock_alert = request.POST.get('send_admin_low_stock_alert') == 'on'
-            shop_settings.send_admin_contact_alert = request.POST.get('send_admin_contact_alert') == 'on'
+            # --- A. SAUVEGARDE DES CONDITIONS D'ENVOI & ALERTES ---
+            if action == 'save_conditions':
+                shop_settings.email_notifications_active = request.POST.get('email_notifications_active') == 'on'
+                shop_settings.send_order_confirmation_email = request.POST.get('send_order_confirmation_email') == 'on'
+                shop_settings.send_order_status_email = request.POST.get('send_order_status_email') == 'on'
+                shop_settings.send_payment_reminder_email = request.POST.get('send_payment_reminder_email') == 'on'
+                shop_settings.send_cart_abandon_reminder_email = request.POST.get('send_cart_abandon_reminder_email') == 'on'
+                shop_settings.send_admin_new_order_alert = request.POST.get('send_admin_new_order_alert') == 'on'
+                shop_settings.send_admin_low_stock_alert = request.POST.get('send_admin_low_stock_alert') == 'on'
+                shop_settings.send_admin_contact_alert = request.POST.get('send_admin_contact_alert') == 'on'
 
-            shop_settings.email_orders = (request.POST.get('email_orders') or shop_settings.email_orders).strip()
-            shop_settings.email_contact = (request.POST.get('email_contact') or shop_settings.email_contact).strip()
-            shop_settings.email_sender_name = (request.POST.get('email_sender_name') or 'ONIZUKA SHOP Bamako').strip()
-            shop_settings.email_reply_to = (request.POST.get('email_reply_to') or shop_settings.email_contact).strip()
+                shop_settings.email_orders = (request.POST.get('email_orders') or shop_settings.email_orders).strip()
+                shop_settings.email_contact = (request.POST.get('email_contact') or shop_settings.email_contact).strip()
+                shop_settings.email_sender_name = (request.POST.get('email_sender_name') or 'ONIZUKA SHOP Bamako').strip()
+                shop_settings.email_reply_to = (request.POST.get('email_reply_to') or shop_settings.email_contact).strip()
 
-            try:
-                shop_settings.payment_reminder_hours = max(1, int(float(request.POST.get('payment_reminder_hours') or 2)))
-            except Exception:
-                shop_settings.payment_reminder_hours = 2
+                try:
+                    shop_settings.payment_reminder_hours = max(1, int(float(request.POST.get('payment_reminder_hours') or 2)))
+                except Exception:
+                    shop_settings.payment_reminder_hours = 2
 
-            try:
-                shop_settings.cart_abandon_reminder_hours = max(1, int(float(request.POST.get('cart_abandon_reminder_hours') or 4)))
-            except Exception:
-                shop_settings.cart_abandon_reminder_hours = 4
+                try:
+                    shop_settings.cart_abandon_reminder_hours = max(1, int(float(request.POST.get('cart_abandon_reminder_hours') or 4)))
+                except Exception:
+                    shop_settings.cart_abandon_reminder_hours = 4
 
-            shop_settings.email_promo_code_reminder = (request.POST.get('email_promo_code_reminder') or '').strip().upper()
-            shop_settings.save()
-            _flush_settings_cache()
-            messages.success(request, "Conditions d'envoi, alertes direction et délais de relance enregistrés.")
-            return redirect('/gestion/emails/?tab=conditions')
+                shop_settings.email_promo_code_reminder = (request.POST.get('email_promo_code_reminder') or '').strip().upper()
+                shop_settings.save()
+                _flush_settings_cache()
+                messages.success(request, "Conditions d'envoi, alertes direction et délais de relance enregistrés.")
+                return redirect('/gestion/emails/?tab=conditions')
 
-        # --- B. SAUVEGARDE DES TEMPLATES & TEXTES PERSONNALISÉS ---
-        elif action == 'save_templates':
-            for field_name in (
-                'email_confirmation_subject',
-                'email_confirmation_intro',
-                'email_status_subject',
-                'email_status_intro',
-                'email_payment_reminder_subject',
-                'email_payment_reminder_intro',
-                'email_cart_reminder_subject',
-                'email_cart_reminder_intro',
-                'email_footer_signature',
-            ):
-                val = (request.POST.get(field_name) or '').strip()
-                if val:
-                    setattr(shop_settings, field_name, val)
-            shop_settings.save()
-            _flush_settings_cache()
-            messages.success(request, "Les sujets, textes d'introduction et la signature des templates email ont été mis à jour.")
-            return redirect('/gestion/emails/?tab=templates')
+            # --- B. SAUVEGARDE DES TEMPLATES & TEXTES PERSONNALISÉS ---
+            elif action == 'save_templates':
+                for field_name in (
+                    'email_confirmation_subject',
+                    'email_confirmation_intro',
+                    'email_status_subject',
+                    'email_status_intro',
+                    'email_payment_reminder_subject',
+                    'email_payment_reminder_intro',
+                    'email_cart_reminder_subject',
+                    'email_cart_reminder_intro',
+                    'email_footer_signature',
+                ):
+                    val = (request.POST.get(field_name) or '').strip()
+                    if val:
+                        setattr(shop_settings, field_name, val)
+                shop_settings.save()
+                _flush_settings_cache()
+                messages.success(request, "Les sujets, textes d'introduction et la signature des templates email ont été mis à jour.")
+                return redirect('/gestion/emails/?tab=templates')
 
-        # --- C. ENVOI D'UN EMAIL DE TEST ---
-        elif action == 'send_test_email':
-            test_recipient = (request.POST.get('test_recipient') or shop_settings.email_orders or 'direction@onizukashop.com').strip()
-            tpl_type = (request.POST.get('test_template') or 'order_confirmation').strip()
-            sample_order = _build_sample_order_for_preview()
-            sample_order.delivery_email = test_recipient
+            # --- C. ENVOI D'UN EMAIL DE TEST ---
+            elif action == 'send_test_email':
+                test_recipient = (request.POST.get('test_recipient') or shop_settings.email_orders or 'direction@onizukashop.com').strip()
+                tpl_type = (request.POST.get('test_template') or 'order_confirmation').strip()
+                sample_order = _build_sample_order_for_preview()
+                sample_order.delivery_email = test_recipient
 
-            ok = False
-            if tpl_type == 'order_confirmation':
-                ok = send_order_confirmation_email(sample_order, force=True)
-            elif tpl_type == 'order_status_update':
-                ok = send_order_status_update_email(sample_order, force=True)
-            elif tpl_type == 'order_payment_reminder':
-                ok = send_order_payment_reminder_email(sample_order, force=True)
-            elif tpl_type == 'admin_new_order_alert':
-                ok = send_admin_order_alert(sample_order, force=True)
-            elif tpl_type == 'admin_low_stock_alert':
-                low_prods = list(Product.objects.filter(is_active=True).order_by('stock')[:3])
-                ok = send_low_stock_alert_email(low_prods, force=True)
-            elif tpl_type == 'admin_contact_message':
-                ok = send_contact_message_email(
-                    name="Client Test Bamako",
-                    phone="+223 92 67 37 99",
-                    email=test_recipient,
-                    subject="Test de réception Email Onizuka Shop",
-                    message="Ceci est un test officiel envoyé depuis le centre de contrôle /gestion/emails/.",
-                    force=True,
+                ok = False
+                if tpl_type == 'order_confirmation':
+                    ok = send_order_confirmation_email(sample_order, force=True)
+                elif tpl_type == 'order_status_update':
+                    ok = send_order_status_update_email(sample_order, force=True)
+                elif tpl_type == 'order_payment_reminder':
+                    ok = send_order_payment_reminder_email(sample_order, force=True)
+                elif tpl_type == 'admin_new_order_alert':
+                    ok = send_admin_order_alert(sample_order, force=True)
+                elif tpl_type == 'admin_low_stock_alert':
+                    low_prods = list(Product.objects.filter(is_active=True).order_by('stock')[:3])
+                    ok = send_low_stock_alert_email(low_prods, force=True)
+                elif tpl_type == 'admin_contact_message':
+                    ok = send_contact_message_email(
+                        name="Client Test Bamako",
+                        phone="+223 92 67 37 99",
+                        email=test_recipient,
+                        subject="Test de réception Email Onizuka Shop",
+                        message="Ceci est un test officiel envoyé depuis le centre de contrôle /gestion/emails/.",
+                        force=True,
+                    )
+
+                if ok:
+                    messages.success(request, f"Email de test (« {tpl_type} ») envoyé avec succès à {test_recipient}.")
+                else:
+                    messages.error(request, f"Échec de l'envoi à {test_recipient}. Consultez l'onglet « Journal d'envoi » pour le détail.")
+                return redirect(f"/gestion/emails/?tab={active_tab}")
+
+            # --- D. RELANCE 1-CLIC D'UNE COMMANDE EN ATTENTE DE FINALISATION ---
+            elif action == 'remind_single_order':
+                ord_obj = get_object_or_404(Order, id=request.POST.get('order_id'))
+                custom_email = (request.POST.get('delivery_email') or '').strip()
+                if custom_email and custom_email != ord_obj.delivery_email:
+                    ord_obj.delivery_email = custom_email
+                    ord_obj.save(update_fields=['delivery_email'])
+
+                if send_order_payment_reminder_email(ord_obj, force=True):
+                    messages.success(request, f"Rappel de finalisation envoyé par email pour la commande #{ord_obj.order_number}.")
+                else:
+                    messages.warning(request, f"Aucun email renseigné pour la commande #{ord_obj.order_number}. Saisissez l'email du client ou relancez-le sur WhatsApp.")
+                return redirect('/gestion/emails/?tab=reminders')
+
+            # --- E. RELANCE GROUPÉE DE TOUTES LES COMMANDES EN ATTENTE ---
+            elif action == 'remind_all_pending_orders':
+                pending_qs = Order.objects.filter(
+                    status=Order.Status.PENDING,
+                    payment_status=False,
                 )
+                sent_cnt = 0
+                for ord_obj in pending_qs:
+                    if (ord_obj.delivery_email or (ord_obj.user and ord_obj.user.email)):
+                        if send_order_payment_reminder_email(ord_obj, force=True):
+                            sent_cnt += 1
+                messages.success(request, f"{sent_cnt} email(s) de rappel de finalisation envoyé(s) aux commandes en attente.")
+                return redirect('/gestion/emails/?tab=reminders')
 
-            if ok:
-                messages.success(request, f"Email de test (« {tpl_type} ») envoyé avec succès à {test_recipient}.")
-            else:
-                messages.error(request, f"Échec de l'envoi à {test_recipient}. Consultez l'onglet « Journal d'envoi » pour le détail.")
-            return redirect(f"/gestion/emails/?tab={active_tab}")
+            # --- F. RELANCE 1-CLIC D'UN PANIER ABANDONNÉ ---
+            elif action == 'remind_single_cart':
+                cart_obj = get_object_or_404(Cart, id=request.POST.get('cart_id'))
+                custom_email = (request.POST.get('guest_email') or '').strip()
+                if custom_email and custom_email != cart_obj.guest_email:
+                    cart_obj.guest_email = custom_email
+                    cart_obj.save(update_fields=['guest_email'])
 
-        # --- D. RELANCE 1-CLIC D'UNE COMMANDE EN ATTENTE DE FINALISATION ---
-        elif action == 'remind_single_order':
-            ord_obj = get_object_or_404(Order, id=request.POST.get('order_id'))
-            custom_email = (request.POST.get('delivery_email') or '').strip()
-            if custom_email and custom_email != ord_obj.delivery_email:
-                ord_obj.delivery_email = custom_email
-                ord_obj.save(update_fields=['delivery_email'])
+                if send_abandoned_cart_reminder_email(cart_obj, force=True):
+                    messages.success(request, f"Rappel de panier abandonné envoyé à {cart_obj.guest_email or cart_obj.user.email}.")
+                else:
+                    messages.warning(request, "Veuillez renseigner une adresse email pour ce panier ou utiliser le bouton WhatsApp.")
+                return redirect('/gestion/emails/?tab=reminders')
 
-            if send_order_payment_reminder_email(ord_obj, force=True):
-                messages.success(request, f"Rappel de finalisation envoyé par email pour la commande #{ord_obj.order_number}.")
-            else:
-                messages.warning(request, f"Aucun email renseigné pour la commande #{ord_obj.order_number}. Saisissez l'email du client ou relancez-le sur WhatsApp.")
-            return redirect('/gestion/emails/?tab=reminders')
+            # --- G. ALERTE STOCK BAS MANUELLE IMMÉDIATE ---
+            elif action == 'send_low_stock_digest_now':
+                low_prods = list(
+                    Product.objects.filter(is_active=True, track_stock=True, stock__lte=F('min_stock')).order_by('stock')
+                )
+                if not low_prods:
+                    low_prods = list(Product.objects.filter(is_active=True).order_by('stock')[:5])
+                if send_low_stock_alert_email(low_prods, force=True):
+                    messages.success(request, f"Rapport d'alerte stock ({len(low_prods)} articles) envoyé à {shop_settings.email_orders}.")
+                else:
+                    messages.error(request, "Erreur lors de l'envoi de l'alerte stock.")
+                return redirect('/gestion/emails/?tab=conditions')
 
-        # --- E. RELANCE GROUPÉE DE TOUTES LES COMMANDES EN ATTENTE ---
-        elif action == 'remind_all_pending_orders':
-            pending_qs = Order.objects.filter(
-                status=Order.Status.PENDING,
-                payment_status=False,
+            # --- H. PURGER LE JOURNAL DES EMAILS ---
+            elif action == 'clear_email_logs':
+                try:
+                    EmailLog.objects.all().delete()
+                    messages.success(request, "Le journal des envois d'emails a été vidé.")
+                except Exception:
+                    messages.error(request, "Impossible de vider le journal (table indisponible).")
+                return redirect('/gestion/emails/?tab=logs')
+
+        # Données pour l'onglet Rappels de Finalisation
+        try:
+            pending_orders = list(
+                Order.objects
+                .select_related('user')
+                .prefetch_related('items')
+                .filter(status__in=[Order.Status.PENDING, Order.Status.CONFIRMED], payment_status=False)
+                .order_by('-created_at')[:30]
             )
-            sent_cnt = 0
-            for ord_obj in pending_qs:
-                if (ord_obj.delivery_email or (ord_obj.user and ord_obj.user.email)):
-                    if send_order_payment_reminder_email(ord_obj, force=True):
-                        sent_cnt += 1
-            messages.success(request, f"{sent_cnt} email(s) de rappel de finalisation envoyé(s) aux commandes en attente.")
-            return redirect('/gestion/emails/?tab=reminders')
+        except Exception:
+            pending_orders = []
 
-        # --- F. RELANCE 1-CLIC D'UN PANIER ABANDONNÉ ---
-        elif action == 'remind_single_cart':
-            cart_obj = get_object_or_404(Cart, id=request.POST.get('cart_id'))
-            custom_email = (request.POST.get('guest_email') or '').strip()
-            if custom_email and custom_email != cart_obj.guest_email:
-                cart_obj.guest_email = custom_email
-                cart_obj.save(update_fields=['guest_email'])
-
-            if send_abandoned_cart_reminder_email(cart_obj, force=True):
-                messages.success(request, f"Rappel de panier abandonné envoyé à {cart_obj.guest_email or cart_obj.user.email}.")
-            else:
-                messages.warning(request, "Veuillez renseigner une adresse email pour ce panier ou utiliser le bouton WhatsApp.")
-            return redirect('/gestion/emails/?tab=reminders')
-
-        # --- G. ALERTE STOCK BAS MANUELLE IMMÉDIATE ---
-        elif action == 'send_low_stock_digest_now':
-            low_prods = list(
-                Product.objects.filter(is_active=True, track_stock=True, stock__lte=F('min_stock')).order_by('stock')
+        try:
+            abandoned_carts = list(
+                Cart.objects
+                .select_related('user')
+                .prefetch_related('items__product')
+                .annotate(items_cnt=Count('items'))
+                .filter(items_cnt__gt=0)
+                .order_by('-updated_at')[:30]
             )
-            if not low_prods:
-                low_prods = list(Product.objects.filter(is_active=True).order_by('stock')[:5])
-            if send_low_stock_alert_email(low_prods, force=True):
-                messages.success(request, f"Rapport d'alerte stock ({len(low_prods)} articles) envoyé à {shop_settings.email_orders}.")
-            else:
-                messages.error(request, "Erreur lors de l'envoi de l'alerte stock.")
-            return redirect('/gestion/emails/?tab=conditions')
+        except Exception:
+            abandoned_carts = []
 
-        # --- H. PURGER LE JOURNAL DES EMAILS ---
-        elif action == 'clear_email_logs':
-            try:
-                EmailLog.objects.all().delete()
-                messages.success(request, "Le journal des envois d'emails a été vidé.")
-            except Exception:
-                messages.error(request, "Impossible de vider le journal (table indisponible).")
-            return redirect('/gestion/emails/?tab=logs')
+        try:
+            email_logs = list(EmailLog.objects.all()[:60])
+            logs_sent_count = EmailLog.objects.filter(status=EmailLog.Status.SENT).count()
+            logs_failed_count = EmailLog.objects.filter(status=EmailLog.Status.FAILED).count()
+        except Exception:
+            email_logs = []
+            logs_sent_count = 0
+            logs_failed_count = 0
 
-    # Données pour l'onglet Rappels de Finalisation
-    try:
-        pending_orders = list(
-            Order.objects
-            .select_related('user')
-            .prefetch_related('items')
-            .filter(status__in=[Order.Status.PENDING, Order.Status.CONFIRMED], payment_status=False)
-            .order_by('-created_at')[:30]
-        )
-    except Exception:
-        pending_orders = []
+        template_cards = [
+            {
+                'key': 'order_confirmation',
+                'title': '1. Confirmation de Commande (Client)',
+                'badge': 'Automatique à l\'achat',
+                'desc': 'Facture récapitulative complète avec articles, total FCFA et instructions Orange Money / Wave / Livraison.',
+            },
+            {
+                'key': 'order_payment_reminder',
+                'title': '2. Rappel de Finalisation / Paiement (Client)',
+                'badge': 'Relance Commande',
+                'desc': 'Rappelle au client que ses appareils sont réservés à Dibidani avec bouton 1-clic pour finaliser par Orange Money, Wave ou WhatsApp.',
+            },
+            {
+                'key': 'abandoned_cart_reminder',
+                'title': '3. Rappel de Panier Abandonné (Client)',
+                'badge': 'Relance Panier',
+                'desc': 'Relance les visiteurs ayant laissé des appareils dans leur panier (avec code promo optionnel et lien WhatsApp).',
+            },
+            {
+                'key': 'order_status_update',
+                'title': '4. Mise à Jour du Statut de Livraison (Client)',
+                'badge': 'Suivi temps réel',
+                'desc': 'Envoyé dès que vous cliquez sur « Confirmer », « En livraison », « Livrée » ou « Annuler » dans la gestion.',
+            },
+            {
+                'key': 'admin_new_order_alert',
+                'title': '5. Alerte Nouvelle Commande (Direction)',
+                'badge': 'Alerte Interne',
+                'desc': 'Envoyé immédiatement à la Direction avec coordonnées du client, quartier à Bamako, téléphone et lien direct ERP.',
+            },
+            {
+                'key': 'admin_low_stock_alert',
+                'title': '6. Alerte Stock Bas / Rupture (Direction)',
+                'badge': 'Alerte Stock',
+                'desc': 'Envoyé automatiquement lorsqu\'un produit passe sous son seuil de stock minimum après une commande.',
+            },
+            {
+                'key': 'admin_contact_message',
+                'title': '7. Alerte Message Formulaire Contact (Direction)',
+                'badge': 'Service Client',
+                'desc': 'Transmet tout message ou demande de devis envoyé depuis la page Contact avec bouton « Répondre sur WhatsApp ».',
+            },
+        ]
 
-    try:
-        abandoned_carts = list(
-            Cart.objects
-            .select_related('user')
-            .prefetch_related('items__product')
-            .annotate(items_cnt=Count('items'))
-            .filter(items_cnt__gt=0)
-            .order_by('-updated_at')[:30]
-        )
-    except Exception:
-        abandoned_carts = []
-
-    try:
-        email_logs = list(EmailLog.objects.all()[:60])
-        logs_sent_count = EmailLog.objects.filter(status=EmailLog.Status.SENT).count()
-        logs_failed_count = EmailLog.objects.filter(status=EmailLog.Status.FAILED).count()
-    except Exception:
-        email_logs = []
-        logs_sent_count = 0
-        logs_failed_count = 0
-
-    template_cards = [
-        {
-            'key': 'order_confirmation',
-            'title': '1. Confirmation de Commande (Client)',
-            'badge': 'Automatique à l\'achat',
-            'desc': 'Facture récapitulative complète avec articles, total FCFA et instructions Orange Money / Wave / Livraison.',
-        },
-        {
-            'key': 'order_payment_reminder',
-            'title': '2. Rappel de Finalisation / Paiement (Client)',
-            'badge': 'Relance Commande',
-            'desc': 'Rappelle au client que ses appareils sont réservés à Dibidani avec bouton 1-clic pour finaliser par Orange Money, Wave ou WhatsApp.',
-        },
-        {
-            'key': 'abandoned_cart_reminder',
-            'title': '3. Rappel de Panier Abandonné (Client)',
-            'badge': 'Relance Panier',
-            'desc': 'Relance les visiteurs ayant laissé des appareils dans leur panier (avec code promo optionnel et lien WhatsApp).',
-        },
-        {
-            'key': 'order_status_update',
-            'title': '4. Mise à Jour du Statut de Livraison (Client)',
-            'badge': 'Suivi temps réel',
-            'desc': 'Envoyé dès que vous cliquez sur « Confirmer », « En livraison », « Livrée » ou « Annuler » dans la gestion.',
-        },
-        {
-            'key': 'admin_new_order_alert',
-            'title': '5. Alerte Nouvelle Commande (Direction)',
-            'badge': 'Alerte Interne',
-            'desc': 'Envoyé immédiatement à la Direction avec coordonnées du client, quartier à Bamako, téléphone et lien direct ERP.',
-        },
-        {
-            'key': 'admin_low_stock_alert',
-            'title': '6. Alerte Stock Bas / Rupture (Direction)',
-            'badge': 'Alerte Stock',
-            'desc': 'Envoyé automatiquement lorsqu\'un produit passe sous son seuil de stock minimum après une commande.',
-        },
-        {
-            'key': 'admin_contact_message',
-            'title': '7. Alerte Message Formulaire Contact (Direction)',
-            'badge': 'Service Client',
-            'desc': 'Transmet tout message ou demande de devis envoyé depuis la page Contact avec bouton « Répondre sur WhatsApp ».',
-        },
-    ]
-
-    context = {
-        'settings': shop_settings,
-        'active_tab': active_tab,
-        'pending_orders': pending_orders,
-        'abandoned_carts': abandoned_carts,
-        'email_logs': email_logs,
-        'logs_sent_count': logs_sent_count,
-        'logs_failed_count': logs_failed_count,
-        'template_cards': template_cards,
-        'current_page': 'emails',
-    }
-    return render(request, 'backoffice/emails_center.html', context)
+        context = {
+            'settings': shop_settings,
+            'active_tab': active_tab,
+            'pending_orders': pending_orders,
+            'abandoned_carts': abandoned_carts,
+            'email_logs': email_logs,
+            'logs_sent_count': logs_sent_count,
+            'logs_failed_count': logs_failed_count,
+            'template_cards': template_cards,
+            'current_page': 'emails',
+        }
+        return render(request, 'backoffice/emails_center.html', context)
+    except Exception as exc:
+        import traceback
+        logger.exception("Erreur critique dans emails_center_view: %s", exc)
+        return render(request, 'backoffice/emails_fallback.html', {
+            'error_title': "Incident sur le Centre d'Emails",
+            'error_message': str(exc),
+            'error_traceback': traceback.format_exc(),
+            'current_page': 'emails',
+        })
 
 
 

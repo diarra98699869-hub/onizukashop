@@ -52,13 +52,39 @@ class Cart(models.Model):
         return f"Panier anonyme {self.session_key}"
 
     def get_total(self):
-        return sum(item.get_subtotal() for item in self.items.all())
+        try:
+            return sum((item.get_subtotal() or 0) for item in self.items.all())
+        except Exception:
+            return 0
 
     def get_items_count(self):
-        return sum(item.quantity for item in self.items.all())
+        try:
+            return sum((item.quantity or 0) for item in self.items.all())
+        except Exception:
+            return 0
 
     def get_formatted_total(self):
         return f"{int(self.get_total()):,} FCFA".replace(",", " ")
+
+    @property
+    def whatsapp_cart_reminder_url(self):
+        """Lien direct WhatsApp pour relancer un panier en attente"""
+        try:
+            import urllib.parse
+            import re
+            phone_raw = self.guest_phone or (self.user.profile.phone if (self.user and hasattr(self.user, 'profile')) else '')
+            digits = re.sub(r'[^0-9]', '', str(phone_raw or ''))
+            phone = ('223' + digits) if len(digits) == 8 else (digits or '22392673799')
+            name = self.guest_name or (self.user.get_full_name() if self.user else '') or 'Cher client'
+            total_fcfa = int(self.get_total() or 0)
+            msg = (
+                f"Bonjour {name}, ici ONIZUKA SHOP (Grand Marché de Bamako, Dibidani). "
+                f"Vous avez laissé des appareils dans votre panier ({total_fcfa:,} FCFA). "
+                f"Souhaitez-vous finaliser votre commande ?"
+            ).replace(',', ' ')
+            return f"https://wa.me/{phone}?text={urllib.parse.quote(msg)}"
+        except Exception:
+            return "https://wa.me/22392673799"
 
     def get_whatsapp_cart_url(self, base_url="https://onizukashop.com"):
         """Lien direct WhatsApp pour commander les produits du panier (avec lien produit pour aperçu visuel WhatsApp)."""
@@ -121,9 +147,13 @@ class CartItem(models.Model):
         return None
 
     def get_unit_total(self):
-        addon = self.addon_details
-        extra = addon['price'] if addon else 0
-        return self.product.current_price + extra
+        try:
+            addon = self.addon_details
+            extra = addon['price'] if addon else 0
+            base = getattr(self.product, 'current_price', 0) if self.product else 0
+            return (base or 0) + extra
+        except Exception:
+            return 0
 
     def get_subtotal(self):
         return self.get_unit_total() * self.quantity
@@ -194,6 +224,22 @@ class Order(models.Model):
         if digits.startswith('00'):
             return digits[2:]
         return digits
+
+    @property
+    def whatsapp_payment_reminder_url(self):
+        """Lien direct WhatsApp sécurisé pour relancer le client sur sa commande en attente"""
+        try:
+            import urllib.parse
+            phone = self.whatsapp_client_phone or '22392673799'
+            total_fcfa = int(self.total or 0)
+            msg = (
+                f"Bonjour {self.delivery_name}, ici ONIZUKA SHOP (Grand Marché de Bamako, Dibidani). "
+                f"Vos appareils pour la commande #{self.order_number} ({total_fcfa:,} FCFA) sont actuellement réservés. "
+                f"Souhaitez-vous finaliser votre commande aujourd'hui ?"
+            ).replace(',', ' ')
+            return f"https://wa.me/{phone}?text={urllib.parse.quote(msg)}"
+        except Exception:
+            return "https://wa.me/22392673799"
 
     order_number = models.CharField(max_length=20, unique=True, verbose_name='N° commande')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True,

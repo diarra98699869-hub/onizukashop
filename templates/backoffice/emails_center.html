@@ -424,7 +424,7 @@
             </form>
 
             <a
-              href="https://wa.me/{{ ord.whatsapp_client_phone }}?text={{ 'Bonjour '|urlencode }}{{ ord.delivery_name|urlencode }}{{ ', ici ONIZUKA SHOP (Grand Marché de Bamako). Vos appareils pour la commande #'|urlencode }}{{ ord.order_number|urlencode }}{{ ' ('|urlencode }}{{ ord.total|floatformat:0 }}{{ ' FCFA) sont réservés. Souhaitez-vous finaliser la livraison aujourd\'hui ?'|urlencode }}"
+              href="{{ ord.whatsapp_payment_reminder_url }}"
               target="_blank"
               rel="noopener"
               class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs"
@@ -495,6 +495,15 @@
                 ✉ Relancer Panier
               </button>
             </form>
+
+            <a
+              href="{{ c_obj.whatsapp_cart_reminder_url }}"
+              target="_blank"
+              rel="noopener"
+              class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs"
+            >
+              WhatsApp ↗
+            </a>
           </div>
         </div>
         {% endfor %}
