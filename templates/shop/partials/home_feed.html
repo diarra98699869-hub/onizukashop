@@ -7,8 +7,18 @@
   <div
     id="load-more-slot"
     class="col-span-full pt-4 pb-2 text-center"
+    x-data
+    x-init="
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0] && entries[0].isIntersecting) {
+          htmx.trigger($el, 'autoLoad');
+          obs.disconnect();
+        }
+      }, { rootMargin: '350px' });
+      obs.observe($el);
+    "
     hx-get="{% url 'shop:home' %}?tab={{ active_tab }}&amp;page={{ feed_products.next_page_number }}&amp;append=1"
-    hx-trigger="revealed, click"
+    hx-trigger="autoLoad, revealed, click"
     hx-target="#load-more-slot"
     hx-swap="outerHTML"
   >
@@ -39,8 +49,18 @@
     <div
       id="load-more-slot"
       class="col-span-full pt-4 pb-2 text-center"
+      x-data
+      x-init="
+        const obs = new IntersectionObserver((entries) => {
+          if (entries[0] && entries[0].isIntersecting) {
+            htmx.trigger($el, 'autoLoad');
+            obs.disconnect();
+          }
+        }, { rootMargin: '350px' });
+        obs.observe($el);
+      "
       hx-get="{% url 'shop:home' %}?tab={{ active_tab }}&amp;page={{ feed_products.next_page_number }}&amp;append=1"
-      hx-trigger="revealed, click"
+      hx-trigger="autoLoad, revealed, click"
       hx-target="#load-more-slot"
       hx-swap="outerHTML"
     >

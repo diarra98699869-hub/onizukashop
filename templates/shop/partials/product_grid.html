@@ -7,8 +7,18 @@
   <div
     id="catalog-load-more"
     class="col-span-full pt-4 pb-2 text-center"
+    x-data
+    x-init="
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0] && entries[0].isIntersecting) {
+          htmx.trigger($el, 'autoLoad');
+          obs.disconnect();
+        }
+      }, { rootMargin: '350px' });
+      obs.observe($el);
+    "
     hx-get="{{ request.path }}?page={{ products.next_page_number }}&amp;append=1{% for k, v in request.GET.items %}{% if k != 'page' and k != 'append' %}&amp;{{ k }}={{ v|urlencode }}{% endif %}{% endfor %}"
-    hx-trigger="revealed, click"
+    hx-trigger="autoLoad, revealed, click"
     hx-target="#catalog-load-more"
     hx-swap="outerHTML"
   >
@@ -39,8 +49,18 @@
     <div
       id="catalog-load-more"
       class="col-span-full pt-4 pb-2 text-center"
+      x-data
+      x-init="
+        const obs = new IntersectionObserver((entries) => {
+          if (entries[0] && entries[0].isIntersecting) {
+            htmx.trigger($el, 'autoLoad');
+            obs.disconnect();
+          }
+        }, { rootMargin: '350px' });
+        obs.observe($el);
+      "
       hx-get="{{ request.path }}?page={{ products.next_page_number }}&amp;append=1{% for k, v in request.GET.items %}{% if k != 'page' and k != 'append' %}&amp;{{ k }}={{ v|urlencode }}{% endif %}{% endfor %}"
-      hx-trigger="revealed, click"
+      hx-trigger="autoLoad, revealed, click"
       hx-target="#catalog-load-more"
       hx-swap="outerHTML"
     >
