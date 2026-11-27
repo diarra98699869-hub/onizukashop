@@ -15,6 +15,7 @@ urlpatterns = [
     path('commandes/nouvelle/', views.pos_order_create_view, name='order_create_pos'),
     path('commandes/export-csv/', views.export_orders_csv_view, name='export_orders_csv'),
     path('commandes/<int:order_id>/', views.order_detail_view, name='order_detail'),
+    path('commandes/<int:order_id>/supprimer/', views.order_delete_view, name='order_delete'),
     path('commandes/<int:order_id>/action-rapide/', views.order_quick_list_action_view, name='order_quick_action'),
     path('commandes/<int:order_id>/facture/', views.order_invoice_view, name='order_invoice'),
     path('commandes/<int:order_id>/status-htmx/', views.update_order_status_htmx, name='order_status_htmx'),

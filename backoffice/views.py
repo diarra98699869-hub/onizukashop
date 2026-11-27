@@ -351,6 +351,28 @@ def order_detail_view(request, order_id):
 
 
 @staff_required
+def order_delete_view(request, order_id):
+    """Supprime définitivement une commande de test ou erronée et restitue le stock."""
+    if request.method != 'POST':
+        messages.error(request, "Méthode non autorisée.")
+        return redirect('backoffice:orders')
+    
+    order = get_object_or_404(Order, id=order_id)
+    order_num = order.order_number
+    
+    # Restituer le stock si la commande n'était pas déjà annulée
+    if order.status != Order.Status.CANCELLED:
+        for item in order.items.all():
+            if item.product and item.product.track_stock:
+                item.product.stock += item.quantity
+                item.product.save(update_fields=['stock'])
+    
+    order.delete()
+    messages.success(request, f"La commande #{order_num} a été définitivement supprimée avec succès.")
+    return redirect('backoffice:orders')
+
+
+@staff_required
 def order_invoice_view(request, order_id):
     """Bordereau de livraison / Facture officiel Onizouka Shop imprimable."""
     order = get_object_or_404(

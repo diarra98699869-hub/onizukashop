@@ -259,6 +259,17 @@
             {% endif %}
           </div>
         </form>
+
+        <!-- ZONE DANGER : SUPPRESSION DÉFINITIVE -->
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-[11px] text-slate-400">Commande de test ou fausse commande ?</span>
+          <form method="POST" action="{% url 'backoffice:order_delete' order.id %}" onsubmit="return confirm('Supprimer définitivement la commande #{{ order.order_number }} de la base de données ? Cette action est irréversible.')">
+            {% csrf_token %}
+            <button type="submit" class="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-700 text-xs font-bold transition cursor-pointer">
+              🗑 Supprimer cette commande
+            </button>
+          </form>
+        </div>
       </div>
     </div>
 
