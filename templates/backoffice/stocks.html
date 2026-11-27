@@ -307,9 +307,6 @@
             {% else %}
             <span class="text-slate-300 text-xs">Photo</span>
             {% endif %}
-            {% if p.stock <= 0 %}
-            <span class="absolute inset-x-0 bottom-0 py-0.5 bg-rose-600 text-white text-[8px] font-black uppercase text-center">Rupture</span>
-            {% endif %}
           </div>
 
           <div class="min-w-0 flex-1">
@@ -338,8 +335,8 @@
         <!-- Contrôles Stock & Actions Mobile -->
         <div class="flex items-center justify-between gap-2 pt-1 border-t border-slate-100/80">
           <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded text-[11px] font-mono font-black {{ p.stock_status_info.badge_class }}">
-              {{ p.stock }} unités
+            <span class="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-800 text-[11px] font-mono font-bold">
+              {{ p.stock }} unité{{ p.stock|pluralize }}
             </span>
             <span class="text-[10px] text-slate-400">seuil: {{ p.min_stock }}</span>
           </div>

@@ -17,12 +17,6 @@
           <svg class="w-6 h-6 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
         </div>
         {% endif %}
-
-        {% if p.stock <= 0 %}
-        <span class="absolute inset-x-0 bottom-0 py-0.5 bg-rose-600/90 text-white text-[9px] font-black uppercase text-center tracking-tighter">Épuisé</span>
-        {% elif p.stock <= p.min_stock %}
-        <span class="absolute inset-x-0 bottom-0 py-0.5 bg-amber-500/95 text-slate-950 text-[9px] font-black uppercase text-center tracking-tighter">Bas</span>
-        {% endif %}
       </div>
 
       <div class="min-w-0 flex-1">
@@ -62,41 +56,33 @@
 
   <!-- 4. DISPONIBILITÉ & STEPPER RAPIDE HTMX (1-CLIC) -->
   <td class="py-3 px-3.5 sm:px-4">
-    <div class="space-y-1.5">
-      <div class="flex items-center gap-2">
-        <span class="px-2.5 py-0.8 rounded-lg text-xs font-mono font-black inline-flex items-center gap-1.5 {{ p.stock_status_info.badge_class }}">
-          <span class="w-2 h-2 rounded-full {{ p.stock_status_info.bar_color }}"></span>
-          <span>{{ p.stock_status_info.full_label }}</span>
+    <div class="flex items-center gap-2.5">
+      <!-- Stepper Rapide +/- HTMX -->
+      <div class="inline-flex items-center rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden shrink-0">
+        <button
+          type="button"
+          hx-post="{% url 'backoffice:stock_quick_adjust_htmx' p.id %}?action=dec"
+          hx-target="#stock-row-{{ p.id }}"
+          hx-swap="outerHTML"
+          title="Retirer 1 unité"
+          class="w-7 h-7 flex items-center justify-center text-xs font-black text-slate-500 hover:bg-slate-100 active:bg-slate-200 transition cursor-pointer"
+        >−</button>
+        <span class="px-2.5 h-7 flex items-center justify-center text-xs font-mono font-extrabold text-slate-900 bg-slate-50 border-x border-slate-200 min-w-[32px] text-center">
+          {{ p.stock }}
         </span>
-
-        <!-- Stepper Rapide +/- HTMX -->
-        <div class="inline-flex items-center rounded-lg border border-slate-200 bg-white shadow-2xs overflow-hidden shrink-0">
-          <button
-            type="button"
-            hx-post="{% url 'backoffice:stock_quick_adjust_htmx' p.id %}?action=dec"
-            hx-target="#stock-row-{{ p.id }}"
-            hx-swap="outerHTML"
-            title="Retirer 1 unité"
-            class="px-2 py-1 text-xs font-extrabold text-slate-600 hover:bg-slate-100 active:bg-slate-200 transition cursor-pointer"
-          >−</button>
-          <span class="px-2 py-1 text-[11px] font-mono font-extrabold text-slate-900 bg-slate-50 border-x border-slate-100 min-w-[28px] text-center">
-            {{ p.stock }}
-          </span>
-          <button
-            type="button"
-            hx-post="{% url 'backoffice:stock_quick_adjust_htmx' p.id %}?action=inc"
-            hx-target="#stock-row-{{ p.id }}"
-            hx-swap="outerHTML"
-            title="Ajouter 1 unité"
-            class="px-2 py-1 text-xs font-extrabold text-amber-700 hover:bg-amber-50 active:bg-amber-100 transition cursor-pointer"
-          >+</button>
-        </div>
+        <button
+          type="button"
+          hx-post="{% url 'backoffice:stock_quick_adjust_htmx' p.id %}?action=inc"
+          hx-target="#stock-row-{{ p.id }}"
+          hx-swap="outerHTML"
+          title="Ajouter 1 unité"
+          class="w-7 h-7 flex items-center justify-center text-xs font-black text-amber-600 hover:bg-amber-50 active:bg-amber-100 transition cursor-pointer"
+        >+</button>
       </div>
 
-      <!-- Mini Jauge Visuelle -->
-      <div class="w-36 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-        <div class="h-full {{ p.stock_status_info.bar_color }} rounded-full transition-all duration-300" style="width: {{ p.stock_status_info.percent }}%;"></div>
-      </div>
+      <span class="text-xs text-slate-600 font-semibold whitespace-nowrap">
+        {{ p.stock }} unité{{ p.stock|pluralize }}
+      </span>
     </div>
   </td>
 
