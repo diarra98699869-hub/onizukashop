@@ -53,15 +53,7 @@ pack_products = [
         'price': 260000,
         'sale_price': 245000,
         'short_description': 'Congélateur vertical East Point 245L avec 7 compartiments de rangement ergonomiques. Froid renforcé tropicalisé, idéal pour stocker viandes, poissons et légumes en toute sérénité à Bamako.',
-        'description': """Le **Congélateur Vertical East Point 245 Litres (7 Étagères)** est la solution idéale pour les familles et commerçants à la recherche d'une organisation parfaite et d'une congélation rapide.
-
-### Points forts :
-- **Volume utile** : 245 Litres optimisés.
-- **Organisation** : 7 compartiments / étagères spacieux facilitant le tri sans perte d'air froid à l'ouverture.
-- **Tropicalisé Climat T** : Fonctionne parfaitement même sous les fortes chaleurs de Bamako (> 43°C).
-- **Économie d'énergie** : Compresseur basse consommation silencieux et gaz écologique R600a.
-- **Sécurité** : Maintien du froid prolongé en cas de coupure de courant.
-- **Garantie** : 12 Mois avec service après-vente Onizuka Shop Bamako Dibidani.""",
+        'description': "Le Congélateur Vertical East Point 245 Litres est spécialement conçu pour répondre aux besoins des foyers et commerces à Bamako. Doté de 7 tiroirs et étagères ergonomiques, il permet d'organiser facilement viandes, poissons et denrées surgelées sans mélanger les odeurs et sans perdre d'air froid à l'ouverture.\n\nSon moteur tropicalisé robuste assure un froid puissant et continu même pendant les fortes chaleurs. Très économe en électricité grâce à son gaz écologique R600a, il conserve parfaitement le froid plusieurs heures en cas de coupure de courant. Appareil garanti 1 an avec SAV officiel Onizuka Shop au Grand Marché de Bamako.",
         'specs': {
             'Marque': 'East Point',
             'Type': 'Congélateur Vertical Armoire',
@@ -84,14 +76,7 @@ pack_products = [
         'price': 385000,
         'sale_price': None,
         'short_description': 'Grand congélateur armoire Victoria 300L avec 9 étagères transparentes grand format. Capacité XXL, congélation express et design ultra-robuste.',
-        'description': """Le **Congélateur Vertical Victoria 300 Litres (Grande Taille - 9 Étagères)** offre un volume massif pour les grandes familles et les professionnels de la restauration.
-
-### Points forts :
-- **Capacité géante** : 300 Litres réels pour stocker toutes vos provisions mensuelles.
-- **9 Étagères et tiroirs amovibles** : Visibilité instantanée de vos aliments et gain de temps maximal.
-- **Compresseur Tropicalisé Heavy-Duty** : Conçu pour supporter les variations de tension et les températures extrêmes.
-- **Finition Inox Satinée** : Design moderne et résistant aux traces.
-- **Garantie** : 12 Mois Onizuka Shop Grand Marché de Bamako.""",
+        'description': "Idéal pour les grandes familles et les professionnels de la restauration, le Congélateur Vertical Victoria 300 Litres offre une capacité de stockage XXL avec ses 9 grands tiroirs transparents. Sa structure robuste en finition inox et son compresseur renforcé garantissent une congélation express et une longévité maximale face aux températures élevées de notre climat.\n\nChaque compartiment offre un accès direct et pratique à vos provisions quotidiennes. Appareil garanti 1 an avec livraison et suivi Onizuka Shop.",
         'specs': {
             'Marque': 'Victoria',
             'Type': 'Congélateur Armoire Grande Capacité',
@@ -115,14 +100,7 @@ pack_products = [
         'price': 270000,
         'sale_price': None,
         'short_description': 'Congélateur vertical LG avec compresseur Smart Inverter durable et silencieux. 6 étagères de conservation optimale avec technologie anti-givre et froid uniforme.',
-        'description': """Bénéficiez de la fiabilité légendaire de la marque **LG** avec ce **Congélateur Vertical Inox 6 Étagères**. 
-
-### Points forts :
-- **Technologie LG** : Refroidissement puissant et uniforme sur chaque niveau.
-- **6 Compartiments renforcés** : Charnières et clayettes en verre trempé/tiroirs renforcés.
-- **Compresseur Smart Silencieux** : Réduction substantielle de la facture d'électricité EDM.
-- **Finition Premium Inox** : Résistance anti-rouille et esthétique irréprochable.
-- **Garantie** : 12 Mois Onizuka Shop avec assistance express sur WhatsApp (+223 92 67 37 99).""",
+        'description': "Alliez modernité et tranquillité d'esprit avec le Congélateur Vertical LG 6 étagères en finition Inox anti-traces. Équipé d'un compresseur Smart Inverter réputé pour sa durabilité et son silence de fonctionnement, il régule le froid de manière uniforme tout en réduisant considérablement la facture d'électricité.\n\nSes 6 tiroirs renforcés facilitent un tri soigné et rapide de vos aliments sans perte d'énergie. Appareil garanti 1 an par Onizuka Shop à Bamako.",
         'specs': {
             'Marque': 'LG',
             'Type': 'Congélateur Vertical Inox',
@@ -145,14 +123,7 @@ pack_products = [
         'price': 425000,
         'sale_price': None,
         'short_description': 'Le roi des congélateurs verticaux : Sharp FR-495 avec 10 étagères ultra-spacieuses. Froid ventilé puissant, poignée ergonomique et robustesse japonaise garantie.',
-        'description': """Le **Sharp FR-495** est le modèle très haut de gamme le plus recherché au Mali. Avec ses **10 étagères indépendantes**, il offre une capacité de rangement inégalée.
-
-### Points forts :
-- **Référence officielle** : Sharp FR-495 original.
-- **10 Étagères / Tiroirs XL** : Compartimentation complète viandes, poissons, jus, glaçons et légumes.
-- **Refroidissement Express** : Congélation ultra-rapide préservant la fraîcheur et les nutriments de vos aliments.
-- **Joint antibactérien & isolation thermique renforcée** : Garde le froid intact plus de 24h sans électricité.
-- **Garantie** : 12 Mois Onizuka Shop.""",
+        'description': "Véritable référence du froid au Mali, le Congélateur Vertical Sharp FR-495 est le modèle haut de gamme le plus prisé. Avec ses 10 étagères indépendantes, il offre le plus grand nombre de compartiments pour ranger séparément poissons, viandes fraîches, sachets et légumes.\n\nSa technologie de congélation rapide Japan Technology et son isolation haute densité maintiennent vos aliments congelés pendant plus de 24 heures sans électricité. Appareil garanti 1 an Onizuka Shop.",
         'specs': {
             'Marque': 'Sharp',
             'Modèle': 'FR-495 Japan Technology',
@@ -175,14 +146,7 @@ pack_products = [
         'price': 275000,
         'sale_price': None,
         'short_description': 'Congélateur vertical Roch 212L équipé de 8 compartiments. Encombrement compact au sol pour un volume intérieur exceptionnel, idéal pour cuisine moderne.',
-        'description': """Le **Congélateur Vertical Roch 212 Litres (8 Étagères)** allie compacité extérieure et générosité intérieure.
-
-### Points forts :
-- **Volume** : 212 Litres nets.
-- **8 Compartiments** : Idéal pour un rangement facile et un accès direct sans fouiller.
-- **Basse consommation** : Classe énergétique performante pour une utilisation continue sans surcoût.
-- **Thermostat réglable** : Ajustez la puissance de froid selon vos besoins.
-- **Garantie** : 12 Mois Onizuka Shop.""",
+        'description': "Le Congélateur Vertical Roch 212 Litres réunit compacité extérieure et générosité intérieure grâce à ses 8 compartiments bien agencés. Il s'intègre facilement dans toutes les cuisines tout en offrant un volume utile idéal pour le quotidien.\n\nSon thermostat réglable permet d'adapter la puissance de congélation à vos besoins, avec une consommation d'énergie maîtrisée et un entretien simplifié. Appareil garanti 1 an chez Onizuka Shop.",
         'specs': {
             'Marque': 'Roch',
             'Capacité': '212 Litres',
@@ -204,14 +168,7 @@ pack_products = [
         'price': 260000,
         'sale_price': None,
         'short_description': 'Congélateur vertical Étoile 220L 8 étagères. Fiable, robuste et parfaitement adapté au réseau électrique et aux conditions climatiques du Mali.',
-        'description': """Le **Congélateur Vertical Étoile 220 Litres (8 Étagères)** offre le meilleur rapport qualité/prix de sa catégorie sur le marché de Bamako.
-
-### Points forts :
-- **Capacité** : 220 Litres bien compartimentés.
-- **8 Étagères** : Tiroirs ergonomiques glissant facilement.
-- **Froid Tropicalisé** : Refroidissement continu et silencieux.
-- **Pieds réglables & porte réversible** : Installation facile dans tous les intérieurs.
-- **Garantie** : 12 Mois Onizuka Shop.""",
+        'description': "Le Congélateur Vertical Étoile 220 Litres propose un excellent équilibre entre budget et performance. Avec ses 8 étagères à tiroirs coulissants, fini la corvée de fouiller dans un congélateur coffre : chaque aliment a sa place attitrée.\n\nSon système de refroidissement tropicalisé est parfaitement adapté au réseau électrique et aux conditions ambiantes de Bamako. Appareil garanti 1 an avec assistance Onizuka Shop.",
         'specs': {
             'Marque': 'Étoile',
             'Capacité': '220 Litres',
@@ -232,14 +189,7 @@ pack_products = [
         'price': 269000,
         'sale_price': None,
         'short_description': 'Congélateur vertical Solstar 8 étagères avec compresseur tropicalisé et carrosserie anti-corrosion. Spécialement conçu pour une endurance maximale.',
-        'description': """Marque reconnue pour sa durabilité en Afrique de l'Ouest, **Solstar** propose ici un **Congélateur Vertical 8 Étagères** performant et robuste.
-
-### Points forts :
-- **8 Tiroirs de rangement** : Capacité optimale pour un stockage familial complet.
-- **Compresseur Tropicalisé T** : Résiste aux fortes chaleurs et variations de courant.
-- **Gaz écologique** : Respectueux de l'environnement et économe en énergie.
-- **Finition Inox brossé** : Élégant et facile à nettoyer.
-- **Garantie** : 12 Mois Onizuka Shop.""",
+        'description': "Reconnue à travers l'Afrique de l'Ouest pour sa robustesse légendaire, la marque Solstar propose ce Congélateur Vertical 8 étagères à carrosserie inox brossé anti-corrosion.\n\nSpécialement renforcé pour résister aux aléas de tension et aux fortes températures de notre région, il assure une congélation homogène et rapide de tous vos produits frais. Appareil garanti 1 an Onizuka Shop Grand Marché de Bamako.",
         'specs': {
             'Marque': 'Solstar',
             'Type': 'Congélateur Vertical Tropicalisé',
@@ -261,14 +211,7 @@ pack_products = [
         'price': 325000,
         'sale_price': None,
         'short_description': 'Congélateur vertical Sharp 8 étagères finition Silver luxe. Technologie japonaise de congélation rapide, silence de fonctionnement et économie d’énergie.',
-        'description': """Le **Congélateur Vertical Sharp Silver 8 Étagères** combine l'excellence technologique de Sharp et un design moderne raffiné.
-
-### Points forts :
-- **Qualité de fabrication Sharp** : Matériaux de premier choix et isolation haute densité.
-- **8 Compartiments ergonomiques** : Rangement clair et conservation longue durée sans givre excessif.
-- **Super Freezing** : Touche de congélation accélérée pour les arrivages de denrées fraîches.
-- **Compresseur tropicalisé certifié** : Longévité assurée dans toutes les conditions au Mali.
-- **Garantie** : 12 Mois Onizuka Shop Bamako.""",
+        'description': "Le Congélateur Vertical Sharp 8 étagères en finition Silver Premium combine l'élégance japonaise et une efficacité thermique remarquable.\n\nConçu avec une isolation isotherme renforcée et la fonction Super Freezing, il permet de surgeler rapidement les nouveaux arrivages sans faire remonter la température des compartiments voisins. Silencieux, économique et durable. Appareil garanti 1 an Onizuka Shop Bamako.",
         'specs': {
             'Marque': 'Sharp',
             'Type': 'Congélateur Vertical Premium Silver',
