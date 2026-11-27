@@ -106,6 +106,52 @@ PRODUCT_IMAGES_MAPPING = {
         ('products/congelateurs_coffres/lg_coffre_345l_ouvert.webp', False, 'Vue intérieure avec panier et compartiment'),
         ('products/congelateurs_coffres/lg_coffre_345l_plaque_technique.webp', False, 'Plaque technique constructeur LG'),
     ],
+    # 9. Nouveaux Congélateurs Coffres Ajoutés
+    'ONZ-PEARL-CH-450L': [
+        ('products/congelateurs_coffres/pearl_450_ferme.webp', True, 'Vue fermée 2 battants Pearl 450L'),
+        ('products/congelateurs_coffres/pearl_450_ouvert.webp', False, 'Vue intérieure cuve spacieuse et vitres coulissantes'),
+    ],
+    'ONZ-SHP-CH-325L': [
+        ('products/congelateurs_coffres/sharp_325_400xi.webp', True, 'Vue ouverte Sharp 325L 400XI avec vitres coulissantes'),
+    ],
+    'ONZ-ROCH-CH-450L': [
+        ('products/congelateurs_coffres/roch_450_ruf450g_ouvert.webp', True, 'Vue 2 battants ouverts Roch 450L RUF-450G'),
+        ('products/congelateurs_coffres/roch_450_rcf450g_plaque.webp', False, 'Plaque signalétique officielle Roch RCF-450-G'),
+    ],
+    'ONZ-ROCH-CH-200L': [
+        ('products/congelateurs_coffres/roch_200_ruf250g_ferme.webp', True, 'Vue fermée Roch 200L RUF-250G gris foncé'),
+        ('products/congelateurs_coffres/roch_200_ruf250g_ouvert.webp', False, 'Vue intérieure cuve et vitres de protection'),
+    ],
+    'ONZ-ETOILE-CH-650L': [
+        ('products/congelateurs_coffres/etoile_650_xfl650.webp', True, 'Vue de face Étoile 650 Litres XFL-650 grand volume'),
+    ],
+    'ONZ-ETOILE-CH-750L': [
+        ('products/congelateurs_coffres/etoile_750_xfl750.webp', True, 'Vue de face Étoile 750 Litres XFL-750 format géant'),
+    ],
+    'ONZ-PEARL-CH-251L': [
+        ('products/congelateurs_coffres/pearl_251_pcf3160.webp', True, 'Vue ouverte Pearl 251L PCF-3160 avec vitres coulissantes'),
+    ],
+    'ONZ-PEARL-CH-299L': [
+        ('products/congelateurs_coffres/pearl_299_pcf361.webp', True, 'Vue ouverte Pearl 299L PCF-361 avec vitres'),
+    ],
+    # 10. Vitrines Réfrigérées Roch
+    'ONZ-VITR-ROCH-209L': [
+        ('products/vitrines/roch_vitrine_209l_rsf260.webp', True, 'Vue vitrine réfrigérée Roch 209 Litres RSF-260 showroom'),
+        ('products/vitrines/roch_vitrines_gamme_showroom.webp', False, 'Vue de la gamme vitrines Roch chez Onizouka Shop'),
+    ],
+    'ONZ-VITR-ROCH-279L': [
+        ('products/vitrines/roch_vitrine_279l_rsf350.webp', True, 'Vue vitrine réfrigérée Roch 279 Litres RSF-350 showroom'),
+        ('products/vitrines/roch_vitrines_gamme_showroom.webp', False, 'Vue de la gamme vitrines Roch chez Onizouka Shop'),
+    ],
+    'ONZ-VITR-ROCH-329L': [
+        ('products/vitrines/roch_vitrine_329l_rsf410.webp', True, 'Vue vitrine réfrigérée Roch 329 Litres RSF-410'),
+        ('products/vitrines/roch_vitrines_gamme_showroom.webp', False, 'Vue de la gamme vitrines Roch chez Onizouka Shop'),
+    ],
+    'ONZ-VITR-ROCH-550L': [
+        ('products/vitrines/roch_vitrine_550l_rsf680_face.webp', True, 'Vue de face vitrine Roch 550L RSF-680 double battant'),
+        ('products/vitrines/roch_vitrine_550l_rsf680_interieur.webp', False, 'Vue intérieure cuve et clayettes vitrine 550L'),
+        ('products/vitrines/roch_vitrines_gamme_showroom.webp', False, 'Gamme complète de vitrines Roch Onizouka Shop'),
+    ],
 }
 
 def link_images():

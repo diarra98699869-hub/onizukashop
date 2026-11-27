@@ -60,7 +60,7 @@
     "created_at": "2026-11-27T12:18:14.682Z",
     "updated_at": "2026-11-27T12:18:14.682Z",
     "lft": 1,
-    "rght": 6,
+    "rght": 8,
     "tree_id": 3,
     "level": 0
   }
@@ -103,6 +103,28 @@
     "order": 1,
     "created_at": "2026-11-27T14:59:16.100Z",
     "updated_at": "2026-11-27T14:59:16.100Z",
+    "lft": 6,
+    "rght": 7,
+    "tree_id": 3,
+    "level": 1
+  }
+},
+{
+  "model": "shop.category",
+  "pk": 12,
+  "fields": {
+    "name": "Vitrines Réfrigérées",
+    "slug": "vitrines-refrigerees",
+    "parent": 9,
+    "image": "",
+    "description": "Vitrines réfrigérées lumineuses pour boissons fraîches et commerces à Bamako.",
+    "icon": "storefront",
+    "meta_title": "",
+    "meta_description": "",
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-11-27T16:47:17.606Z",
+    "updated_at": "2026-11-27T16:47:17.606Z",
     "lft": 4,
     "rght": 5,
     "tree_id": 3,
@@ -2344,7 +2366,7 @@
     "is_featured": false,
     "is_new": true,
     "created_at": "2026-11-27T14:59:16.111Z",
-    "updated_at": "2026-11-27T15:00:05.480Z"
+    "updated_at": "2026-11-27T15:30:19.999Z"
   }
 },
 {
@@ -2391,7 +2413,7 @@
     "is_featured": false,
     "is_new": true,
     "created_at": "2026-11-27T15:00:05.869Z",
-    "updated_at": "2026-11-27T15:00:05.869Z"
+    "updated_at": "2026-11-27T15:30:20.351Z"
   }
 },
 {
@@ -2438,7 +2460,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T15:00:06.149Z",
-    "updated_at": "2026-11-27T15:00:06.149Z"
+    "updated_at": "2026-11-27T15:30:20.726Z"
   }
 },
 {
@@ -2485,7 +2507,7 @@
     "is_featured": false,
     "is_new": true,
     "created_at": "2026-11-27T15:00:06.448Z",
-    "updated_at": "2026-11-27T15:00:06.448Z"
+    "updated_at": "2026-11-27T15:30:21.119Z"
   }
 },
 {
@@ -2532,7 +2554,7 @@
     "is_featured": false,
     "is_new": true,
     "created_at": "2026-11-27T15:00:06.778Z",
-    "updated_at": "2026-11-27T15:00:06.778Z"
+    "updated_at": "2026-11-27T15:30:21.527Z"
   }
 },
 {
@@ -2579,7 +2601,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T15:00:07.088Z",
-    "updated_at": "2026-11-27T15:00:07.088Z"
+    "updated_at": "2026-11-27T15:30:21.927Z"
   }
 },
 {
@@ -2627,7 +2649,7 @@
     "is_featured": false,
     "is_new": true,
     "created_at": "2026-11-27T15:00:07.474Z",
-    "updated_at": "2026-11-27T15:00:07.474Z"
+    "updated_at": "2026-11-27T15:30:22.362Z"
   }
 },
 {
@@ -2677,7 +2699,7 @@
     "is_featured": false,
     "is_new": true,
     "created_at": "2026-11-27T15:07:48.799Z",
-    "updated_at": "2026-11-27T15:07:48.799Z"
+    "updated_at": "2026-11-27T15:30:22.707Z"
   }
 },
 {
@@ -2726,7 +2748,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T15:07:49.263Z",
-    "updated_at": "2026-11-27T15:07:49.263Z"
+    "updated_at": "2026-11-27T15:30:23.072Z"
   }
 },
 {
@@ -2775,7 +2797,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T15:13:17.682Z",
-    "updated_at": "2026-11-27T15:13:17.682Z"
+    "updated_at": "2026-11-27T15:30:23.443Z"
   }
 },
 {
@@ -2823,7 +2845,7 @@
     "is_featured": false,
     "is_new": true,
     "created_at": "2026-11-27T15:13:18.847Z",
-    "updated_at": "2026-11-27T15:13:18.847Z"
+    "updated_at": "2026-11-27T15:30:24.222Z"
   }
 },
 {
@@ -2872,7 +2894,7 @@
     "is_featured": false,
     "is_new": true,
     "created_at": "2026-11-27T15:13:19.316Z",
-    "updated_at": "2026-11-27T15:13:19.316Z"
+    "updated_at": "2026-11-27T15:30:24.587Z"
   }
 },
 {
@@ -2923,7 +2945,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T15:15:47.440Z",
-    "updated_at": "2026-11-27T15:15:47.440Z"
+    "updated_at": "2026-11-27T15:30:25.038Z"
   }
 },
 {
@@ -2973,7 +2995,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T15:15:47.811Z",
-    "updated_at": "2026-11-27T15:15:47.811Z"
+    "updated_at": "2026-11-27T15:30:25.296Z"
   }
 },
 {
@@ -3022,7 +3044,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T15:17:15.365Z",
-    "updated_at": "2026-11-27T15:17:15.365Z"
+    "updated_at": "2026-11-27T15:30:25.740Z"
   }
 },
 {
@@ -3070,7 +3092,7 @@
     "is_featured": false,
     "is_new": true,
     "created_at": "2026-11-27T15:24:47.595Z",
-    "updated_at": "2026-11-27T15:24:47.595Z"
+    "updated_at": "2026-11-27T15:30:26.282Z"
   }
 },
 {
@@ -3118,7 +3140,7 @@
     "is_featured": false,
     "is_new": true,
     "created_at": "2026-11-27T15:24:47.735Z",
-    "updated_at": "2026-11-27T15:24:47.735Z"
+    "updated_at": "2026-11-27T15:30:26.424Z"
   }
 },
 {
@@ -3166,7 +3188,7 @@
     "is_featured": false,
     "is_new": true,
     "created_at": "2026-11-27T15:24:47.853Z",
-    "updated_at": "2026-11-27T15:24:47.853Z"
+    "updated_at": "2026-11-27T15:30:26.546Z"
   }
 },
 {
@@ -3215,7 +3237,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T15:24:47.969Z",
-    "updated_at": "2026-11-27T15:24:47.969Z"
+    "updated_at": "2026-11-27T15:30:26.671Z"
   }
 },
 {
@@ -3264,7 +3286,535 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T15:24:48.193Z",
-    "updated_at": "2026-11-27T15:24:48.193Z"
+    "updated_at": "2026-11-27T15:30:26.900Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 179,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Pearl 450 Litres - 2 Battants & Vitres Coulissantes",
+    "slug": "congelateur-coffre-horizontal-pearl-450-litres-2-battants-vitres-coulissantes",
+    "sku": "ONZ-PEARL-CH-450L",
+    "category": 11,
+    "brand": 25,
+    "short_description": "",
+    "description": "Le congélateur horizontal Pearl 450 Litres offre une capacité généreuse et une isolation thermique renforcée idéale pour les commerces, restaurants et grandes familles à Bamako. Doté d'une ouverture double battant ergonomique et de vitres coulissantes intérieures, il conserve le froid de façon optimale même en cas de coupure de courant. Système Fast Cooling haute efficacité, panier suspendu amovible et gaz réfrigérant écologique R600a.",
+    "specifications": {
+      "Capacité brute": "450 Litres",
+      "Type": "Congélateur Coffre Horizontal Double Battant",
+      "Vitres intérieures": "Oui, coulissantes en verre trempé",
+      "Système de refroidissement": "Fast Cooling Express & Retain Freshness",
+      "Thermostat": "Réglable mécanique en façade avec voyants LED",
+      "Éclairage intérieur": "LED intégré longue durée",
+      "Réfrigérant": "R600a écologique",
+      "Panier de rangement": "Inclus",
+      "Garantie": "12 Mois Boutique Onizouka Shop Bamako"
+    },
+    "price": "385000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T16:48:05.080Z",
+    "updated_at": "2026-11-27T16:48:05.080Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 180,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Sharp 325 Litres - Modèle 400XI Super Fast Freezing",
+    "slug": "congelateur-coffre-horizontal-sharp-325-litres-modele-400xi-super-fast-freezing",
+    "sku": "ONZ-SHP-CH-325L",
+    "category": 11,
+    "brand": 10,
+    "short_description": "",
+    "description": "Congélateur horizontal Sharp modèle 400XI d'une contenance de 325 Litres. Technologie japonaise Super Fast Freezing assurant une congélation ultra-rapide des viandes, poissons et vivres. Équipé de vitres coulissantes intérieures sous le couvercle pour une rétention maximale du froid, d'un panier métallique de rangement et d'un éclairage LED cuve. Charnières renforcées et serrure de sécurité.",
+    "specifications": {
+      "Capacité nette": "325 Litres (Gamme 400XI)",
+      "Marque": "SHARP (Technologie Japonaise)",
+      "Type": "Congélateur Horizontal Coffre",
+      "Vitres intérieures": "Oui, double vitrage coulissant protecteur",
+      "Refroidissement": "Super Fast Freezing grande vitesse",
+      "Éclairage": "LED intégrée sous le couvercle",
+      "Paniers": "Paniers filaires suspendus inclus",
+      "Fermeture": "Poignée ergonomique avec serrure à clé",
+      "Garantie": "12 Mois Officielle Onizouka Shop Bamako"
+    },
+    "price": "323500",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T16:48:05.116Z",
+    "updated_at": "2026-11-27T16:48:05.116Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 181,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Roch 450 Litres - Modèle RUF-450G / RCF-450-G 2 Battants",
+    "slug": "congelateur-coffre-horizontal-roch-450-litres-modele-ruf-450g-rcf-450-g-2-battants",
+    "sku": "ONZ-ROCH-CH-450L",
+    "category": 11,
+    "brand": 19,
+    "short_description": "",
+    "description": "Grand congélateur coffre horizontal Roch de 450 Litres (référence constructeur RUF-450G / RCF-450-G). Conçu avec 2 battants indépendants pour limiter les déperditions thermiques à l'ouverture, ce modèle tropicalisé Classe T offre une puissance de congélation remarquable de 17 kg/24h. Finition gris anthracite moderne, cuve en aluminium gaufré résistant à la corrosion et serrure de sécurité.",
+    "specifications": {
+      "Capacité brute": "450 Litres",
+      "Modèle constructeur": "RUF-450G / RCF-450-G",
+      "Ouverture": "2 Battants indépendants avec poignées confort",
+      "Capacité de congélation": "17 kg / 24 heures",
+      "Classe climatique": "ST / T Tropicalisé (adapté climat de Bamako)",
+      "Gaz réfrigérant": "R600a (98g) économique",
+      "Niveau sonore": "42 dB(A) ultra-silencieux",
+      "Sécurité": "Serrure à clé intégrée",
+      "Garantie": "12 Mois Onizouka Shop"
+    },
+    "price": "335000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T16:48:05.123Z",
+    "updated_at": "2026-11-27T16:48:05.123Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 182,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Roch 200 Litres - Modèle RUF-250G Gris Anthracite",
+    "slug": "congelateur-coffre-horizontal-roch-200-litres-modele-ruf-250g-gris-anthracite",
+    "sku": "ONZ-ROCH-CH-200L",
+    "category": 11,
+    "brand": 19,
+    "short_description": "",
+    "description": "Congélateur horizontal compact Roch 200 Litres (série RUF-250G / RCF-250-G). Finition premium gris anthracite résistant aux rayures. Parfait pour les ménages et commerces de proximité. Équipé de vitres coulissantes intérieures pour conserver le froid, d'un panier de séparation et d'un thermostat frontal avec voyants indicateurs de marche et d'alarme.",
+    "specifications": {
+      "Capacité": "200 Litres (Série RUF-250G)",
+      "Type": "Congélateur Horizontal Compact",
+      "Vitres intérieures": "Oui, vitres coulissantes hermétiques",
+      "Couleur": "Gris foncé anthracite",
+      "Thermostat": "Façade avant avec témoins lumineux Power / Run / Alarm",
+      "Consommation": "Faible consommation d'énergie basse tension",
+      "Cuve": "Aluminium structuré anti-givre",
+      "Garantie": "12 Mois Onizouka Shop"
+    },
+    "price": "223500",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T16:48:05.129Z",
+    "updated_at": "2026-11-27T16:48:05.129Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 183,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Étoile 650 Litres PRO - Modèle XFL-650 2 Battants",
+    "slug": "congelateur-coffre-horizontal-etoile-650-litres-pro-modele-xfl-650-2-battants",
+    "sku": "ONZ-ETOILE-CH-650L",
+    "category": 11,
+    "brand": 22,
+    "short_description": "",
+    "description": "Congélateur horizontal grand volume Étoile XFL-650 d'une contenance exceptionnelle de 650 Litres. Conçu pour un usage commercial intensif (supérettes, grossistes, restaurants, boucheries). Deux grands battants d'accès indépendant, double vitrage intérieur coulissant et cuve renforcée. Actuellement en rupture temporaire de stock - arrivage et réapprovisionnement en cours chez Onizouka Shop Bamako.",
+    "specifications": {
+      "Capacité": "650 Litres Grand Volume",
+      "Modèle": "XFL-650 PRO",
+      "Configuration": "Double battant supérieur avec poignées robustes",
+      "Vitrage": "Double vitre coulissante intérieure protectrice",
+      "Compartimentage": "Séparateur central et paniers métalliques",
+      "Disponibilité": "En attente d'approvisionnement (Bientôt de retour)",
+      "Garantie": "12 Mois Onizouka Shop"
+    },
+    "price": "470000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 0,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "out_of_stock",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T16:48:05.138Z",
+    "updated_at": "2026-11-27T16:48:05.138Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 184,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Étoile 750 Litres PRO - Modèle XFL-750 Géant 2 Battants",
+    "slug": "congelateur-coffre-horizontal-etoile-750-litres-pro-modele-xfl-750-geant-2-battants",
+    "sku": "ONZ-ETOILE-CH-750L",
+    "category": 11,
+    "brand": 22,
+    "short_description": "",
+    "description": "Le mastodonte de la conservation : Congélateur coffre horizontal Étoile XFL-750 de 750 Litres. Capacité colossale pour le stockage massif de denrées, viandes et poissons. Isolation ultra-épaisse préservant le grand froid jusqu'à plus de 48 heures sans électricité. Double battant avec joints d'étanchéité magnétiques renforcés et vitres coulissantes. Actuellement en rupture temporaire - réapprovisionnement en cours.",
+    "specifications": {
+      "Capacité": "750 Litres Géant Professionnel",
+      "Modèle": "XFL-750 PRO Commercial",
+      "Type": "Coffre horizontal 2 battants grande largeur",
+      "Vitres intérieures": "Oui, vitres coulissantes de maintien de température",
+      "Isolation": "Mousse cyclopentane haute densité 100 mm",
+      "Disponibilité": "En attente d'approvisionnement (Bientôt de retour)",
+      "Garantie": "12 Mois Onizouka Shop"
+    },
+    "price": "540000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 0,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "out_of_stock",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T16:48:05.145Z",
+    "updated_at": "2026-11-27T16:48:05.145Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 185,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Pearl 251 Litres - Modèle PCF-3160 Vitres Coulissantes",
+    "slug": "congelateur-coffre-horizontal-pearl-251-litres-modele-pcf-3160-vitres-coulissantes",
+    "sku": "ONZ-PEARL-CH-251L",
+    "category": 11,
+    "brand": 25,
+    "short_description": "",
+    "description": "Congélateur couché Pearl modèle PCF-3160 de 251 Litres. Idéal pour les ménages souhaitant une autonomie de stockage fiable et économique en électricité. Ouverture supérieure monobattant assistée avec vitres de protection coulissantes en verre trempé. Thermostat frontal réglable, technologie de froid rapide et finition gris argentée sobre.",
+    "specifications": {
+      "Capacité nette": "251 Litres",
+      "Modèle constructeur": "PCF-3160",
+      "Vitres intérieures": "Oui, coulissantes anti-déperdition de froid",
+      "Technologie": "Retain Freshness All Day & Fast Freezing",
+      "Consommation": "Basse consommation énergétique",
+      "Paniers": "Panier suspendu inclus",
+      "Garantie": "12 Mois Onizouka Shop Bamako"
+    },
+    "price": "240000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T16:48:05.149Z",
+    "updated_at": "2026-11-27T16:48:05.149Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 186,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Pearl 299 Litres - Modèle PCF-361 Vitres Coulissantes",
+    "slug": "congelateur-coffre-horizontal-pearl-299-litres-modele-pcf-361-vitres-coulissantes",
+    "sku": "ONZ-PEARL-CH-299L",
+    "category": 11,
+    "brand": 25,
+    "short_description": "",
+    "description": "Congélateur horizontal couché Pearl modèle PCF-361 d'une capacité de 299 Litres. Ce modèle offre le compromis parfait entre compacité au sol et grand volume intérieur utile. Équipé de vitres coulissantes intérieures étanches, d'un compresseur tropicalisé puissant et d'un éclairage cuve. Robuste, durable et prêt pour une utilisation quotidienne sans compromis.",
+    "specifications": {
+      "Capacité nette": "299 Litres",
+      "Modèle constructeur": "PCF-361",
+      "Vitres de cuve": "Oui, vitres coulissantes de protection",
+      "Performance": "Compresseur renforcé Tropicalisé Classe T",
+      "Cuve intérieure": "Revêtement aluminium martelé anti-bactérien",
+      "Couleur": "Gris foncé métallisé",
+      "Garantie": "12 Mois Onizouka Shop Grand Marché de Bamako"
+    },
+    "price": "255000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T16:48:05.155Z",
+    "updated_at": "2026-11-27T16:48:05.156Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 187,
+  "fields": {
+    "name": "Réfrigérateur Vitrine Roch 209 Litres - Modèle RSF-260 Boissons Fraîches",
+    "slug": "refrigerateur-vitrine-roch-209-litres-modele-rsf-260-boissons-fraiches",
+    "sku": "ONZ-VITR-ROCH-209L",
+    "category": 12,
+    "brand": 19,
+    "short_description": "",
+    "description": "Vitrine réfrigérée verticale Roch modèle RSF-260 d'un volume de 209 Litres. Conçue pour la mise en valeur et le rafraîchissement rapide de vos boissons, jus, canettes et eaux minérales. Porte vitrée en verre trempé double vitrage anti-buée, bandeau lumineux supérieur publicitaire 'Roch Live Smarter', éclairage intérieur vertical LED et étagères réglables en hauteur. Idéale pour boutiques, alimentations et cafés.",
+    "specifications": {
+      "Capacité": "209 Litres",
+      "Modèle": "RSF-260 / 209L",
+      "Type": "Vitrine Réfrigérée Positive Verticale 1 Porte",
+      "Porte": "Verre trempé double vitrage sécurisé anti-buée",
+      "Bandeau supérieur": "Lumineux avec visuel rafraîchissant Roch",
+      "Éclairage intérieur": "LED verticale pleine hauteur",
+      "Refroidissement": "Froid ventilé dynamique uniforme",
+      "Clayettes": "Étagères métalliques amovibles et réglables",
+      "Garantie": "12 Mois Onizouka Shop Bamako"
+    },
+    "price": "285000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T16:48:05.161Z",
+    "updated_at": "2026-11-27T16:48:05.161Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 188,
+  "fields": {
+    "name": "Réfrigérateur Vitrine Roch 279 Litres - Modèle RSF-350 Lumineuse Boissons",
+    "slug": "refrigerateur-vitrine-roch-279-litres-modele-rsf-350-lumineuse-boissons",
+    "sku": "ONZ-VITR-ROCH-279L",
+    "category": 12,
+    "brand": 19,
+    "short_description": "",
+    "description": "Vitrine réfrigérée verticale Roch modèle RSF-350 d'une contenance de 279 Litres. Présentation haut de gamme pour les commerces exigeants. Froid ventilé puissant garantissant des boissons glacées en continu même lors de fortes chaleurs extérieures. Enseigne lumineuse supérieure attrayante, porte vitrée avec cadre noir moderne et étagères renforcées supportant des dizaines de bouteilles et canettes.",
+    "specifications": {
+      "Capacité": "279 Litres",
+      "Modèle": "RSF-350 / 279L",
+      "Type": "Vitrine Réfrigérée Verticale Professionnelle",
+      "Technologie": "Froid ventilé No Frost avec ventilateur tangentiel",
+      "Bandeau lumineux": "Caisson lumineux supérieur rétroéclairé",
+      "Éclairage intérieur": "Ruban LED éclatant pour valoriser les produits",
+      "Finition": "Cadre de porte noir et carrosserie traitée anti-corrosion",
+      "Garantie": "12 Mois Onizouka Shop Grand Marché de Bamako"
+    },
+    "price": "335000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T16:48:05.169Z",
+    "updated_at": "2026-11-27T16:48:05.170Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 189,
+  "fields": {
+    "name": "Réfrigérateur Vitrine Roch 329 Litres - Modèle RSF-410 Grande Capacité",
+    "slug": "refrigerateur-vitrine-roch-329-litres-modele-rsf-410-grande-capacite",
+    "sku": "ONZ-VITR-ROCH-329L",
+    "category": 12,
+    "brand": 19,
+    "short_description": "",
+    "description": "Vitrine réfrigérée Roch RSF-410 d'un grand volume de 329 Litres. Un équipement professionnel indispensable pour les supermarchés, stations-services, restaurants et maquis à Bamako. Capacité de chargement impressionnante avec plusieurs niveaux de clayettes réglables. Système de dégivrage automatique, compresseur tropicalisé haute performance et circulation d'air homogène.",
+    "specifications": {
+      "Capacité": "329 Litres Grande Capacité",
+      "Modèle": "RSF-410 / 329L",
+      "Type": "Vitrine Réfrigérée Positive 1 Grande Porte",
+      "Froid": "Ventilé dynamique haute puissance",
+      "Porte": "Double vitrage thermique avec fermeture automatique",
+      "Caisson lumineux": "Enseigne publicitaire rétroéclairée supérieure",
+      "Pieds": "Roulettes et pieds réglables pour un déplacement aisé",
+      "Garantie": "12 Mois Onizouka Shop Bamako"
+    },
+    "price": "415000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T16:48:05.177Z",
+    "updated_at": "2026-11-27T16:48:05.177Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 190,
+  "fields": {
+    "name": "Réfrigérateur Vitrine Roch 550 Litres Double Battant PRO - Modèle RSF-680",
+    "slug": "refrigerateur-vitrine-roch-550-litres-double-battant-pro-modele-rsf-680",
+    "sku": "ONZ-VITR-ROCH-550L",
+    "category": 12,
+    "brand": 19,
+    "short_description": "",
+    "description": "Vitrine réfrigérée professionnelle Roch modèle RSF-680 de 550 Litres à double battant vitré. Le fleuron des vitrines commerciales : double porte vitrée à ouverture battante facilitant le service et le réassort, visibilité panoramique maximale pour vos clients, grande enseigne lumineuse supérieure et compresseur commercial robuste. Température positive réglable idéale pour toutes les boissons et produits frais à consommer.",
+    "specifications": {
+      "Capacité brute": "550 Litres Grand Format PRO",
+      "Modèle": "RSF-680 / 550L",
+      "Configuration": "2 Portes battantes vitrées avec poignées aluminium",
+      "Froid": "Froid ventilé puissant double circulation",
+      "Bandeau lumineux": "Large enseigne lumineuse supérieure rétroéclairée",
+      "Clayettes": "Nombreuses grilles métalliques renforcées haute charge",
+      "Fermeture": "Serrure de sécurité à clé",
+      "Garantie": "12 Mois Intégrale Onizouka Shop Bamako"
+    },
+    "price": "655000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T16:48:05.184Z",
+    "updated_at": "2026-11-27T16:48:05.184Z"
   }
 },
 {
@@ -4523,420 +5073,640 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 453,
+  "pk": 491,
   "fields": {
     "product": 159,
     "image": "products/congelateurs_coffres/fizzen_coffre_110l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 110 Litres Compact - Vue réelle Dibidani",
+    "alt_text": "Vue fermée",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 454,
+  "pk": 492,
   "fields": {
     "product": 159,
     "image": "products/congelateurs_coffres/fizzen_coffre_110l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 110 Litres Compact - Vue réelle Dibidani",
+    "alt_text": "Vue ouverte avec vitres coulissantes",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 455,
+  "pk": 493,
   "fields": {
     "product": 160,
     "image": "products/congelateurs_coffres/fizzen_coffre_160l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 160 Litres - Vue réelle Dibidani",
+    "alt_text": "Vue fermée",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 456,
+  "pk": 494,
   "fields": {
     "product": 160,
     "image": "products/congelateurs_coffres/fizzen_coffre_160l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 160 Litres - Vue réelle Dibidani",
+    "alt_text": "Vue ouverte avec panier",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 457,
+  "pk": 495,
   "fields": {
     "product": 161,
     "image": "products/congelateurs_coffres/fizzen_coffre_210l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 210 Litres - Vue réelle Dibidani",
+    "alt_text": "Vue fermée",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 458,
+  "pk": 496,
   "fields": {
     "product": 161,
     "image": "products/congelateurs_coffres/fizzen_coffre_210l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 210 Litres - Vue réelle Dibidani",
+    "alt_text": "Vue intérieure",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 459,
+  "pk": 497,
   "fields": {
     "product": 162,
     "image": "products/congelateurs_coffres/fizzen_coffre_270l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 270 Litres Grand Volume - Vue réelle Dibidani",
+    "alt_text": "Vue fermée",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 460,
+  "pk": 498,
   "fields": {
     "product": 162,
     "image": "products/congelateurs_coffres/fizzen_coffre_270l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 270 Litres Grand Volume - Vue réelle Dibidani",
+    "alt_text": "Vue intérieure cuve",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 461,
+  "pk": 499,
   "fields": {
     "product": 163,
     "image": "products/congelateurs_coffres/fizzen_coffre_350l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 350 Litres - Vue réelle Dibidani",
+    "alt_text": "Vue fermée 2 battants",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 462,
+  "pk": 500,
   "fields": {
     "product": 163,
     "image": "products/congelateurs_coffres/fizzen_coffre_350l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 350 Litres - Vue réelle Dibidani",
+    "alt_text": "Vue intérieure spacieuse",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 463,
+  "pk": 501,
   "fields": {
     "product": 164,
     "image": "products/congelateurs_coffres/fizzen_coffre_430l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 430 Litres - 2 Battants Indépendants - Vue réelle Dibidani",
+    "alt_text": "Vue fermée 2 battants",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 464,
+  "pk": 502,
   "fields": {
     "product": 164,
     "image": "products/congelateurs_coffres/fizzen_coffre_430l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 430 Litres - 2 Battants Indépendants - Vue réelle Dibidani",
+    "alt_text": "Vue intérieure grande capacité",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 465,
+  "pk": 503,
   "fields": {
     "product": 165,
     "image": "products/congelateurs_coffres/fizzen_coffre_550l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 550 Litres PRO - 2 Battants Géants - Vue réelle Dibidani",
+    "alt_text": "Vue fermée 2 battants PRO",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 466,
+  "pk": 504,
   "fields": {
     "product": 165,
     "image": "products/congelateurs_coffres/fizzen_coffre_550l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal Fizzen 550 Litres PRO - 2 Battants Géants - Vue réelle Dibidani",
+    "alt_text": "Vue intérieure commerciale",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 467,
+  "pk": 505,
   "fields": {
     "product": 166,
     "image": "products/congelateurs_coffres/roch_coffre_316l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal Roch 316 Litres - Vitres Coulissantes Intérieures - Vue réelle Dibidani",
+    "alt_text": "Vue extérieure",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 468,
+  "pk": 506,
   "fields": {
     "product": 166,
     "image": "products/congelateurs_coffres/roch_coffre_316l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal Roch 316 Litres - Vitres Coulissantes Intérieures - Vue réelle Dibidani",
+    "alt_text": "Vue intérieure vitres coulissantes",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 469,
+  "pk": 507,
   "fields": {
     "product": 167,
     "image": "products/congelateurs_coffres/roch_coffre_550l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal Roch 550 Litres PRO - 2 Battants Fast Freezing - Vue réelle Dibidani",
+    "alt_text": "Vue extérieure 2 battants",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 470,
+  "pk": 508,
   "fields": {
     "product": 167,
     "image": "products/congelateurs_coffres/roch_coffre_550l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal Roch 550 Litres PRO - 2 Battants Fast Freezing - Vue réelle Dibidani",
+    "alt_text": "Vue ouverte grand volume",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 471,
+  "pk": 509,
   "fields": {
     "product": 168,
     "image": "products/congelateurs_coffres/pearl_coffre_375l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal Pearl 375 Litres - 2 Battants & Vitres Coulissantes - Vue réelle Dibidani",
+    "alt_text": "Vue extérieure fermée",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 472,
+  "pk": 510,
   "fields": {
     "product": 168,
     "image": "products/congelateurs_coffres/pearl_coffre_375l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal Pearl 375 Litres - 2 Battants & Vitres Coulissantes - Vue réelle Dibidani",
+    "alt_text": "Vue ouverte 2 battants",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 473,
+  "pk": 511,
   "fields": {
     "product": 168,
     "image": "products/congelateurs_coffres/pearl_coffre_375l_interieur_badge.webp",
-    "alt_text": "Congélateur Coffre Horizontal Pearl 375 Litres - 2 Battants & Vitres Coulissantes - Vue réelle Dibidani",
+    "alt_text": "Détail vitres et badge",
     "is_primary": false,
     "order": 2
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 474,
+  "pk": 512,
   "fields": {
     "product": 169,
     "image": "products/congelateurs_coffres/tmt_coffre_200l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal TMT 200 Litres - Vitres Coulissantes Intérieures - Vue réelle Dibidani",
+    "alt_text": "Vue extérieure",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 475,
+  "pk": 513,
   "fields": {
     "product": 169,
     "image": "products/congelateurs_coffres/tmt_coffre_200l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal TMT 200 Litres - Vitres Coulissantes Intérieures - Vue réelle Dibidani",
+    "alt_text": "Vue intérieure vitres coulissantes",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 476,
+  "pk": 514,
   "fields": {
     "product": 170,
     "image": "products/congelateurs_coffres/tmt_coffre_288l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal TMT 288 Litres - Vitres Coulissantes Intérieures - Vue réelle Dibidani",
+    "alt_text": "Vue extérieure",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 477,
+  "pk": 515,
   "fields": {
     "product": 170,
     "image": "products/congelateurs_coffres/tmt_coffre_288l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal TMT 288 Litres - Vitres Coulissantes Intérieures - Vue réelle Dibidani",
+    "alt_text": "Vue intérieure vitres coulissantes",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 478,
+  "pk": 516,
   "fields": {
     "product": 171,
     "image": "products/congelateurs_coffres/sharp_coffre_450l_ref580.webp",
-    "alt_text": "Congélateur Coffre Horizontal Sharp 450 Litres - Super Fast Freezing Réf 580 - Vue réelle showroom Dibidani",
+    "alt_text": "Vue officielle Sharp Réf 580",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 479,
+  "pk": 517,
   "fields": {
     "product": 172,
     "image": "products/congelateurs_coffres/sharp_coffre_520l_ref660_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal Sharp 520 Litres PRO - 2 Battants Réf 660 - Vue réelle showroom Dibidani",
+    "alt_text": "Vue extérieure 2 battants Réf 660",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 480,
+  "pk": 518,
   "fields": {
     "product": 172,
     "image": "products/congelateurs_coffres/sharp_coffre_520l_ref660_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal Sharp 520 Litres PRO - 2 Battants Réf 660 - Vue réelle showroom Dibidani",
+    "alt_text": "Vue intérieure grand volume",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 481,
+  "pk": 519,
   "fields": {
     "product": 173,
     "image": "products/congelateurs_coffres/telimani_coffre_212l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal Telimani 212 Litres - Vitres Coulissantes Intérieures - Vue fermée showroom Dibidani",
+    "alt_text": "Vue extérieure",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 482,
+  "pk": 520,
   "fields": {
     "product": 173,
     "image": "products/congelateurs_coffres/telimani_coffre_212l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal Telimani 212 Litres - Vitres Coulissantes Intérieures - Vue intérieure vitres coulissantes et panier",
+    "alt_text": "Vue ouverte avec vitres",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 483,
+  "pk": 521,
   "fields": {
     "product": 174,
     "image": "products/congelateurs_coffres/nafa_coffre_348l_bd398.webp",
-    "alt_text": "Congélateur Coffre Horizontal NAFA BD-398 Couché 348 Litres - Vue studio showroom Dibidani",
+    "alt_text": "Vue grand modèle NAFA 348L BD-398",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 484,
+  "pk": 522,
   "fields": {
     "product": 175,
     "image": "products/congelateurs_coffres/nafa_coffre_248l_bd298.webp",
-    "alt_text": "Congélateur Coffre Horizontal NAFA BD-298 Couché 248 Litres - Vue studio showroom Dibidani",
+    "alt_text": "Vue intermédiaire NAFA 248L BD-298",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 485,
+  "pk": 523,
   "fields": {
     "product": 176,
     "image": "products/congelateurs_coffres/nafa_coffre_148l_bd198.webp",
-    "alt_text": "Congélateur Coffre Horizontal NAFA BD-198 Couché 148 Litres Compact - Vue studio showroom Dibidani",
+    "alt_text": "Vue compacte NAFA 148L BD-198",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 486,
+  "pk": 524,
   "fields": {
     "product": 177,
     "image": "products/congelateurs_coffres/telimani_coffre_650l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal Telimani 650 Litres PRO - 2 Battants Géants - Vue studio showroom Dibidani",
+    "alt_text": "Vue extérieure fermée 2 battants",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 487,
+  "pk": 525,
   "fields": {
     "product": 177,
     "image": "products/congelateurs_coffres/telimani_coffre_650l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal Telimani 650 Litres PRO - 2 Battants Géants - Vue studio showroom Dibidani",
+    "alt_text": "Vue ouverte professionnelle",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 488,
+  "pk": 526,
   "fields": {
     "product": 178,
     "image": "products/congelateurs_coffres/lg_coffre_345l_ferme.webp",
-    "alt_text": "Congélateur Coffre Horizontal LG 345 Litres - Inverter Modèle GCS415GQFG - Vue studio showroom Dibidani",
+    "alt_text": "Vue extérieure fermée officielle",
     "is_primary": true,
     "order": 0
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 489,
+  "pk": 527,
   "fields": {
     "product": 178,
     "image": "products/congelateurs_coffres/lg_coffre_345l_ouvert.webp",
-    "alt_text": "Congélateur Coffre Horizontal LG 345 Litres - Inverter Modèle GCS415GQFG - Vue studio showroom Dibidani",
+    "alt_text": "Vue intérieure avec panier et compartiment",
     "is_primary": false,
     "order": 1
   }
 },
 {
   "model": "shop.productimage",
-  "pk": 490,
+  "pk": 528,
   "fields": {
     "product": 178,
     "image": "products/congelateurs_coffres/lg_coffre_345l_plaque_technique.webp",
-    "alt_text": "Congélateur Coffre Horizontal LG 345 Litres - Inverter Modèle GCS415GQFG - Vue studio showroom Dibidani",
+    "alt_text": "Plaque technique constructeur LG",
     "is_primary": false,
     "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 529,
+  "fields": {
+    "product": 179,
+    "image": "products/congelateurs_coffres/pearl_450_ferme.webp",
+    "alt_text": "Vue fermée 2 battants Pearl 450L",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 530,
+  "fields": {
+    "product": 179,
+    "image": "products/congelateurs_coffres/pearl_450_ouvert.webp",
+    "alt_text": "Vue intérieure cuve spacieuse et vitres coulissantes",
+    "is_primary": false,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 531,
+  "fields": {
+    "product": 180,
+    "image": "products/congelateurs_coffres/sharp_325_400xi.webp",
+    "alt_text": "Vue ouverte Sharp 325L 400XI avec vitres coulissantes",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 532,
+  "fields": {
+    "product": 181,
+    "image": "products/congelateurs_coffres/roch_450_ruf450g_ouvert.webp",
+    "alt_text": "Vue 2 battants ouverts Roch 450L RUF-450G",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 533,
+  "fields": {
+    "product": 181,
+    "image": "products/congelateurs_coffres/roch_450_rcf450g_plaque.webp",
+    "alt_text": "Plaque signalétique officielle Roch RCF-450-G",
+    "is_primary": false,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 534,
+  "fields": {
+    "product": 182,
+    "image": "products/congelateurs_coffres/roch_200_ruf250g_ferme.webp",
+    "alt_text": "Vue fermée Roch 200L RUF-250G gris foncé",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 535,
+  "fields": {
+    "product": 182,
+    "image": "products/congelateurs_coffres/roch_200_ruf250g_ouvert.webp",
+    "alt_text": "Vue intérieure cuve et vitres de protection",
+    "is_primary": false,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 536,
+  "fields": {
+    "product": 183,
+    "image": "products/congelateurs_coffres/etoile_650_xfl650.webp",
+    "alt_text": "Vue de face Étoile 650 Litres XFL-650 grand volume",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 537,
+  "fields": {
+    "product": 184,
+    "image": "products/congelateurs_coffres/etoile_750_xfl750.webp",
+    "alt_text": "Vue de face Étoile 750 Litres XFL-750 format géant",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 538,
+  "fields": {
+    "product": 185,
+    "image": "products/congelateurs_coffres/pearl_251_pcf3160.webp",
+    "alt_text": "Vue ouverte Pearl 251L PCF-3160 avec vitres coulissantes",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 539,
+  "fields": {
+    "product": 186,
+    "image": "products/congelateurs_coffres/pearl_299_pcf361.webp",
+    "alt_text": "Vue ouverte Pearl 299L PCF-361 avec vitres",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 540,
+  "fields": {
+    "product": 187,
+    "image": "products/vitrines/roch_vitrine_209l_rsf260.webp",
+    "alt_text": "Vue vitrine réfrigérée Roch 209 Litres RSF-260 showroom",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 541,
+  "fields": {
+    "product": 187,
+    "image": "products/vitrines/roch_vitrines_gamme_showroom.webp",
+    "alt_text": "Vue de la gamme vitrines Roch chez Onizouka Shop",
+    "is_primary": false,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 542,
+  "fields": {
+    "product": 188,
+    "image": "products/vitrines/roch_vitrine_279l_rsf350.webp",
+    "alt_text": "Vue vitrine réfrigérée Roch 279 Litres RSF-350 showroom",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 543,
+  "fields": {
+    "product": 188,
+    "image": "products/vitrines/roch_vitrines_gamme_showroom.webp",
+    "alt_text": "Vue de la gamme vitrines Roch chez Onizouka Shop",
+    "is_primary": false,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 544,
+  "fields": {
+    "product": 189,
+    "image": "products/vitrines/roch_vitrine_329l_rsf410.webp",
+    "alt_text": "Vue vitrine réfrigérée Roch 329 Litres RSF-410",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 545,
+  "fields": {
+    "product": 189,
+    "image": "products/vitrines/roch_vitrines_gamme_showroom.webp",
+    "alt_text": "Vue de la gamme vitrines Roch chez Onizouka Shop",
+    "is_primary": false,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 546,
+  "fields": {
+    "product": 190,
+    "image": "products/vitrines/roch_vitrine_550l_rsf680_face.webp",
+    "alt_text": "Vue de face vitrine Roch 550L RSF-680 double battant",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 547,
+  "fields": {
+    "product": 190,
+    "image": "products/vitrines/roch_vitrine_550l_rsf680_interieur.webp",
+    "alt_text": "Vue intérieure cuve et clayettes vitrine 550L",
+    "is_primary": false,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 548,
+  "fields": {
+    "product": 190,
+    "image": "products/vitrines/roch_vitrines_gamme_showroom.webp",
+    "alt_text": "Gamme complète de vitrines Roch Onizouka Shop",
+    "is_primary": false,
+    "order": 0
   }
 }
 ]
