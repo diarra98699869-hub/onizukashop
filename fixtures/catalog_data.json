@@ -2583,6 +2583,105 @@
   }
 },
 {
+  "model": "shop.product",
+  "pk": 166,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Roch 316 Litres - Vitres Coulissantes Intérieures",
+    "slug": "congelateur-horizontal-roch-316l",
+    "sku": "ONZ-ROCH-CH-316L",
+    "category": 11,
+    "brand": 19,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal Roch 316 litres de nouvelle génération équipé de vitres coulissantes transparentes intérieures. Cette conception innovante empêche la déperdition d'air froid lors de l'ouverture du couvercle principal, garantissant une conservation maximale de vos vivres et d'importantes économies d'électricité à Bamako. Doté de la technologie exclusive « Roch Fast Freezing » pour une congélation à cœur ultra-rapide des viandes, poissons et jus de fruits. Comprend un éclairage LED intégré dans le couvercle, un panier métallique suspendu, une serrure de sécurité avec clé et un thermostat réglable en façade. Cuve en aluminium gaufré martelé anti-corrosion. Moteur tropicalisé conçu pour endurer les fortes chaleurs. Disponible au Showroom Onizuka Shop au Grand Marché de Bamako (Dibidani).",
+    "specifications": {
+      "Capacité brute / nette": "316 Litres",
+      "Marque": "Roch",
+      "Technologie": "Roch Fast Freezing (Surgélation rapide)",
+      "Type": "Congélateur coffre horizontal avec double isolation",
+      "Isolation spéciale": "Portes vitrées coulissantes intérieures transparentes",
+      "Porte principale": "1 large battant avec poignées intégrées",
+      "Sécurité": "Serrure à clé intégrée",
+      "Éclairage": "Éclairage LED automatique sous le couvercle",
+      "Rangement": "Panier métallique suspendu amovible",
+      "Cuve intérieure": "Aluminium gaufré martelé haute conductivité",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé)",
+      "Couleur": "Gris métallisé premium",
+      "Vidange": "Bouchon de dégivrage frontal"
+    },
+    "price": "299000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T15:07:48.799Z",
+    "updated_at": "2026-11-27T15:07:48.799Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 167,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Roch 550 Litres PRO - 2 Battants Fast Freezing",
+    "slug": "congelateur-horizontal-roch-550l",
+    "sku": "ONZ-ROCH-CH-550L",
+    "category": 11,
+    "brand": 19,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal professionnel Roch d'une grande capacité de 550 litres, conçu spécialement pour un usage intensif et commercial à Bamako. Doté de la technologie exclusive « ROCH Fast Freezing » assurant une descente ultrarapide en température pour préserver la fraîcheur absolue des viandes, poissons, glaces, volailles et boissons. Équipé d'une double porte à deux battants indépendants limitant la déperdition d'air froid, d'un double éclairage intérieur LED automatique, de 2 grands paniers suspendus amovibles et de serrures à clé de sécurité. Sa cuve interne en aluminium martelé gaufré garantit une répartition optimale du froid et une protection totale contre la corrosion. Tropicalisé lourd pour résister aux fortes chaleurs sans surconsommation électrique. Disponible au Grand Marché de Bamako avec garantie officielle Onizuka Shop.",
+    "specifications": {
+      "Capacité brute / nette": "550 Litres",
+      "Marque": "Roch",
+      "Technologie": "Roch Fast Freezing (Surgélation ultra-rapide)",
+      "Type": "Congélateur coffre professionnel double porte (2 battants)",
+      "Portes / Battants": "2 grands battants indépendants avec poignées intégrées",
+      "Sécurité": "Double serrure à clé indépendante",
+      "Éclairage": "Double éclairage LED automatique intégré aux couvercles",
+      "Rangement": "2 grands paniers métalliques suspendus amovibles",
+      "Cuve intérieure": "Aluminium gaufré martelé haute conduction thermique",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé lourd spécial Bamako)",
+      "Couleur": "Gris Silver métallisé haute durabilité",
+      "Vidange": "Bouchon de vidange frontal pour dégivrage rapide"
+    },
+    "price": "415000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T15:07:49.263Z",
+    "updated_at": "2026-11-27T15:07:49.263Z"
+  }
+},
+{
   "model": "shop.productimage",
   "pk": 254,
   "fields": {
@@ -3986,6 +4085,50 @@
     "product": 165,
     "image": "products/congelateurs_coffres/fizzen_coffre_550l_ouvert.webp",
     "alt_text": "Congélateur Coffre Horizontal Fizzen 550 Litres PRO - 2 Battants Géants - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 467,
+  "fields": {
+    "product": 166,
+    "image": "products/congelateurs_coffres/roch_coffre_316l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal Roch 316 Litres - Vitres Coulissantes Intérieures - Vue réelle Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 468,
+  "fields": {
+    "product": 166,
+    "image": "products/congelateurs_coffres/roch_coffre_316l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal Roch 316 Litres - Vitres Coulissantes Intérieures - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 469,
+  "fields": {
+    "product": 167,
+    "image": "products/congelateurs_coffres/roch_coffre_550l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal Roch 550 Litres PRO - 2 Battants Fast Freezing - Vue réelle Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 470,
+  "fields": {
+    "product": 167,
+    "image": "products/congelateurs_coffres/roch_coffre_550l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal Roch 550 Litres PRO - 2 Battants Fast Freezing - Vue réelle Dibidani",
     "is_primary": false,
     "order": 1
   }
