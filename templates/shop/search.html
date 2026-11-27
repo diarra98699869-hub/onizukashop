@@ -2,10 +2,11 @@
 {% load static humanize %}
 
 {% block content %}
-<div class="max-w-[1400px] mx-auto px-2 sm:px-4 xl:px-6 py-3 sm:py-5 space-y-3" id="search-workspace">
+<div class="max-w-[1400px] mx-auto px-2 sm:px-4 xl:px-6 py-3 sm:py-5 space-y-4" id="search-workspace">
 
-  <!-- Barre de recherche en direct + Suggestions Rapides Sans Reload -->
-  <div class="bg-white rounded-2xl border border-slate-200/80 p-3 sm:p-4 shadow-sm space-y-2.5">
+  <!-- BARRE DE RECHERCHE PRINCIPALE SUR-MESURE AVEC FILTRAGE INSTANTANÉ SANS RECHARGEMENT -->
+  <div class="bg-white rounded-2xl border border-slate-200/90 p-3 sm:p-5 shadow-xs space-y-3">
+    
     <form
       method="GET"
       action="{% url 'shop:search' %}"
@@ -16,51 +17,149 @@
       hx-indicator="#search-results-zone"
       hx-swap="outerHTML"
       hx-push-url="true"
-      class="flex items-center gap-2"
+      class="relative"
+      x-data="{
+        qVal: '{{ query|escapejs }}',
+        clear() {
+          this.qVal = '';
+          const inp = this.$refs.qInput;
+          inp.value = '';
+          inp.focus();
+          htmx.trigger(inp, 'keyup');
+        }
+      }"
     >
-      <input
-        type="search"
-        name="q"
-        value="{{ query }}"
-        placeholder="Filtrer instantanément (meuble, salon, lustre, frigo, clim, TV...)"
-        class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm text-slate-900 focus:outline-none focus:border-amber-500"
-      >
-      <button type="submit" class="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs shrink-0 cursor-pointer">
-        Filtrer
-      </button>
+      <div class="flex items-center w-full h-12 bg-slate-50 hover:bg-white focus-within:bg-white rounded-full p-1 pl-4 pr-1.5 border border-amber-400/90 shadow-sm focus-within:ring-4 focus-within:ring-amber-400/20 focus-within:border-amber-500 transition-all">
+        
+        <div class="pr-2.5 text-amber-500 shrink-0">
+          <svg width="20" height="20" class="w-5 h-5 stroke-[2.3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+          </svg>
+        </div>
+
+        <input
+          x-ref="qInput"
+          type="text"
+          name="q"
+          autocomplete="off"
+          x-model="qVal"
+          value="{{ query }}"
+          placeholder="Rechercher par nom, marque, référence (ex: congélateur coffre, clim lg, sharp 520, 348L...)"
+          class="flex-1 bg-transparent text-sm sm:text-base font-semibold text-slate-900 placeholder:text-slate-400 placeholder:font-normal focus:outline-none pr-2"
+        >
+
+        <!-- Bouton Reset ✕ -->
+        <button
+          type="button"
+          x-show="qVal.trim().length > 0"
+          x-cloak
+          @click="clear()"
+          class="w-7 h-7 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-200/70 flex items-center justify-center mr-1.5 transition cursor-pointer"
+          title="Effacer le texte"
+        >
+          <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+
+        <button
+          type="submit"
+          class="h-[38px] px-6 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 active:scale-95 text-slate-950 font-black text-xs sm:text-sm inline-flex items-center gap-1.5 shadow-xs transition shrink-0 cursor-pointer"
+        >
+          <span>Rechercher</span>
+          <span class="text-xs">→</span>
+        </button>
+      </div>
     </form>
 
-    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[11px]">
-      <span class="text-slate-400 font-bold shrink-0">Populaires :</span>
-      <a href="?q=Salon" hx-get="{% url 'shop:search' %}?q=Salon" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Salon &amp; Meubles</a>
-      <a href="?q=Lustre" hx-get="{% url 'shop:search' %}?q=Lustre" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Déco &amp; Lustres</a>
-      <a href="?q=Refrigerateur" hx-get="{% url 'shop:search' %}?q=Refrigerateur" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Réfrigérateur</a>
-      <a href="?q=Climatiseur" hx-get="{% url 'shop:search' %}?q=Climatiseur" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Climatiseur</a>
-      <a href="?q=TV" hx-get="{% url 'shop:search' %}?q=TV" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Smart TV</a>
-      <a href="?q=Samsung" hx-get="{% url 'shop:search' %}?q=Samsung" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Samsung</a>
-      <a href="?q=LG" hx-get="{% url 'shop:search' %}?q=LG" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">LG</a>
+    <!-- MOTS-CLÉS POPULAIRES À BAMAKO EN 1 CLIC -->
+    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[11px] pt-1 select-none">
+      <span class="text-slate-400 font-extrabold shrink-0 flex items-center gap-1">
+        <span>🔥</span>
+        <span>Tendances :</span>
+      </span>
+      <a href="?q=Congelateur" hx-get="{% url 'shop:search' %}?q=Congelateur" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Congélateurs Coffres</a>
+      <a href="?q=Climatiseur" hx-get="{% url 'shop:search' %}?q=Climatiseur" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Climatiseurs Inverter</a>
+      <a href="?q=Solaire" hx-get="{% url 'shop:search' %}?q=Solaire" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">☀ Solaire &amp; Batterie</a>
+      <a href="?q=Refrigerateur" hx-get="{% url 'shop:search' %}?q=Refrigerateur" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Réfrigérateurs</a>
+      <a href="?q=Ventilateur" hx-get="{% url 'shop:search' %}?q=Ventilateur" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Ventilateurs Rechargeables</a>
+      <a href="?q=Samsung" hx-get="{% url 'shop:search' %}?q=Samsung" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Samsung</a>
+      <a href="?q=LG" hx-get="{% url 'shop:search' %}?q=LG" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">LG</a>
+      <a href="?q=Sharp" hx-get="{% url 'shop:search' %}?q=Sharp" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Sharp</a>
+      <a href="?q=NAFA" hx-get="{% url 'shop:search' %}?q=NAFA" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">NAFA</a>
     </div>
+
   </div>
 
-  <!-- Zone de résultats dynamique -->
+  <!-- ZONE DE RÉSULTATS DYNAMIQUE -->
   <div id="search-results-zone" class="space-y-3">
     {% if query %}
-      <div class="flex items-center justify-between gap-2 flex-wrap px-0.5">
-        <h1 class="font-display text-sm sm:text-lg font-black text-slate-950">
-          « <span class="text-amber-600">{{ query }}</span> » • <span class="text-slate-500 font-bold">{{ total }} résultat{{ total|pluralize }}</span>
-        </h1>
+      <div class="flex items-center justify-between gap-2 flex-wrap px-1">
+        <div>
+          <h1 class="font-display text-sm sm:text-lg font-black text-slate-950">
+            « <span class="text-amber-600">{{ query }}</span> »
+          </h1>
+          <p class="text-[11px] text-slate-500 font-semibold">
+            {{ total }} produit{{ total|pluralize }} trouvé{{ total|pluralize }} au catalogue
+          </p>
+        </div>
+
+        <!-- Tris rapides -->
         <div class="flex items-center gap-1.5 text-[11px]">
-          <a href="?q={{ query|urlencode }}&amp;tri=pertinence" hx-get="{% url 'shop:search' %}?q={{ query|urlencode }}&amp;tri=pertinence" hx-target="#search-results-zone" hx-select="#search-results-zone" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-lg font-extrabold {% if sort == 'pertinence' %}bg-slate-950 text-amber-400{% else %}bg-white border border-slate-200 text-slate-700{% endif %}">Pertinence</a>
-          <a href="?q={{ query|urlencode }}&amp;tri=prix_asc" hx-get="{% url 'shop:search' %}?q={{ query|urlencode }}&amp;tri=prix_asc" hx-target="#search-results-zone" hx-select="#search-results-zone" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-lg font-extrabold {% if sort == 'prix_asc' %}bg-slate-950 text-amber-400{% else %}bg-white border border-slate-200 text-slate-700{% endif %}">Prix ↑</a>
-          <a href="?q={{ query|urlencode }}&amp;tri=prix_desc" hx-get="{% url 'shop:search' %}?q={{ query|urlencode }}&amp;tri=prix_desc" hx-target="#search-results-zone" hx-select="#search-results-zone" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-lg font-extrabold {% if sort == 'prix_desc' %}bg-slate-950 text-amber-400{% else %}bg-white border border-slate-200 text-slate-700{% endif %}">Prix ↓</a>
+          <span class="text-slate-400 text-[10px] uppercase font-bold mr-1 hidden sm:inline">Trier par :</span>
+          <a
+            href="?q={{ query|urlencode }}&amp;tri=pertinence"
+            hx-get="{% url 'shop:search' %}?q={{ query|urlencode }}&amp;tri=pertinence"
+            hx-target="#search-results-zone"
+            hx-select="#search-results-zone"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+            class="px-3 py-1.5 rounded-full font-black transition {% if sort == 'pertinence' %}bg-slate-950 text-amber-400 shadow-xs{% else %}bg-white border border-slate-200 text-slate-700 hover:border-amber-300{% endif %}"
+          >Pertinence</a>
+
+          <a
+            href="?q={{ query|urlencode }}&amp;tri=prix_asc"
+            hx-get="{% url 'shop:search' %}?q={{ query|urlencode }}&amp;tri=prix_asc"
+            hx-target="#search-results-zone"
+            hx-select="#search-results-zone"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+            class="px-3 py-1.5 rounded-full font-black transition {% if sort == 'prix_asc' %}bg-slate-950 text-amber-400 shadow-xs{% else %}bg-white border border-slate-200 text-slate-700 hover:border-amber-300{% endif %}"
+          >Prix croissant ↑</a>
+
+          <a
+            href="?q={{ query|urlencode }}&amp;tri=prix_desc"
+            hx-get="{% url 'shop:search' %}?q={{ query|urlencode }}&amp;tri=prix_desc"
+            hx-target="#search-results-zone"
+            hx-select="#search-results-zone"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+            class="px-3 py-1.5 rounded-full font-black transition {% if sort == 'prix_desc' %}bg-slate-950 text-amber-400 shadow-xs{% else %}bg-white border border-slate-200 text-slate-700 hover:border-amber-300{% endif %}"
+          >Prix décroissant ↓</a>
         </div>
       </div>
 
       {% include 'shop/partials/product_grid.html' %}
+
     {% else %}
-      <div class="bg-white rounded-2xl border border-slate-200/80 p-8 text-center">
-        <p class="text-xs text-slate-600 font-medium">Tapez le nom d'un meuble, d'une décoration ou d'un appareil ci-dessus pour filtrer instantanément.</p>
+
+      <!-- AUCUNE RECHERCHE EN COURS : GUIDE D'ACCÈS RAPIDE -->
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-8 sm:p-12 text-center max-w-lg mx-auto space-y-3">
+        <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto text-2xl font-bold">
+          ⚡
+        </div>
+        <h2 class="text-base sm:text-lg font-black text-slate-900">Que recherchez-vous chez Onizouka Shop ?</h2>
+        <p class="text-xs text-slate-500 max-w-sm mx-auto">
+          Tapez le nom d'un appareil, d'une marque (Samsung, LG, Sharp, NAFA, Fizzen...) ou d'une capacité pour voir les résultats instantanément.
+        </p>
+        <div class="pt-2">
+          <a href="{% url 'shop:catalog' %}" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-slate-950 text-amber-400 hover:bg-slate-900 text-xs font-black transition">
+            <span>Explorer tout le catalogue (66 produits)</span>
+            <span>→</span>
+          </a>
+        </div>
       </div>
+
     {% endif %}
   </div>
 

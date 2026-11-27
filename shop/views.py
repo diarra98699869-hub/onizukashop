@@ -556,79 +556,182 @@ def product_detail(request, slug):
 
 
 # ---------------------------------------------------------------------------
-# Recherche & Autocomplétion Live Instantanée (HTMX)
+# Recherche & Autocomplétion Live Instantanée Multi-Mots Tolérante (HTMX)
 # ---------------------------------------------------------------------------
 
-def _build_accent_tolerant_q(query):
-    """Recherche tolérante aux accents (ex: refrigerateur <-> réfrigérateur, meuble, deco <-> déco)."""
+def _build_smart_search_q(query_str):
+    """
+    Moteur de recherche e-commerce intelligent et tolérant aux accents / synonymes / multi-mots.
+    Supporte les requêtes composées (ex: 'clim lg', 'congelateur nafa 348', 'sharp 520', 'frigo solaire').
+    Chaque mot affine la recherche (ET logique entre les termes).
+    """
+    import re
     import unicodedata
-    stripped = ''.join(
-        c for c in unicodedata.normalize('NFD', query) if unicodedata.category(c) != 'Mn'
+
+    query_str = (query_str or '').strip()
+    if not query_str:
+        return Q()
+
+    # Dictionnaire de synonymes & équivalences fréquentes à Bamako
+    SYNONYMS = {
+        'frigo': ['frigo', 'refrigerateur', 'réfrigérateur'],
+        'frigos': ['frigo', 'refrigerateur', 'réfrigérateur'],
+        'refrigerateur': ['refrigerateur', 'réfrigérateur', 'frigo'],
+        'refrigerateurs': ['refrigerateurs', 'réfrigérateurs', 'frigo', 'frigos'],
+        'clim': ['clim', 'climatiseur', 'climatisation', 'inverter'],
+        'clims': ['clim', 'climatiseur', 'climatisation'],
+        'climatiseur': ['climatiseur', 'clim', 'inverter', 'split'],
+        'climatiseurs': ['climatiseurs', 'clims', 'inverter', 'split'],
+        'congelo': ['congelateur', 'congélateur', 'coffre'],
+        'congelos': ['congelateur', 'congélateur', 'coffre'],
+        'congelateur': ['congelateur', 'congélateur', 'coffre'],
+        'congelateurs': ['congelateurs', 'congélateurs', 'coffres'],
+        'coffre': ['coffre', 'horizontal', 'congelateur', 'congélateur'],
+        'coffres': ['coffres', 'horizontaux', 'congelateur', 'congélateur'],
+        'tele': ['tele', 'télé', 'televiseur', 'téléviseur', 'tv'],
+        'teles': ['teles', 'télés', 'televiseurs', 'téléviseurs', 'tv'],
+        'tv': ['tv', 'televiseur', 'téléviseur', 'smart', 'led'],
+        'televiseur': ['televiseur', 'téléviseur', 'tv', 'smart'],
+        'ventilo': ['ventilo', 'ventilateur'],
+        'ventilos': ['ventilos', 'ventilateurs'],
+        'ventilateur': ['ventilateur', 'ventilo', 'rechargeable'],
+        'ventilateurs': ['ventilateurs', 'ventilos', 'rechargeables'],
+        'solaire': ['solaire', 'dc', 'panneau', 'batterie'],
+        'meuble': ['meuble', 'salon', 'canape', 'canapé', 'fauteuil'],
+        'meubles': ['meubles', 'salons', 'canapes', 'canapés', 'fauteuils'],
+        'deco': ['deco', 'déco', 'decoration', 'décoration', 'lustre'],
+        'lustre': ['lustre', 'luminaire', 'lampe', 'led'],
+    }
+
+    # Découpage par espace ou tiret
+    tokens = [t for t in re.split(r'[\s,\-_+]+', query_str) if len(t) >= 1]
+    if not tokens:
+        tokens = [query_str]
+
+    master_q = Q()
+    for token in tokens:
+        t_clean = ''.join(c for c in unicodedata.normalize('NFD', token) if unicodedata.category(c) != 'Mn').lower()
+        variants = {token.lower(), t_clean}
+
+        # Ajouter synonymes éventuels
+        if t_clean in SYNONYMS:
+            for s in SYNONYMS[t_clean]:
+                variants.add(s)
+                variants.add(''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn').lower())
+
+        # Pour ce token, il doit apparaître dans au moins un des champs
+        token_q = Q()
+        for v in variants:
+            token_q |= (
+                Q(name__icontains=v) |
+                Q(brand__name__icontains=v) |
+                Q(category__name__icontains=v) |
+                Q(sku__icontains=v) |
+                Q(short_description__icontains=v) |
+                Q(description__icontains=v)
+            )
+        # Chaque token doit matcher (AND logique)
+        master_q &= token_q
+
+    return master_q
+
+
+def _get_search_relevance_ordering(query_str):
+    """Donne une priorité maximale aux correspondances sur le nom, le modèle et la marque."""
+    from django.db.models import Case, When, Value, IntegerField
+    query_clean = query_str.strip().lower()
+    return Case(
+        When(name__icontains=query_clean, then=Value(100)),
+        When(sku__iexact=query_clean, then=Value(90)),
+        When(brand__name__icontains=query_clean, then=Value(70)),
+        When(category__name__icontains=query_clean, then=Value(50)),
+        default=Value(10),
+        output_field=IntegerField(),
     )
-    variants = {query}
-    if stripped and stripped.lower() != query.lower():
-        variants.add(stripped)
-    # Ajouter quelques équivalences françaises fréquentes
-    for base_w, acc_w in [('refrigerateur', 'réfrigérateur'), ('congelateur', 'congélateur'), ('televiseur', 'téléviseur'), ('decoration', 'décoration'), ('cuisiniere', 'cuisinière'), ('canape', 'canapé')]:
-        if base_w in stripped.lower():
-            variants.add(stripped.lower().replace(base_w, acc_w))
-    q_obj = Q()
-    for v in variants:
-        q_obj |= (
-            Q(name__icontains=v) |
-            Q(short_description__icontains=v) |
-            Q(description__icontains=v) |
-            Q(brand__name__icontains=v) |
-            Q(category__name__icontains=v) |
-            Q(sku__icontains=v)
-        )
-    return q_obj
 
 
 def live_search(request):
-    """Résultats instantanés HTMX sous la barre de recherche dès 2 caractères."""
+    """
+    Résultats instantanés HTMX ultra-rapides sous la barre de recherche.
+    Si query < 2 caractères : suggestions de recherche populaires + rayons phares.
+    Si query >= 2 caractères : autocomplétion intelligente avec miniature, prix et badge.
+    """
     query = request.GET.get('q', '').strip()
-    if len(query) < 2:
-        return render(request, 'shop/partials/live_search_results.html', {'query': query, 'results': [], 'categories': []})
 
-    q_filter = _build_accent_tolerant_q(query)
+    # Découverte / Tendances par défaut si la barre est vide ou vient d'être cliquée
+    if len(query) < 2:
+        popular_keywords = [
+            'Congélateur Coffre', 'Climatiseur Inverter', 'Frigo Solaire',
+            'Smart TV 4K', 'Ventilateur Solaire', 'Salon & Meuble', 'Sharp 520L', 'NAFA'
+        ]
+        top_categories = list(Category.objects.filter(parent__isnull=True, is_active=True).order_by('order', 'name')[:6])
+        featured_samples = list(Product.objects.filter(is_active=True, is_featured=True).select_related('brand', 'category').prefetch_related('images')[:4])
+
+        return render(request, 'shop/partials/live_search_results.html', {
+            'query': query,
+            'is_empty_state': True,
+            'popular_keywords': popular_keywords,
+            'top_categories': top_categories,
+            'featured_samples': featured_samples,
+            'results': [],
+            'categories': [],
+            'total_matches': 0,
+        })
+
+    q_filter = _build_smart_search_q(query)
+    relevance_order = _get_search_relevance_ordering(query)
+
+    base_qs = Product.objects.filter(q_filter, is_active=True).distinct()
+    total_matches = base_qs.count()
+
     results = list(
-        Product.objects.filter(q_filter, is_active=True)
+        base_qs
         .select_related('brand', 'category')
         .prefetch_related('images')
-        .distinct()
-        .order_by('-is_featured', '-created_at')[:6]
+        .annotate(relevance=relevance_order)
+        .order_by('-relevance', '-is_featured', '-created_at')[:7]
     )
+
     categories = list(
-        Category.objects.filter(Q(name__icontains=query) | Q(slug__icontains=query), is_active=True)[:3]
+        Category.objects.filter(Q(name__icontains=query) | Q(slug__icontains=query), is_active=True)[:4]
     )
+
     return render(request, 'shop/partials/live_search_results.html', {
         'query': query,
+        'is_empty_state': False,
         'results': results,
         'categories': categories,
+        'total_matches': total_matches,
     })
 
 
 def search(request):
-    """Recherche fulltext tolérante aux accents dans tous les rayons avec tri/filtres live"""
+    """Recherche fulltext multi-mots intelligente dans tous les rayons avec tri et pagination live"""
     query = request.GET.get('q', '').strip()
     sort = request.GET.get('tri', 'pertinence')
     products_qs = Product.objects.none()
     total = 0
 
     if query:
-        q_filter = _build_accent_tolerant_q(query)
-        products_qs = Product.objects.filter(
-            q_filter,
-            is_active=True
-        ).select_related('brand', 'category').prefetch_related('images').distinct()
+        q_filter = _build_smart_search_q(query)
+        relevance_order = _get_search_relevance_ordering(query)
+
+        products_qs = (
+            Product.objects.filter(q_filter, is_active=True)
+            .select_related('brand', 'category')
+            .prefetch_related('images')
+            .distinct()
+        )
         products_qs = _apply_smart_catalog_filters(request, products_qs)
+
         if sort == 'prix_asc':
             products_qs = products_qs.order_by('price')
         elif sort == 'prix_desc':
             products_qs = products_qs.order_by('-price')
-        else:
-            products_qs = products_qs.order_by('-is_featured', '-created_at')
+        elif sort == 'recents':
+            products_qs = products_qs.order_by('-created_at')
+        else: # pertinence
+            products_qs = products_qs.annotate(relevance=relevance_order).order_by('-relevance', '-is_featured', '-created_at')
 
         total = products_qs.count()
         paginator = Paginator(products_qs, 24)

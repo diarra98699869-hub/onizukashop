@@ -341,33 +341,78 @@
           {% endif %}
         </div>
 
-        <!-- GRANDE BARRE DE RECHERCHE STYLE ALIBABA + LIVE AUTOCOMPLETE (DESKTOP) -->
-        <div class="hidden lg:flex flex-1 max-w-2xl mx-4 relative" x-data="{ liveOpen: false }" @click.away="liveOpen = false">
+        <!-- GRANDE BARRE DE RECHERCHE ULTRA-PREMIUM + LIVE AUTOCOMPLETE (DESKTOP) -->
+        <div
+          class="hidden lg:flex flex-1 max-w-2xl mx-4 relative"
+          x-data="{
+            liveOpen: false,
+            searchQuery: '{{ request.GET.q|default:''|escapejs }}',
+            clearSearch() {
+              this.searchQuery = '';
+              const inp = this.$refs.searchInput;
+              inp.value = '';
+              inp.focus();
+              htmx.trigger(inp, 'focus');
+            }
+          }"
+          @click.away="liveOpen = false"
+          @keydown.escape="liveOpen = false"
+        >
           <form action="{% url 'shop:search' %}" method="GET" class="w-full">
-            <div class="flex items-center w-full h-11 bg-white rounded-full p-1 border-2 border-amber-400 focus-within:ring-4 focus-within:ring-amber-400/20 transition">
-              <div class="pl-3.5 pr-2 text-slate-400">
-                <svg width="18" height="18" class="w-[18px] h-[18px] stroke-[2.2] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="flex items-center w-full h-11 bg-white rounded-full p-1 pl-3.5 pr-1.5 border border-amber-400/90 shadow-[0_2px_12px_rgba(245,158,11,0.12)] focus-within:border-amber-500 focus-within:ring-4 focus-within:ring-amber-400/20 transition-all">
+              
+              <!-- Icône Loupe raffinée -->
+              <div class="pr-2 text-amber-500/80 focus-within:text-amber-500 shrink-0">
+                <svg width="18" height="18" class="w-[18px] h-[18px] stroke-[2.3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
                 </svg>
               </div>
+
+              <!-- Champ de saisie instantané -->
               <input
-                type="search"
+                x-ref="searchInput"
+                type="text"
                 name="q"
                 autocomplete="off"
-                value="{{ request.GET.q|default:'' }}"
-                placeholder="Chercher meuble, salon, déco, frigo, clim, TV, référence..."
+                x-model="searchQuery"
+                placeholder="Rechercher congélateur, clim Inverter, frigo, TV, meuble..."
                 hx-get="{% url 'shop:live_search' %}"
-                hx-trigger="keyup changed delay:220ms"
+                hx-trigger="keyup changed delay:180ms, focus"
                 hx-target="#desktop-live-results"
                 @focus="liveOpen = true"
-                @input="liveOpen = $event.target.value.trim().length >= 2"
-                class="flex-1 bg-transparent text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none pr-2"
+                @input="liveOpen = true"
+                class="flex-1 bg-transparent text-sm font-semibold text-slate-900 placeholder:text-slate-400 placeholder:font-normal focus:outline-none pr-1"
               >
+
+              <!-- Bouton Effacer Rapide (Croix ✕) -->
+              <button
+                type="button"
+                x-show="searchQuery.trim().length > 0"
+                x-cloak
+                @click="clearSearch()"
+                class="w-6 h-6 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center mr-1.5 transition cursor-pointer"
+                title="Effacer la recherche"
+                aria-label="Effacer"
+              >
+                <svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+
+              <!-- Raccourci Clavier Indicatif '/' -->
+              <span
+                x-show="searchQuery.trim().length === 0"
+                class="hidden xl:inline-flex items-center justify-center px-1.5 py-0.5 mr-2 text-[10px] font-bold text-slate-400 bg-slate-100 rounded border border-slate-200 select-none"
+                title="Raccourci clavier"
+              >/</span>
+
+              <!-- Bouton Lancer la recherche -->
               <button
                 type="submit"
-                class="h-[34px] px-5 rounded-full bg-amber-400 hover:bg-amber-500 active:scale-95 text-slate-950 font-extrabold text-xs inline-flex items-center gap-1.5 transition shrink-0 cursor-pointer"
+                class="h-[34px] px-5 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 active:scale-95 text-slate-950 font-black text-xs inline-flex items-center gap-1.5 shadow-xs transition shrink-0 cursor-pointer"
               >
                 <span>Rechercher</span>
+                <span class="text-xs">→</span>
               </button>
             </div>
           </form>
@@ -471,36 +516,72 @@
 
       </div>
 
-      <!-- 2. BARRE DE RECHERCHE MOBILE ALIBABA + LIVE AUTOCOMPLETE -->
-      <div class="lg:hidden pb-2 relative" x-data="{ mLiveOpen: false }" @click.away="mLiveOpen = false">
+      <!-- 2. BARRE DE RECHERCHE MOBILE ULTRA-PREMIUM + LIVE AUTOCOMPLETE -->
+      <div
+        class="lg:hidden pb-2 relative"
+        x-data="{
+          mLiveOpen: false,
+          mSearchQuery: '{{ request.GET.q|default:''|escapejs }}',
+          mClearSearch() {
+            this.mSearchQuery = '';
+            const inp = this.$refs.mSearchInput;
+            inp.value = '';
+            inp.focus();
+            htmx.trigger(inp, 'focus');
+          }
+        }"
+        @click.away="mLiveOpen = false"
+        @keydown.escape="mLiveOpen = false"
+      >
         <form action="{% url 'shop:search' %}" method="GET" class="w-full">
-          <div class="flex items-center w-full h-[38px] bg-white rounded-full p-0.5 border-2 border-amber-400 shadow-sm">
+          <div class="flex items-center w-full h-[40px] bg-white rounded-full p-1 pl-1.5 pr-1 border border-amber-400/90 shadow-sm focus-within:ring-2 focus-within:ring-amber-400/30 transition-all">
+            <!-- Bouton Catégories Drawer -->
             <button
               type="button"
               @click="catDrawer = true"
-              class="h-8 pl-2.5 pr-1.5 text-slate-600 flex items-center justify-center shrink-0"
+              class="h-8 px-2 rounded-full hover:bg-slate-100 text-slate-700 flex items-center gap-1 shrink-0"
               aria-label="Toutes les catégories"
             >
-              <svg class="w-4 h-4 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 stroke-[2.2] text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h12"/>
               </svg>
             </button>
+
+            <span class="w-[1px] h-4 bg-slate-200 mx-1"></span>
+
             <input
-              type="search"
+              x-ref="mSearchInput"
+              type="text"
               name="q"
               autocomplete="off"
-              value="{{ request.GET.q|default:'' }}"
-              placeholder="Meuble, déco, frigo, clim, TV..."
+              x-model="mSearchQuery"
+              placeholder="Congélateur, clim, TV, frigo..."
               hx-get="{% url 'shop:live_search' %}"
-              hx-trigger="keyup changed delay:240ms"
+              hx-trigger="keyup changed delay:180ms, focus"
               hx-target="#mobile-live-results"
               @focus="mLiveOpen = true"
-              @input="mLiveOpen = $event.target.value.trim().length >= 2"
-              class="flex-1 min-w-0 bg-transparent text-[13px] font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none px-1.5"
+              @input="mLiveOpen = true"
+              class="flex-1 min-w-0 bg-transparent text-[13px] font-semibold text-slate-900 placeholder:text-slate-400 placeholder:font-normal focus:outline-none px-1"
             >
+
+            <!-- Bouton Effacer Mobile -->
+            <button
+              type="button"
+              x-show="mSearchQuery.trim().length > 0"
+              x-cloak
+              @click="mClearSearch()"
+              class="w-6 h-6 rounded-full text-slate-400 hover:text-slate-600 flex items-center justify-center shrink-0 mr-1"
+              aria-label="Effacer"
+            >
+              <svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+
+            <!-- Bouton Chercher -->
             <button
               type="submit"
-              class="h-[30px] px-3.5 rounded-full bg-amber-400 active:bg-amber-500 text-slate-950 font-extrabold text-[11px] inline-flex items-center gap-1 shrink-0"
+              class="h-[32px] px-3.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 active:from-amber-500 active:to-amber-600 text-slate-950 font-black text-[11px] inline-flex items-center gap-1 shrink-0 shadow-xs"
             >
               <svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>

@@ -1,54 +1,188 @@
 {% load humanize %}
-{% if query|length >= 2 %}
-<div class="mt-1.5 bg-white text-slate-900 rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden z-50">
-  {% if categories %}
-  <div class="px-3 py-2 bg-slate-50 border-b border-slate-100 flex items-center gap-1.5 flex-wrap">
-    <span class="text-[10px] font-extrabold text-slate-400 uppercase">Rayons :</span>
-    {% for c in categories %}
-    <a href="{{ c.get_absolute_url }}" class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[11px] font-extrabold hover:bg-amber-400 transition">
-      {{ c.name }} →
-    </a>
-    {% endfor %}
-  </div>
-  {% endif %}
 
-  {% if results %}
-  <div class="divide-y divide-slate-100 max-h-80 overflow-y-auto">
-    {% for item in results %}
-    <a href="{{ item.get_absolute_url }}" class="flex items-center justify-between gap-3 p-2.5 hover:bg-amber-50/50 transition">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <div class="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200/70 p-1 flex items-center justify-center shrink-0 overflow-hidden relative">
-          {% if item.primary_image %}
-          <img src="{{ item.primary_image.thumbnail.url|default:item.primary_image.image.url }}" alt="{{ item.name }}" class="max-w-full max-h-full object-contain">
-          {% endif %}
-          {% if item.has_video %}
-          <span class="absolute bottom-0.5 right-0.5 w-4 h-4 rounded-full bg-slate-950/85 text-amber-400 text-[8px] flex items-center justify-center font-black">▶</span>
-          {% endif %}
+<div class="mt-2 bg-white text-slate-900 rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden z-50 text-left transition-all">
+
+  {% if is_empty_state %}
+    <!-- ÉTAT DÉCOUVERTE : QUAND L'UTILISATEUR CLIQUE DANS LA BARRE SANS TAPER -->
+    <div class="p-3.5 space-y-3.5 bg-gradient-to-b from-slate-50/80 to-white">
+      
+      <!-- Recherches populaires à Bamako -->
+      <div>
+        <div class="flex items-center gap-1.5 text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">
+          <span>🔥</span>
+          <span>Recherches populaires à Bamako</span>
         </div>
-        <div class="min-w-0">
-          <p class="text-xs font-bold text-slate-900 truncate">{{ item.name }}</p>
-          <p class="text-[10px] text-slate-400 truncate">{{ item.category.short_name }}{% if item.brand %} • {{ item.brand.name }}{% endif %}</p>
+        <div class="flex flex-wrap gap-1.5">
+          {% for kw in popular_keywords %}
+          <a
+            href="{% url 'shop:search' %}?q={{ kw|urlencode }}"
+            class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-400 hover:text-slate-950 text-slate-700 text-xs font-semibold transition active:scale-95"
+          >
+            <span>{{ kw }}</span>
+          </a>
+          {% endfor %}
         </div>
       </div>
-      <span class="font-display font-black text-xs sm:text-sm text-amber-600 shrink-0 whitespace-nowrap">
-        {{ item.current_price|floatformat:0|intcomma }} F
-      </span>
-    </a>
-    {% endfor %}
-  </div>
-  <a href="{% url 'shop:search' %}?q={{ query|urlencode }}" class="block py-2.5 px-3 bg-slate-950 hover:bg-slate-900 text-amber-400 text-center text-xs font-extrabold transition">
-    Voir tous les résultats pour « {{ query }} » →
-  </a>
+
+      <!-- Rayons phares direct -->
+      {% if top_categories %}
+      <div class="pt-2 border-t border-slate-100">
+        <div class="flex items-center gap-1.5 text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">
+          <svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h7"/>
+          </svg>
+          <span>Accès direct aux rayons</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+          {% for cat in top_categories %}
+          <a
+            href="{{ cat.get_absolute_url }}"
+            class="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-amber-50/70 border border-slate-100 hover:border-amber-300 text-xs font-bold text-slate-800 transition group"
+          >
+            <span class="truncate">{{ cat.short_name }}</span>
+            <span class="text-amber-500 text-[10px] group-hover:translate-x-0.5 transition-transform">→</span>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="pt-1 text-center">
+        <span class="text-[10px] text-slate-400 font-medium">💡 Astuce : vous pouvez chercher par nom, marque (Samsung, LG, Sharp, NAFA, Fizzen) ou capacité (348L, 1.5 CV...).</span>
+      </div>
+
+    </div>
+
   {% else %}
-  <div class="p-3.5 text-center space-y-2">
-    <p class="text-xs text-slate-500">Aucun article trouvé pour « <strong>{{ query }}</strong> »</p>
+
+    <!-- ÉTAT RÉSULTATS : DÈS 2 CARACTÈRES TAPÉS -->
+    {% if categories %}
+    <div class="px-3.5 py-2 bg-amber-50/70 border-b border-amber-100/80 flex items-center gap-2 flex-wrap">
+      <span class="text-[10px] font-black text-amber-800 uppercase tracking-wider">Rayons suggérés :</span>
+      {% for c in categories %}
+      <a
+        href="{{ c.get_absolute_url }}"
+        class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 border border-amber-200 text-xs font-bold hover:bg-amber-400 hover:text-slate-950 transition"
+      >
+        <span>{{ c.name }}</span>
+        <span class="text-amber-600 font-black text-[10px]">→</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if results %}
+    <div class="divide-y divide-slate-100 max-h-[360px] overflow-y-auto overscroll-contain">
+      {% for item in results %}
+      <a
+        href="{{ item.get_absolute_url }}"
+        class="flex items-center justify-between gap-3 p-3 hover:bg-amber-50/60 transition group"
+      >
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200/80 p-1 flex items-center justify-center shrink-0 overflow-hidden relative group-hover:border-amber-400 transition">
+            {% if item.primary_image %}
+              <img
+                src="{{ item.primary_image.thumbnail.url|default:item.primary_image.image.url }}"
+                alt="{{ item.name }}"
+                class="max-w-full max-h-full object-contain"
+                loading="lazy"
+              >
+            {% else %}
+              <span class="text-xs text-slate-400">📦</span>
+            {% endif %}
+
+            {% if item.has_video %}
+              <span class="absolute bottom-0.5 right-0.5 w-4 h-4 rounded-full bg-slate-950/90 text-amber-400 text-[8px] flex items-center justify-center font-black" title="Vidéo disponible">
+                ▶
+              </span>
+            {% endif %}
+          </div>
+
+          <div class="min-w-0">
+            <p class="text-xs sm:text-[13px] font-bold text-slate-900 group-hover:text-amber-700 truncate transition">
+              {{ item.name }}
+            </p>
+            <div class="flex items-center gap-1.5 mt-0.5 text-[11px] text-slate-500 flex-wrap">
+              <span class="font-medium text-slate-600">{{ item.category.short_name }}</span>
+              {% if item.brand %}
+                <span class="text-slate-300">•</span>
+                <span class="font-bold text-slate-700 bg-slate-100 px-1.5 py-0.2 rounded text-[10px]">{{ item.brand.name }}</span>
+              {% endif %}
+              {% if item.sku %}
+                <span class="text-slate-300 hidden sm:inline">•</span>
+                <span class="text-slate-400 text-[10px] hidden sm:inline">Réf: {{ item.sku }}</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="text-right shrink-0">
+          {% if item.current_price > 0 %}
+            <span class="font-display font-black text-xs sm:text-sm text-slate-950 whitespace-nowrap block">
+              {{ item.current_price|floatformat:0|intcomma }} <span class="text-[10px] text-amber-600 font-extrabold">F</span>
+            </span>
+            {% if item.is_on_sale %}
+              <span class="text-[10px] text-slate-400 line-through font-medium block">
+                {{ item.price|floatformat:0|intcomma }} F
+              </span>
+            {% endif %}
+          {% else %}
+            <span class="text-[11px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 whitespace-nowrap">
+              Sur devis
+            </span>
+          {% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+
+    <!-- Lien voir tous les résultats avec compteur réel -->
     <a
-      href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text={{ 'Bonjour Onizouka Shop, avez-vous disponible : '|urlencode }}{{ query|urlencode }}"
-      target="_blank"
-      rel="noopener"
-      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-[11px] font-extrabold"
-    >Demander « {{ query }} » sur WhatsApp</a>
-  </div>
+      href="{% url 'shop:search' %}?q={{ query|urlencode }}"
+      class="flex items-center justify-between py-3 px-4 bg-slate-950 hover:bg-slate-900 text-amber-400 text-xs font-black transition border-t border-slate-800"
+    >
+      <span>Voir les {{ total_matches }} résultat{{ total_matches|pluralize }} pour « {{ query }} »</span>
+      <span class="text-white text-xs">Afficher tout →</span>
+    </a>
+
+    {% else %}
+
+    <!-- ÉTAT AUCUN RÉSULTAT : ORIENTATION WHATSAPP & SUGGESTIONS -->
+    <div class="p-5 text-center space-y-3">
+      <div class="w-10 h-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto text-lg">
+        🔍
+      </div>
+      <div>
+        <p class="text-xs sm:text-sm font-bold text-slate-800">
+          Aucun produit ne correspond exactement à « <span class="text-amber-600 font-black">{{ query }}</span> »
+        </p>
+        <p class="text-[11px] text-slate-500 mt-1 max-w-sm mx-auto">
+          Nos arrivages au Grand Marché de Bamako (Dibidani) sont quotidiens. Cet article est peut-être disponible en boutique physique !
+        </p>
+      </div>
+
+      <div class="pt-1 flex flex-col sm:flex-row items-center justify-center gap-2">
+        <a
+          href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text={{ 'Bonjour ONIZUKA SHOP, avez-vous en stock au Grand Marché : '|urlencode }}{{ query|urlencode }}{{ ' ?'|urlencode }}"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-extrabold shadow-sm transition"
+        >
+          <span>Demander « {{ query }} » sur WhatsApp</span>
+          <span class="text-sm">💬</span>
+        </a>
+        <a
+          href="{% url 'shop:catalog' %}"
+          class="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
+        >
+          <span>Explorer tout le catalogue</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+
+    {% endif %}
+
   {% endif %}
+
 </div>
-{% endif %}
