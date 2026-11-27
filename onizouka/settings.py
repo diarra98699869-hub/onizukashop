@@ -402,3 +402,10 @@ SHOP_NAME = 'Onizouka Shop'
 SHOP_TAGLINE = "L'electronique de qualite au Mali"
 PRODUCTS_PER_PAGE = 24
 LOW_STOCK_THRESHOLD = 5
+
+# ==============================================================================
+# PERFORMANCE & CACHE IMAGES (Optimistic ImageKit - Pas de checks disques redondants)
+# ==============================================================================
+IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = 'imagekit.cachefiles.strategies.Optimistic'
+IMAGEKIT_SPEC_CACHEFILE_NAMER = 'imagekit.cachefiles.namers.hash'
+IMAGEKIT_CACHEFILE_DIR = 'CACHE/images'

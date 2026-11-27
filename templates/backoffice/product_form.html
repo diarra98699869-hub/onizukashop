@@ -7,6 +7,7 @@
 <div
   class="max-w-4xl mx-auto space-y-3.5 pb-8"
   x-data="{
+    isSaving: false,
     previewUrl: '{% if product and product.primary_image %}{{ product.primary_image.image.url }}{% endif %}',
     videoPreviewUrl: '{% if product and product.video_file %}{{ product.video_file.url }}{% endif %}',
     videoFileName: '',
@@ -123,7 +124,7 @@
   </div>
 
   <!-- FORMULAIRE PRODUIT EXPRESS MOBILE & PRO DESKTOP -->
-  <form id="product-editor-form" method="POST" enctype="multipart/form-data" class="space-y-3.5">
+  <form id="product-editor-form" method="POST" enctype="multipart/form-data" class="space-y-3.5" @submit="isSaving = true">
     {% csrf_token %}
     <input type="hidden" name="remove_video" :value="removeVideo ? '1' : '0'">
 
@@ -534,12 +535,31 @@
           Annuler
         </a>
         {% if not product %}
-        <button type="submit" name="save_and_add" value="1" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs cursor-pointer">
+        <button
+          type="submit"
+          name="save_and_add"
+          value="1"
+          :disabled="isSaving"
+          class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-bold text-xs cursor-pointer"
+        >
           Enregistrer + Ajouter un suivant
         </button>
         {% endif %}
-        <button type="submit" class="px-6 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs shadow-sm cursor-pointer">
-          {% if product %}Enregistrer les modifications{% else %}Publier sur la boutique{% endif %}
+        <button
+          type="submit"
+          :disabled="isSaving"
+          :class="isSaving ? 'opacity-80 cursor-wait' : 'cursor-pointer'"
+          class="px-6 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs shadow-sm transition inline-flex items-center justify-center gap-2 min-w-[160px]"
+        >
+          <template x-if="isSaving">
+            <span class="inline-flex items-center gap-1.5">
+              <svg class="animate-spin w-3.5 h-3.5 text-slate-950" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              <span>Enregistrement...</span>
+            </span>
+          </template>
+          <template x-if="!isSaving">
+            <span>{% if product %}Enregistrer les modifications{% else %}Publier sur la boutique{% endif %}</span>
+          </template>
         </button>
       </div>
     </div>
@@ -560,15 +580,26 @@
     form="product-editor-form"
     name="save_and_add"
     value="1"
-    class="px-3 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold shrink-0"
+    :disabled="isSaving"
+    class="px-3 py-2.5 rounded-xl bg-slate-900 disabled:opacity-50 text-white text-xs font-bold shrink-0"
   >+ Suivant</button>
   {% endif %}
   <button
     type="submit"
     form="product-editor-form"
-    class="flex-1 py-2.5 px-4 rounded-xl bg-amber-400 active:bg-amber-500 text-slate-950 font-extrabold text-xs shadow-sm"
+    :disabled="isSaving"
+    :class="isSaving ? 'opacity-80 cursor-wait' : ''"
+    class="flex-1 py-2.5 px-4 rounded-xl bg-amber-400 active:bg-amber-500 text-slate-950 font-extrabold text-xs shadow-sm inline-flex items-center justify-center gap-2"
   >
-    {% if product %}Enregistrer{% else %}Publier sur la boutique{% endif %}
+    <template x-if="isSaving">
+      <span class="inline-flex items-center gap-1.5">
+        <svg class="animate-spin w-3.5 h-3.5 text-slate-950" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+        <span>Enregistrement...</span>
+      </span>
+    </template>
+    <template x-if="!isSaving">
+      <span>{% if product %}Enregistrer{% else %}Publier sur la boutique{% endif %}</span>
+    </template>
   </button>
 </div>
 {% endblock %}
