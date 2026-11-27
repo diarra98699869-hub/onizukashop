@@ -1,194 +1,436 @@
 {% extends "backoffice/base.html" %}
 {% load humanize %}
 
-{% block title %}Stocks • Gestion Onizouka{% endblock %}
+{% block title %}Stocks &amp; Inventaire Magasin • Gestion Onizouka{% endblock %}
 
 {% block content %}
 <div
-  class="space-y-3"
+  class="space-y-4 pb-12"
   x-data="{
     supplyModalOpen: {{ form_has_errors|yesno:'true,false' }},
+    stockOutModalOpen: false,
     selectedProductId: '',
     selectedProductName: '',
     currentStock: 0,
     qtyInput: 5,
+    qtyOutInput: 1,
+
     openSupply(id, name, stock) {
       this.selectedProductId = id || '';
       this.selectedProductName = name || '';
       this.currentStock = stock || 0;
       this.qtyInput = 5;
       this.supplyModalOpen = true;
+    },
+
+    openStockOut(id, name, stock) {
+      this.selectedProductId = id || '';
+      this.selectedProductName = name || '';
+      this.currentStock = stock || 0;
+      this.qtyOutInput = 1;
+      this.stockOutModalOpen = true;
     }
   }"
 >
 
-  <!-- EN-TÊTE -->
-  <div class="bg-white rounded-2xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs flex items-center justify-between gap-2">
+  <!-- ===================================================================== -->
+  <!-- 1. EN-TÊTE OFFICIEL + ACTIONS D'EXPLOITATION                           -->
+  <!-- ===================================================================== -->
+  <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-3">
     <div>
-      <h1 class="text-base sm:text-xl font-black text-slate-950 font-heading">Stocks &amp; Arrivages</h1>
-      <p class="text-xs text-slate-500">Inventaire du magasin • Grand Marché Bamako</p>
-    </div>
-    <button
-      type="button"
-      @click="openSupply('', '', 0)"
-      class="px-3.5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs inline-flex items-center gap-1 shadow-2xs cursor-pointer shrink-0 active:scale-95 transition"
-    >
-      <svg class="w-4 h-4 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-      <span>Entrée stock</span>
-    </button>
-  </div>
-
-  <!-- 3 COMPTEURS RAPIDES -->
-  <div class="grid grid-cols-3 gap-2 sm:gap-3">
-    <a href="?filter=all" class="bg-white p-3 rounded-2xl border {% if filter_urgency == 'all' %}border-amber-400{% else %}border-slate-200/80{% endif %} shadow-2xs">
-      <span class="text-[10px] font-bold text-slate-400 uppercase block">Total</span>
-      <span class="font-heading font-black text-lg sm:text-2xl text-slate-950">{{ total_tracked_products }}</span>
-    </a>
-    <a href="?filter=out" class="bg-white p-3 rounded-2xl border {% if filter_urgency == 'out' %}border-rose-400{% else %}border-slate-200/80{% endif %} shadow-2xs">
-      <span class="text-[10px] font-bold text-rose-500 uppercase block">Ruptures</span>
-      <span class="font-heading font-black text-lg sm:text-2xl text-rose-600">{{ out_of_stock_count }}</span>
-    </a>
-    <a href="?filter=low" class="bg-white p-3 rounded-2xl border {% if filter_urgency == 'low' %}border-amber-400{% else %}border-slate-200/80{% endif %} shadow-2xs">
-      <span class="text-[10px] font-bold text-amber-600 uppercase block">Stock bas</span>
-      <span class="font-heading font-black text-lg sm:text-2xl text-amber-600">{{ low_stock_count }}</span>
-    </a>
-  </div>
-
-  <!-- RECHERCHE INSTANTANÉE -->
-  <form
-    method="GET"
-    action="{% url 'backoffice:stocks' %}"
-    hx-get="{% url 'backoffice:stocks' %}"
-    hx-trigger="keyup changed delay:200ms from:find input[name='q'], submit"
-    hx-target="#bo-live-results"
-    hx-select="#bo-live-results"
-    hx-swap="outerHTML show:none"
-    hx-push-url="true"
-    class="flex gap-1.5"
-  >
-    <input type="hidden" name="filter" id="bo-stocks-filter-input" value="{{ filter_urgency }}">
-    <input type="search" name="q" value="{{ search_q }}" placeholder="Filtrage instantané : nom, marque ou SKU..." class="flex-1 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-base sm:text-xs focus:outline-none focus:border-amber-500">
-    <button type="submit" class="px-3.5 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold cursor-pointer">OK</button>
-  </form>
-
-  <div id="bo-live-results" class="space-y-3">
-
-  <div data-keep-scroll="bo-stock-tabs" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs">
-    <a href="?filter=all{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}" hx-get="?filter=all{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}" hx-target="#bo-live-results" hx-select="#bo-live-results" hx-swap="outerHTML show:none" hx-push-url="true" onclick="document.getElementById('bo-stocks-filter-input').value='all'" class="px-3 py-2 rounded-xl font-extrabold whitespace-nowrap active:scale-95 transition {% if filter_urgency == 'all' %}bg-slate-950 text-amber-400{% else %}bg-white border border-slate-200 text-slate-600{% endif %}">Tous</a>
-    <a href="?filter=critical{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}" hx-get="?filter=critical{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}" hx-target="#bo-live-results" hx-select="#bo-live-results" hx-swap="outerHTML show:none" hx-push-url="true" onclick="document.getElementById('bo-stocks-filter-input').value='critical'" class="px-3 py-2 rounded-xl font-extrabold whitespace-nowrap active:scale-95 transition {% if filter_urgency == 'critical' %}bg-rose-600 text-white{% else %}bg-white border border-slate-200 text-rose-600{% endif %}">Alertes ({{ out_of_stock_count|add:low_stock_count }})</a>
-    <a href="?filter=out{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}" hx-get="?filter=out{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}" hx-target="#bo-live-results" hx-select="#bo-live-results" hx-swap="outerHTML show:none" hx-push-url="true" onclick="document.getElementById('bo-stocks-filter-input').value='out'" class="px-3 py-2 rounded-xl font-extrabold whitespace-nowrap active:scale-95 transition {% if filter_urgency == 'out' %}bg-rose-600 text-white{% else %}bg-white border border-slate-200 text-slate-600{% endif %}">Épuisés</a>
-    <a href="?filter=low{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}" hx-get="?filter=low{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}" hx-target="#bo-live-results" hx-select="#bo-live-results" hx-swap="outerHTML show:none" hx-push-url="true" onclick="document.getElementById('bo-stocks-filter-input').value='low'" class="px-3 py-2 rounded-xl font-extrabold whitespace-nowrap active:scale-95 transition {% if filter_urgency == 'low' %}bg-amber-400 text-slate-950{% else %}bg-white border border-slate-200 text-slate-600{% endif %}">Faibles</a>
-  </div>
-
-  <!-- CARTES STOCK MOBILE -->
-  <div class="sm:hidden space-y-2">
-    {% for p in products %}
-    <div class="bg-white rounded-2xl border border-slate-200/80 p-3 shadow-2xs flex items-center justify-between gap-2.5">
-      <div class="min-w-0 flex-1">
-        <p class="text-xs font-bold text-slate-900 line-clamp-1">{{ p.name }}</p>
-        <p class="text-[10px] text-slate-400 mt-0.5">{{ p.category.short_name|default:p.category.name }} • {{ p.sku }}</p>
-        <div class="mt-1.5 flex items-center gap-2">
-          <span class="px-2 py-0.5 rounded-md font-mono text-xs font-black {% if p.stock == 0 %}bg-rose-50 text-rose-700{% elif p.stock <= p.min_stock %}bg-amber-50 text-amber-800{% else %}bg-emerald-50 text-emerald-700{% endif %}">
-            {{ p.stock }} en stock
-          </span>
-          <span class="text-[10px] text-slate-400">seuil: {{ p.min_stock }}</span>
-        </div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <h1 class="text-base sm:text-xl font-black text-slate-950 font-heading">Stocks, Arrivages &amp; Valorisation Magasin</h1>
+        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">
+          Disponibilité : {{ availability_rate }}%
+        </span>
       </div>
+      <p class="text-xs text-slate-500 mt-0.5">
+        Grand Marché de Bamako (Dibidani) • Suivi des 107+ références en stock physique, alertes et traçabilité
+      </p>
+    </div>
+
+    <!-- BOUTONS D'ACTION RAPIDE -->
+    <div class="flex items-center gap-2 flex-wrap shrink-0 text-xs">
+      <button
+        type="button"
+        @click="openSupply('', '', 0)"
+        class="px-3.5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold inline-flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95 transition"
+      >
+        <svg class="w-4 h-4 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        <span>+ Arrivage Stock</span>
+      </button>
 
       <button
         type="button"
-        @click="openSupply('{{ p.id }}', '{{ p.name|escapejs }}', {{ p.stock }})"
-        class="h-9 px-3 rounded-xl bg-amber-400 active:bg-amber-500 text-slate-950 font-extrabold text-xs shrink-0 active:scale-95 transition"
-      >+ Stock</button>
+        @click="openStockOut('', '', 0)"
+        class="px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold inline-flex items-center gap-1.5 border border-slate-200/80 cursor-pointer active:scale-95 transition"
+      >
+        <span>− Sortie / Déstockage</span>
+      </button>
+
+      <a
+        href="{% url 'backoffice:export_stocks_csv' %}"
+        class="px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold inline-flex items-center gap-1.5 border border-slate-200/80 transition"
+        title="Télécharger l'inventaire complet format Excel UTF-8"
+      >
+        <svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+        <span class="hidden sm:inline">Export Excel</span>
+      </a>
+
+      <a
+        href="{% url 'backoffice:stocks_inventory_sheet' %}"
+        target="_blank"
+        class="px-3 py-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-bold inline-flex items-center gap-1.5 shadow-2xs transition"
+        title="Ouvrir la feuille d'inventaire officielle format papier A4 pour comptage physique"
+      >
+        <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24-1.077-.47-2.315-.65-3.674m0 0C5.35 6.068 6.438 4.5 8.1 4.5h7.8c1.662 0 2.75 1.568 2.03 5.655m-9.83 0h9.83m-9.83 0c-.18 1.359-.41 2.597-.65 3.674m9.83 0c.24-1.077.47-2.315.65-3.674M3.75 18h16.5M3.75 21h16.5"/></svg>
+        <span class="hidden sm:inline">Fiche A4</span>
+      </a>
     </div>
-    {% empty %}
-    <div class="bg-white rounded-2xl border border-slate-200 p-8 text-center text-xs text-slate-400">Aucun article trouvé.</div>
-    {% endfor %}
   </div>
 
-  <!-- TABLEAU STOCK DESKTOP -->
-  <div class="hidden sm:block bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
-    <table class="w-full text-left text-xs">
-      <thead>
-        <tr class="bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-          <th class="py-3 px-4">Produit</th>
-          <th class="py-3 px-4">Catégorie</th>
-          <th class="py-3 px-4">Disponible</th>
-          <th class="py-3 px-4">Seuil min</th>
-          <th class="py-3 px-4 text-right">Actions</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-100">
-        {% for p in products %}
-        <tr class="hover:bg-slate-50/70">
-          <td class="py-2.5 px-4">
-            <p class="font-bold text-slate-900 max-w-sm truncate">{{ p.name }}</p>
-            <p class="text-[10px] font-mono text-slate-400">{{ p.sku }}</p>
-          </td>
-          <td class="py-2.5 px-4 text-slate-600">{{ p.category.name }}</td>
-          <td class="py-2.5 px-4">
-            <span class="px-2 py-0.5 rounded-md font-mono font-black {% if p.stock == 0 %}bg-rose-50 text-rose-700{% elif p.stock <= p.min_stock %}bg-amber-50 text-amber-800{% else %}bg-emerald-50 text-emerald-700{% endif %}">
+  <!-- ===================================================================== -->
+  <!-- 2. RUBAN DES KPIS EXÉCUTIFS & VALEUR FINANCIÈRE EN FCFA               -->
+  <!-- ===================================================================== -->
+  <div class="grid grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-3">
+    
+    <!-- 1. Valeur marchande totale -->
+    <div class="col-span-2 sm:col-span-1 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent p-3 sm:p-4 rounded-2xl border border-amber-300 shadow-2xs">
+      <span class="text-[10px] font-extrabold text-amber-800 uppercase tracking-wider block">Valeur du Stock</span>
+      <span class="font-heading font-black text-lg sm:text-2xl text-slate-950 block mt-0.5">
+        {{ total_stock_value|floatformat:0|intcomma }} <span class="text-xs font-bold text-amber-700">FCFA</span>
+      </span>
+      <span class="text-[11px] text-slate-500 mt-1 block">Capital immobilisé magasin</span>
+    </div>
+
+    <!-- 2. Unités physiques réelles -->
+    <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
+      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Pièces en Dépôt</span>
+      <span class="font-heading font-black text-lg sm:text-2xl text-slate-950 block mt-0.5">
+        {{ total_physical_units|intcomma }} <span class="text-xs font-bold text-slate-400">unités</span>
+      </span>
+      <span class="text-[11px] text-slate-500 mt-1 block">Tous appareils confondus</span>
+    </div>
+
+    <!-- 3. Références suivies -->
+    <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
+      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Catalogue Suivi</span>
+      <span class="font-heading font-black text-lg sm:text-2xl text-slate-950 block mt-0.5">
+        {{ total_tracked_products }} <span class="text-xs font-bold text-slate-400">modèles</span>
+      </span>
+      <span class="text-[11px] text-emerald-700 font-semibold mt-1 block">{{ healthy_stock_count }} à niveau</span>
+    </div>
+
+    <!-- 4. Ruptures de stock -->
+    <a
+      href="?filter=out"
+      class="bg-white p-3 sm:p-4 rounded-2xl border {% if filter_urgency == 'out' %}border-rose-500 bg-rose-50/40{% else %}border-slate-200/80 hover:border-rose-300{% endif %} shadow-2xs transition group"
+    >
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-extrabold text-rose-600 uppercase tracking-wider">Ruptures</span>
+        <span class="w-2 h-2 rounded-full bg-rose-500 group-hover:animate-ping"></span>
+      </div>
+      <span class="font-heading font-black text-lg sm:text-2xl text-rose-600 block mt-0.5">
+        {{ out_of_stock_count }} <span class="text-xs font-bold text-rose-400">modèles</span>
+      </span>
+      <span class="text-[11px] text-rose-700/80 font-medium mt-1 block">Urgence réappro</span>
+    </a>
+
+    <!-- 5. Alertes Stock Bas -->
+    <a
+      href="?filter=low"
+      class="bg-white p-3 sm:p-4 rounded-2xl border {% if filter_urgency == 'low' %}border-amber-400 bg-amber-50/40{% else %}border-slate-200/80 hover:border-amber-300{% endif %} shadow-2xs transition group"
+    >
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-extrabold text-amber-700 uppercase tracking-wider">Stock Bas</span>
+        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+      </div>
+      <span class="font-heading font-black text-lg sm:text-2xl text-amber-700 block mt-0.5">
+        {{ low_stock_count }} <span class="text-xs font-bold text-amber-500">modèles</span>
+      </span>
+      <span class="text-[11px] text-amber-800 font-medium mt-1 block">&le; Seuil d'alerte</span>
+    </a>
+
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 3. BARRE DE RECHERCHE & FILTRES COMBINÉS (RAYON, MARQUE, TRI)         -->
+  <!-- ===================================================================== -->
+  <form
+    method="GET"
+    action="{% url 'backoffice:stocks' %}"
+    class="bg-white rounded-2xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs space-y-3"
+  >
+    <input type="hidden" name="filter" id="bo-stocks-filter-input" value="{{ filter_urgency }}">
+
+    <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 text-xs">
+      
+      <!-- Recherche texte -->
+      <div class="sm:col-span-5 relative">
+        <input
+          type="search"
+          name="q"
+          value="{{ search_q }}"
+          placeholder="Rechercher par nom d'appareil, SKU, marque ou rayon..."
+          class="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-amber-500"
+        >
+        <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+      </div>
+
+      <!-- Filtre Rayon -->
+      <div class="sm:col-span-3">
+        <select name="category" onchange="this.form.submit()" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800">
+          <option value="">Tous les rayons...</option>
+          {% for c in all_categories %}
+          <option value="{{ c.id }}" {% if category_id == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Filtre Marque -->
+      <div class="sm:col-span-2">
+        <select name="brand" onchange="this.form.submit()" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800">
+          <option value="">Toutes les marques...</option>
+          {% for b in all_brands %}
+          <option value="{{ b.id }}" {% if brand_id == b.id|stringformat:"s" %}selected{% endif %}>{{ b.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Tri -->
+      <div class="sm:col-span-2 flex gap-1.5">
+        <select name="sort" onchange="this.form.submit()" class="flex-1 px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800">
+          <option value="stock_asc" {% if sort_by == 'stock_asc' %}selected{% endif %}>Stock croissant</option>
+          <option value="stock_desc" {% if sort_by == 'stock_desc' %}selected{% endif %}>Stock décroissant</option>
+          <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Nom A-Z</option>
+          <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Prix décroissant</option>
+        </select>
+
+        <button type="submit" class="px-3.5 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-extrabold cursor-pointer">
+          Filtrer
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ONGLETS DE STATUT D'URGENCE -->
+    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 border-t border-slate-100 text-xs">
+      <a
+        href="?filter=all{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}{% if category_id %}&amp;category={{ category_id }}{% endif %}{% if brand_id %}&amp;brand={{ brand_id }}{% endif %}"
+        class="px-3 py-1.5 rounded-xl font-extrabold whitespace-nowrap transition {% if filter_urgency == 'all' %}bg-slate-950 text-amber-400{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}"
+      >
+        Tous ({{ total_tracked_products }})
+      </a>
+
+      <a
+        href="?filter=critical{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}{% if category_id %}&amp;category={{ category_id }}{% endif %}{% if brand_id %}&amp;brand={{ brand_id }}{% endif %}"
+        class="px-3 py-1.5 rounded-xl font-extrabold whitespace-nowrap transition {% if filter_urgency == 'critical' %}bg-rose-600 text-white{% else %}bg-slate-100 text-rose-700 hover:bg-rose-50{% endif %}"
+      >
+        Alertes globales ({{ out_of_stock_count|add:low_stock_count }})
+      </a>
+
+      <a
+        href="?filter=out{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}{% if category_id %}&amp;category={{ category_id }}{% endif %}{% if brand_id %}&amp;brand={{ brand_id }}{% endif %}"
+        class="px-3 py-1.5 rounded-xl font-extrabold whitespace-nowrap transition {% if filter_urgency == 'out' %}bg-rose-600 text-white{% else %}bg-slate-100 text-rose-700 hover:bg-rose-50{% endif %}"
+      >
+        En Rupture ({{ out_of_stock_count }})
+      </a>
+
+      <a
+        href="?filter=low{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}{% if category_id %}&amp;category={{ category_id }}{% endif %}{% if brand_id %}&amp;brand={{ brand_id }}{% endif %}"
+        class="px-3 py-1.5 rounded-xl font-extrabold whitespace-nowrap transition {% if filter_urgency == 'low' %}bg-amber-400 text-slate-950{% else %}bg-slate-100 text-amber-800 hover:bg-amber-50{% endif %}"
+      >
+        Stock bas ({{ low_stock_count }})
+      </a>
+
+      <a
+        href="?filter=healthy{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}{% if category_id %}&amp;category={{ category_id }}{% endif %}{% if brand_id %}&amp;brand={{ brand_id }}{% endif %}"
+        class="px-3 py-1.5 rounded-xl font-extrabold whitespace-nowrap transition {% if filter_urgency == 'healthy' %}bg-emerald-600 text-white{% else %}bg-slate-100 text-emerald-800 hover:bg-emerald-50{% endif %}"
+      >
+        Stock suffisant ({{ healthy_stock_count }})
+      </a>
+
+      {% if search_q or category_id or brand_id or filter_urgency != 'all' %}
+      <a href="{% url 'backoffice:stocks' %}" class="px-2.5 py-1 text-slate-400 hover:text-slate-700 text-xs font-semibold ml-auto underline whitespace-nowrap">
+        Réinitialiser les filtres
+      </a>
+      {% endif %}
+    </div>
+  </form>
+
+  <!-- ===================================================================== -->
+  <!-- 4. TABLEAU DES STOCKS PRO AVEC VIGNETTES HD & STEPPER HTMX           -->
+  <!-- ===================================================================== -->
+  <div class="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
+    
+    <!-- Table Desktop -->
+    <div class="hidden lg:block overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead>
+          <tr class="bg-slate-50 border-b border-slate-200/80 text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
+            <th class="py-3 px-4">Appareil &amp; Modèle</th>
+            <th class="py-3 px-4">Marque</th>
+            <th class="py-3 px-4">Prix Unitaire</th>
+            <th class="py-3 px-4">Stock Disponible (1-Clic)</th>
+            <th class="py-3 px-4">Seuil Min</th>
+            <th class="py-3 px-4">Valeur Magasin</th>
+            <th class="py-3 px-4 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for p in products %}
+            {% include "backoffice/partials/stock_row.html" %}
+          {% empty %}
+          <tr>
+            <td colspan="7" class="py-12 text-center text-slate-400">
+              <div class="max-w-xs mx-auto space-y-2">
+                <span class="text-3xl">📦</span>
+                <p class="font-bold text-slate-700">Aucun produit ne correspond à vos filtres.</p>
+                <a href="{% url 'backoffice:stocks' %}" class="inline-block px-3 py-1.5 rounded-lg bg-amber-100 text-amber-900 font-bold text-xs">Afficher tout l'inventaire</a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Cartes Responsive pour Tablettes & Mobiles -->
+    <div class="lg:hidden divide-y divide-slate-100">
+      {% for p in products %}
+      <div id="stock-mobile-card-{{ p.id }}" class="p-3.5 space-y-2.5">
+        <div class="flex items-start gap-3">
+          <!-- Vignette HD -->
+          <div class="relative w-14 h-14 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
+            {% if p.primary_image %}
+            <img src="{{ p.primary_image.image.url }}" alt="{{ p.name }}" class="w-full h-full object-contain p-1" loading="lazy">
+            {% else %}
+            <span class="text-slate-300 text-xs">Photo</span>
+            {% endif %}
+            {% if p.stock <= 0 %}
+            <span class="absolute inset-x-0 bottom-0 py-0.5 bg-rose-600 text-white text-[8px] font-black uppercase text-center">Rupture</span>
+            {% endif %}
+          </div>
+
+          <div class="min-w-0 flex-1">
+            <a href="{% url 'backoffice:product_edit' p.id %}" class="font-bold text-xs text-slate-950 truncate block">
+              {{ p.name }}
+            </a>
+            <div class="flex items-center gap-1.5 mt-0.5 flex-wrap text-[10px]">
+              <span class="font-mono text-slate-400">{{ p.sku }}</span>
+              {% if p.brand %}
+              <span class="px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 font-bold">{{ p.brand.name }}</span>
+              {% endif %}
+              <span class="text-slate-500">• {{ p.category.short_name|default:p.category.name }}</span>
+            </div>
+
+            <div class="flex items-center justify-between gap-2 mt-2">
+              <span class="font-mono font-bold text-xs text-slate-900">
+                {{ p.current_price|floatformat:0|intcomma }} FCFA
+              </span>
+              <span class="font-mono font-black text-xs text-amber-950">
+                Valeur : {{ p.stock_value|floatformat:0|intcomma }} FCFA
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contrôles Stock & Actions Mobile -->
+        <div class="flex items-center justify-between gap-2 pt-1 border-t border-slate-100/80">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-[11px] font-mono font-black {{ p.stock_status_info.badge_class }}">
               {{ p.stock }} unités
             </span>
-          </td>
-          <td class="py-2.5 px-4 font-mono text-slate-500">{{ p.min_stock }}</td>
-          <td class="py-2.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+            <span class="text-[10px] text-slate-400">seuil: {{ p.min_stock }}</span>
+          </div>
+
+          <div class="flex items-center gap-1.5">
             <button
               type="button"
               @click="openSupply('{{ p.id }}', '{{ p.name|escapejs }}', {{ p.stock }})"
-              class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs cursor-pointer"
-            >+ Approvisionner</button>
-            <a href="{% url 'backoffice:product_edit' p.id %}" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs inline-block">Modifier</a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="5" class="py-8 text-center text-slate-400">Aucun produit.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+              class="px-2.5 py-1.5 rounded-lg bg-amber-400 text-slate-950 font-extrabold text-xs"
+            >+ Arrivage</button>
+
+            <button
+              type="button"
+              @click="openStockOut('{{ p.id }}', '{{ p.name|escapejs }}', {{ p.stock }})"
+              class="px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 font-bold text-xs border border-slate-200"
+            >− Sortie</button>
+
+            <a
+              href="{% url 'backoffice:product_edit' p.id %}"
+              class="px-2.5 py-1.5 rounded-lg bg-slate-900 text-white font-bold text-xs"
+            >Éditer</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="p-8 text-center text-xs text-slate-400">Aucun produit trouvé.</div>
+      {% endfor %}
+    </div>
+
   </div>
 
+  <!-- PAGINATION -->
   {% if products.has_other_pages %}
-  <div class="flex items-center justify-between text-xs">
-    <span class="text-slate-500">Page {{ products.number }} / {{ products.paginator.num_pages }}</span>
+  <div class="flex items-center justify-between text-xs bg-white rounded-2xl border border-slate-200/80 p-3 shadow-2xs">
+    <span class="text-slate-500 font-medium">Page {{ products.number }} sur {{ products.paginator.num_pages }} ({{ total_tracked_products }} articles)</span>
     <div class="flex gap-1.5">
       {% if products.has_previous %}
-      <a href="?page={{ products.previous_page_number }}&amp;filter={{ filter_urgency }}&amp;q={{ search_q|urlencode }}" class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 font-bold">← Précédent</a>
+      <a href="?page={{ products.previous_page_number }}&amp;filter={{ filter_urgency }}&amp;q={{ search_q|urlencode }}&amp;category={{ category_id }}&amp;brand={{ brand_id }}&amp;sort={{ sort_by }}" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold transition">← Précédent</a>
       {% endif %}
       {% if products.has_next %}
-      <a href="?page={{ products.next_page_number }}&amp;filter={{ filter_urgency }}&amp;q={{ search_q|urlencode }}" class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 font-bold">Suivant →</a>
+      <a href="?page={{ products.next_page_number }}&amp;filter={{ filter_urgency }}&amp;q={{ search_q|urlencode }}&amp;category={{ category_id }}&amp;brand={{ brand_id }}&amp;sort={{ sort_by }}" class="px-3.5 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-bold transition">Suivant →</a>
       {% endif %}
     </div>
   </div>
   {% endif %}
 
-  <!-- HISTORIQUE RÉCENT (RESPONSIVE MOBILE + PC) -->
+  <!-- ===================================================================== -->
+  <!-- 5. HISTORIQUE RÉCENT DES MOUVEMENTS DE STOCK                          -->
+  <!-- ===================================================================== -->
   {% if recent_movements %}
-  <div class="bg-white rounded-2xl border border-slate-200/80 p-3.5 sm:p-4 shadow-2xs space-y-2.5">
-    <h2 class="font-heading font-black text-xs sm:text-sm text-slate-950">Derniers mouvements de stock</h2>
+  <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-2xs space-y-3">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="font-heading font-black text-sm text-slate-950">Journal Récent des Mouvements de Stock</h2>
+        <p class="text-[11px] text-slate-500">Traçabilité complète des entrées conteneur, sorties comptoir et ajustements</p>
+      </div>
+      <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-mono text-[11px] font-bold">15 derniers mouvements</span>
+    </div>
+
     <div class="divide-y divide-slate-100 text-xs">
-      {% for m in recent_movements|slice:":8" %}
-      <div class="py-2 flex items-center justify-between gap-2">
+      {% for m in recent_movements %}
+      <div class="py-2.5 flex items-center justify-between gap-3">
         <div class="min-w-0">
-          <p class="font-semibold text-slate-900 truncate">{{ m.product.name }}</p>
-          <p class="text-[10px] text-slate-400">{{ m.created_at|date:"d/m H:i" }} {% if m.reference %}• {{ m.reference }}{% endif %}</p>
+          <p class="font-bold text-slate-900 truncate">{{ m.product.name }}</p>
+          <p class="text-[10px] text-slate-400 mt-0.5">
+            {{ m.created_at|date:"d/m/Y à H:i" }}
+            {% if m.created_by %}• Par <strong>{{ m.created_by.first_name|default:m.created_by.username }}</strong>{% endif %}
+            {% if m.supplier %}• Fournisseur : {{ m.supplier.name }}{% endif %}
+            {% if m.reference %}• Réf : {{ m.reference }}{% endif %}
+            {% if m.notes %}• <em>{{ m.notes }}</em>{% endif %}
+          </p>
         </div>
         <div class="text-right shrink-0 font-mono">
           {% if m.movement_type == 'out' %}
-          <span class="font-black text-rose-600">-{{ m.quantity }}</span>
+          <span class="font-black text-rose-600 bg-rose-50 px-2 py-0.5 rounded text-xs">−{{ m.quantity }} pièces</span>
+          {% elif m.movement_type == 'in' %}
+          <span class="font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-xs">+{{ m.quantity }} pièces</span>
           {% else %}
-          <span class="font-black text-emerald-700">+{{ m.quantity }}</span>
+          <span class="font-black text-amber-700 bg-amber-50 px-2 py-0.5 rounded text-xs">{{ m.quantity }} pièces</span>
           {% endif %}
-          <span class="text-[10px] text-slate-400 block">{{ m.stock_before }} → {{ m.stock_after }}</span>
+          <span class="text-[10px] text-slate-400 block mt-0.5">{{ m.stock_before }} → {{ m.stock_after }} en stock</span>
         </div>
       </div>
       {% endfor %}
     </div>
   </div>
   {% endif %}
-  </div><!-- /#bo-live-results -->
 
-  <!-- BOTTOM SHEET / MODAL D'ENTRÉE DE STOCK (AVEC SÉLECTEUR PRODUIT + PUCES RAPIDES) -->
+  <!-- ===================================================================== -->
+  <!-- 6. MODAL 1 : ENTRÉE DE STOCK (ARRIVAGE / RÉAPPROVISIONNEMENT)          -->
+  <!-- ===================================================================== -->
   <div
     x-show="supplyModalOpen"
     x-cloak
@@ -205,20 +447,22 @@
         x-transition:enter="ease-out duration-200"
         x-transition:enter-start="translate-y-full sm:translate-y-4 opacity-0"
         x-transition:enter-end="translate-y-0 opacity-100"
-        class="relative w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-2xl p-4 sm:p-5 pb-safe-bottom shadow-2xl z-10 space-y-3.5"
+        class="relative w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-2xl p-5 pb-safe-bottom shadow-2xl z-10 space-y-4"
         @click.stop
       >
-        <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-          <h3 class="font-heading font-black text-base text-slate-950">Entrée de Stock</h3>
-          <button type="button" @click="supplyModalOpen = false" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center">✕</button>
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div>
+            <h3 class="font-heading font-black text-base text-slate-950">+ Entrée de Stock (Arrivage)</h3>
+            <p class="text-[11px] text-slate-500">Réception de marchandise au magasin Grand Marché</p>
+          </div>
+          <button type="button" @click="supplyModalOpen = false" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold">✕</button>
         </div>
 
-        <form method="POST" class="space-y-3 text-xs">
+        <form method="POST" class="space-y-3.5 text-xs">
           {% csrf_token %}
 
-          <!-- Si ouvert depuis une ligne produit : affichage direct ; sinon : menu déroulant complet -->
           <template x-if="selectedProductName">
-            <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-between gap-2">
+            <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-between gap-2">
               <div class="min-w-0">
                 <input type="hidden" name="product_id" :value="selectedProductId">
                 <p class="font-bold text-slate-950 truncate" x-text="selectedProductName"></p>
@@ -230,8 +474,8 @@
 
           <template x-if="!selectedProductName">
             <div>
-              <label class="block font-bold text-slate-700 mb-1">Choisir l'appareil *</label>
-              <select name="product_id" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-base sm:text-sm font-medium text-slate-900">
+              <label class="block font-bold text-slate-700 mb-1">Choisir l'appareil à approvisionner *</label>
+              <select name="product_id" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-900">
                 <option value="">Sélectionner un produit...</option>
                 {% for ap in all_products_select %}
                 <option value="{{ ap.id }}">{{ ap.name }} (Stock: {{ ap.stock }})</option>
@@ -248,15 +492,15 @@
               x-model="qtyInput"
               min="1"
               required
-              inputmode="numeric"
-              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base font-black font-mono text-slate-950 focus:outline-none focus:border-amber-500"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-lg font-black font-mono text-slate-950 focus:outline-none focus:border-amber-500"
             >
-            <div class="flex items-center gap-1.5 mt-2">
+            <div class="flex items-center gap-1.5 mt-2 flex-wrap">
               <button type="button" @click="qtyInput = 1" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-amber-100 font-bold text-slate-700">+1</button>
               <button type="button" @click="qtyInput = 3" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-amber-100 font-bold text-slate-700">+3</button>
               <button type="button" @click="qtyInput = 5" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-amber-100 font-bold text-slate-700">+5</button>
               <button type="button" @click="qtyInput = 10" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-amber-100 font-bold text-slate-700">+10</button>
               <button type="button" @click="qtyInput = 20" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-amber-100 font-bold text-slate-700">+20</button>
+              <button type="button" @click="qtyInput = 50" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-amber-100 font-bold text-slate-700">+50</button>
             </div>
           </div>
 
@@ -264,20 +508,117 @@
             <div>
               <label class="block font-bold text-slate-700 mb-1">Fournisseur</label>
               <select name="supplier" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-medium">
-                <option value="">Optionnel...</option>
+                <option value="">Optionnel (Dibidani / Import)...</option>
                 {% for s in suppliers %}
                 <option value="{{ s.id }}">{{ s.name }}</option>
                 {% endfor %}
               </select>
             </div>
             <div>
-              <label class="block font-bold text-slate-700 mb-1">Réf. Bon / Arrivage</label>
-              {{ supply_form.reference }}
+              <label class="block font-bold text-slate-700 mb-1">Réf. Bon / Facture</label>
+              <input type="text" name="reference" placeholder="Ex: BL-2026-11" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs">
             </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Notes / Remarques</label>
+            <input type="text" name="notes" placeholder="Ex: Arrivage conteneur Fizzen Dubaï" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
           </div>
 
           <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-sm shadow-xs cursor-pointer">
             Valider l'entrée de stock
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 7. MODAL 2 : SORTIE DE STOCK (CASSE, VENTE DIRECTE, INVENTAIRE)       -->
+  <!-- ===================================================================== -->
+  <div
+    x-show="stockOutModalOpen"
+    x-cloak
+    class="fixed inset-0 z-50 overflow-y-auto"
+    role="dialog"
+    aria-modal="true"
+    @keydown.escape.window="stockOutModalOpen = false"
+  >
+    <div x-show="stockOutModalOpen" x-transition.opacity class="fixed inset-0 bg-black/60 backdrop-blur-xs" @click="stockOutModalOpen = false"></div>
+
+    <div class="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4">
+      <div
+        x-show="stockOutModalOpen"
+        x-transition:enter="ease-out duration-200"
+        x-transition:enter-start="translate-y-full sm:translate-y-4 opacity-0"
+        x-transition:enter-end="translate-y-0 opacity-100"
+        class="relative w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-2xl p-5 pb-safe-bottom shadow-2xl z-10 space-y-4"
+        @click.stop
+      >
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div>
+            <h3 class="font-heading font-black text-base text-rose-700">− Sortie / Déstockage</h3>
+            <p class="text-[11px] text-slate-500">Enregistrer une diminution de stock avec motif</p>
+          </div>
+          <button type="button" @click="stockOutModalOpen = false" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold">✕</button>
+        </div>
+
+        <form method="POST" action="{% url 'backoffice:stock_out' %}" class="space-y-3.5 text-xs">
+          {% csrf_token %}
+
+          <template x-if="selectedProductName">
+            <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-between gap-2">
+              <div class="min-w-0">
+                <input type="hidden" name="product_id" :value="selectedProductId">
+                <p class="font-bold text-slate-950 truncate" x-text="selectedProductName"></p>
+                <p class="text-[11px] text-rose-700">Stock disponible : <strong x-text="currentStock"></strong> unités</p>
+              </div>
+              <button type="button" @click="selectedProductName = ''; selectedProductId = ''" class="text-[11px] font-bold text-slate-500 underline shrink-0">Changer</button>
+            </div>
+          </template>
+
+          <template x-if="!selectedProductName">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Choisir l'appareil à déstocker *</label>
+              <select name="product_id" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-900">
+                <option value="">Sélectionner un produit...</option>
+                {% for ap in all_products_select %}
+                <option value="{{ ap.id }}">{{ ap.name }} (Stock: {{ ap.stock }})</option>
+                {% endfor %}
+              </select>
+            </div>
+          </template>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Quantité à déduire *</label>
+            <input
+              type="number"
+              name="quantity"
+              x-model="qtyOutInput"
+              min="1"
+              required
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-lg font-black font-mono text-slate-950 focus:outline-none focus:border-rose-500"
+            >
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Motif de la sortie *</label>
+            <select name="reason" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold">
+              <option value="Vente directe comptoir">Vente directe comptoir (Magasin)</option>
+              <option value="Casse / Avarie transport">Casse / Avarie transport</option>
+              <option value="Démonstration Showroom">Démonstration Showroom</option>
+              <option value="Ajustement inventaire physique">Ajustement inventaire physique (Perte / Erreur)</option>
+              <option value="Autre motif">Autre motif</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Détails / Notes complémentaires</label>
+            <input type="text" name="notes" placeholder="Ex: Carton abîmé au déchargement" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+          </div>
+
+          <button type="submit" class="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow-xs cursor-pointer">
+            Confirmer la sortie de stock
           </button>
         </form>
       </div>

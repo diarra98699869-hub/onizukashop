@@ -225,6 +225,44 @@ class Product(models.Model):
         return bool(self.sale_price and self.sale_price < self.price)
 
     @property
+    def stock_value(self):
+        """Valeur financière marchande du stock disponible en FCFA"""
+        return int((self.stock or 0) * (self.current_price or 0))
+
+    @property
+    def stock_status_info(self):
+        """Renvoie le statut visuel du stock (label, couleur, jauge)"""
+        if (self.stock or 0) <= 0:
+            return {
+                'label': 'Rupture',
+                'full_label': '0 unité • Rupture',
+                'badge_class': 'bg-rose-50 text-rose-700 border border-rose-200',
+                'bar_color': 'bg-rose-500',
+                'percent': 0,
+                'code': 'out',
+            }
+        elif self.stock <= (self.min_stock or 5):
+            pct = min(100, int((self.stock / max(1, (self.min_stock or 5) * 2)) * 100))
+            return {
+                'label': 'Stock bas',
+                'full_label': f"{self.stock} unité{'s' if self.stock > 1 else ''} • Alerte",
+                'badge_class': 'bg-amber-50 text-amber-900 border border-amber-300 font-black',
+                'bar_color': 'bg-amber-500',
+                'percent': max(18, pct),
+                'code': 'low',
+            }
+        else:
+            pct = min(100, int((self.stock / max(1, (self.min_stock or 5) * 3)) * 100))
+            return {
+                'label': 'En stock',
+                'full_label': f"{self.stock} unités",
+                'badge_class': 'bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold',
+                'bar_color': 'bg-emerald-500',
+                'percent': min(100, max(30, pct)),
+                'code': 'ok',
+            }
+
+    @property
     def margin(self):
         """Marge bénéficiaire brute en FCFA (Prix de vente actuel - Prix d'achat)"""
         if self.cost_price:

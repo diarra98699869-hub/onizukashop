@@ -1335,7 +1335,14 @@ def product_quick_image_upload_view(request, product_id):
 
 @staff_required
 def stocks_view(request):
-    """Gestion des stocks, alertes réapprovisionnement et entrées de marchandises."""
+    """
+    Gestion avancée des stocks, valorisation financière, arrivages & inventaire :
+    - KPIs financiers en FCFA (Valeur marchande totale, unités physiques réelles, ruptures, alertes)
+    - Vignettes produits HD, prix unitaires, marge et valeur du stock par référence
+    - Filtres combinés : Rayon/Catégorie, Marque, Urgence (Tous, Alertes, Ruptures, Faibles, OK)
+    - Ajustement rapide inline HTMX (+1, -1, inventaire direct)
+    - Export officiel Excel/CSV et Impression de la fiche d'inventaire A4
+    """
     supply_form = StockSupplyForm()
     form_has_errors = False
 
@@ -1368,47 +1375,84 @@ def stocks_view(request):
             )
             messages.success(
                 request,
-                f"Stock approvisionné : +{qty} unités pour « {product.name} ». Nouveau stock : {product.stock}.",
+                f"Arrivage validé : +{qty} unités pour « {product.name} ». Nouveau stock disponible : {product.stock} unités.",
             )
             return redirect('backoffice:stocks')
         else:
-            # Formulaire invalide : rouvrir le modal avec les erreurs visibles
             form_has_errors = True
             messages.error(request, "Veuillez corriger les erreurs dans le formulaire d'approvisionnement.")
 
     filter_urgency = request.GET.get('filter', 'all')
     search_q = request.GET.get('q', '').strip()
+    category_id = request.GET.get('category', '').strip()
+    brand_id = request.GET.get('brand', '').strip()
+    sort_by = request.GET.get('sort', 'stock_asc').strip()
 
     products_qs = (
         Product.objects
         .filter(track_stock=True)
         .select_related('category', 'brand')
-        .order_by('stock')
+        .prefetch_related('images')
     )
 
+    # Filtrage par urgence stock
     if filter_urgency == 'out':
         products_qs = products_qs.filter(stock=0)
     elif filter_urgency == 'low':
         products_qs = products_qs.filter(stock__lte=F('min_stock'), stock__gt=0)
     elif filter_urgency == 'critical':
         products_qs = products_qs.filter(stock__lte=F('min_stock'))
+    elif filter_urgency == 'healthy':
+        products_qs = products_qs.filter(stock__gt=F('min_stock'))
 
+    # Filtrage par catégorie / rayon
+    if category_id:
+        products_qs = products_qs.filter(category_id=category_id)
+
+    # Filtrage par marque
+    if brand_id:
+        products_qs = products_qs.filter(brand_id=brand_id)
+
+    # Recherche instantanée
     if search_q:
         products_qs = products_qs.filter(
             Q(name__icontains=search_q) |
             Q(sku__icontains=search_q) |
-            Q(brand__name__icontains=search_q)
+            Q(brand__name__icontains=search_q) |
+            Q(category__name__icontains=search_q)
         )
 
-    # Chiffres globaux : UNE seule requête annotée au lieu de 3 COUNT séparés
+    # Tri personnalisé
+    if sort_by == 'stock_desc':
+        products_qs = products_qs.order_by('-stock', 'name')
+    elif sort_by == 'name':
+        products_qs = products_qs.order_by('name')
+    elif sort_by == 'price_desc':
+        products_qs = products_qs.order_by('-price')
+    elif sort_by == 'price_asc':
+        products_qs = products_qs.order_by('price')
+    else:  # 'stock_asc' par défaut (les ruptures et stocks critiques en premier)
+        products_qs = products_qs.order_by('stock', 'name')
+
+    # Agrégats globaux : Valeur totale en FCFA, unités réelles, alertes
+    from django.db.models import Value, DecimalField
+    from django.db.models.functions import Coalesce
     stock_agg = Product.objects.filter(track_stock=True).aggregate(
         total=Count('id'),
+        total_units=Sum('stock'),
         out=Count('id', filter=Q(stock=0)),
         low=Count('id', filter=Q(stock__lte=F('min_stock'), stock__gt=0)),
+        healthy=Count('id', filter=Q(stock__gt=F('min_stock'))),
+        total_value=Sum(F('stock') * Coalesce(F('sale_price'), F('price'), Value(0, output_field=DecimalField()))),
     )
+
     total_tracked_products = stock_agg['total'] or 0
+    total_physical_units = stock_agg['total_units'] or 0
+    total_stock_value = stock_agg['total_value'] or 0
     out_of_stock_count = stock_agg['out'] or 0
     low_stock_count = stock_agg['low'] or 0
+    healthy_stock_count = stock_agg['healthy'] or 0
+    availability_rate = round(((total_tracked_products - out_of_stock_count) / total_tracked_products * 100), 1) if total_tracked_products > 0 else 100
 
     recent_movements = (
         StockMovement.objects
@@ -1416,9 +1460,11 @@ def stocks_view(request):
         .order_by('-created_at')[:15]
     )
     suppliers = Supplier.objects.filter(is_active=True).order_by('name')
-    all_products_select = Product.objects.filter(track_stock=True).only('id', 'name', 'sku', 'stock').order_by('name')
+    all_categories = Category.objects.filter(products__isnull=False).distinct().order_by('name')
+    all_brands = Brand.objects.filter(products__isnull=False).distinct().order_by('name')
+    all_products_select = Product.objects.filter(track_stock=True).only('id', 'name', 'sku', 'stock', 'price').order_by('name')
 
-    paginator = Paginator(products_qs, 20)
+    paginator = Paginator(products_qs, 25)
     page_number = request.GET.get('page', 1)
     products = paginator.get_page(page_number)
 
@@ -1427,9 +1473,18 @@ def stocks_view(request):
         'all_products_select': all_products_select,
         'filter_urgency': filter_urgency,
         'search_q': search_q,
+        'category_id': category_id,
+        'brand_id': brand_id,
+        'sort_by': sort_by,
+        'all_categories': all_categories,
+        'all_brands': all_brands,
         'total_tracked_products': total_tracked_products,
+        'total_physical_units': total_physical_units,
+        'total_stock_value': total_stock_value,
         'out_of_stock_count': out_of_stock_count,
         'low_stock_count': low_stock_count,
+        'healthy_stock_count': healthy_stock_count,
+        'availability_rate': availability_rate,
         'recent_movements': recent_movements,
         'suppliers': suppliers,
         'supply_form': supply_form,
@@ -1437,6 +1492,182 @@ def stocks_view(request):
         'current_page': 'stocks',
     }
     return render(request, 'backoffice/stocks.html', context)
+
+
+@staff_required
+@require_POST
+def stock_quick_adjust_htmx(request, product_id):
+    """
+    Ajustement rapide du stock en 1 clic (HTMX) :
+    - action='inc' : +qty
+    - action='dec' : -qty
+    - action='set' : mise à jour directe (ex: inventaire physique)
+    - action='set_min' : mise à jour du seuil d'alerte min_stock
+    Renvoie la ligne complète du produit mise à jour instantanément.
+    """
+    product = get_object_or_404(Product, id=product_id)
+    action = request.POST.get('action') or request.GET.get('action')
+    stock_before = product.stock
+    qty = 1
+    mov_type = StockMovement.MovementType.ADJUSTMENT
+    note = "Ajustement rapide direct"
+
+    if action == 'inc':
+        try:
+            qty = max(1, int(request.POST.get('qty', 1)))
+        except (ValueError, TypeError):
+            qty = 1
+        product.stock += qty
+        mov_type = StockMovement.MovementType.IN
+        note = f"Entrée rapide +{qty}"
+    elif action == 'dec':
+        try:
+            qty = max(1, int(request.POST.get('qty', 1)))
+        except (ValueError, TypeError):
+            qty = 1
+        product.stock = max(0, product.stock - qty)
+        mov_type = StockMovement.MovementType.OUT
+        note = f"Sortie rapide -{qty}"
+    elif action == 'set':
+        try:
+            new_val = max(0, int(request.POST.get('stock', 0)))
+        except (ValueError, TypeError):
+            new_val = product.stock
+        qty = abs(new_val - product.stock)
+        product.stock = new_val
+        mov_type = StockMovement.MovementType.ADJUSTMENT
+        note = f"Inventaire direct : {stock_before} -> {new_val}"
+    elif action == 'set_min':
+        try:
+            new_min = max(0, int(request.POST.get('min_stock', 5)))
+        except (ValueError, TypeError):
+            new_min = product.min_stock
+        product.min_stock = new_min
+        product.save(update_fields=['min_stock'])
+        return render(request, 'backoffice/partials/stock_row.html', {'p': product})
+    else:
+        return HttpResponse("Action non reconnue", status=400)
+
+    if product.stock > 0 and product.status == Product.Status.OUT_OF_STOCK:
+        product.status = Product.Status.ACTIVE
+    product.save(update_fields=['stock', 'status'])
+
+    if stock_before != product.stock:
+        StockMovement.objects.create(
+            product=product,
+            movement_type=mov_type,
+            quantity=qty,
+            stock_before=stock_before,
+            stock_after=product.stock,
+            reference="Ajustement Direct",
+            notes=note,
+            created_by=request.user,
+        )
+
+    return render(request, 'backoffice/partials/stock_row.html', {'p': product})
+
+
+@staff_required
+@require_POST
+def stock_out_view(request):
+    """Sortie de stock manuelle (Casse, Vente directe comptoir, Démo showroom, Inventaire)."""
+    product_id = request.POST.get('product_id')
+    try:
+        qty = max(1, int(request.POST.get('quantity', 1)))
+    except (ValueError, TypeError):
+        qty = 1
+    reason = request.POST.get('reason') or 'Sortie manuelle'
+    notes = request.POST.get('notes', '').strip()
+
+    product = get_object_or_404(Product, id=product_id)
+    stock_before = product.stock
+    actual_qty = min(product.stock, qty)
+    product.stock = max(0, product.stock - qty)
+    product.save(update_fields=['stock'])
+
+    StockMovement.objects.create(
+        product=product,
+        movement_type=StockMovement.MovementType.OUT,
+        quantity=actual_qty,
+        stock_before=stock_before,
+        stock_after=product.stock,
+        reference=f"Sortie : {reason}",
+        notes=notes,
+        created_by=request.user,
+    )
+
+    messages.success(request, f"Sortie enregistrée : -{actual_qty} unité(s) pour « {product.name} ». Stock restant : {product.stock}.")
+    return redirect('backoffice:stocks')
+
+
+@staff_required
+def export_stocks_csv_view(request):
+    """Export officiel CSV Excel (UTF-8 avec BOM) de l'inventaire complet des stocks."""
+    products = (
+        Product.objects
+        .filter(track_stock=True)
+        .select_related('category', 'brand')
+        .order_by('category__name', 'name')
+    )
+
+    response = HttpResponse(content_type='text/csv; charset=utf-8-sig')
+    filename = f"inventaire_stocks_onizuka_{timezone.now().strftime('%Y%m%d_%H%M')}.csv"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    writer = csv.writer(response, delimiter=';')
+    writer.writerow([
+        'SKU Référence',
+        'Nom de l\'Appareil / Meuble',
+        'Rayon / Catégorie',
+        'Marque',
+        'Stock Actuel (Unités)',
+        'Seuil Alerte Min',
+        'Prix Vente FCFA',
+        'Prix Achat FCFA',
+        'Valeur Stock FCFA',
+        'Statut Stock',
+        'Actif Boutique',
+    ])
+
+    for p in products:
+        statut = "Rupture" if p.stock <= 0 else ("Stock bas" if p.stock <= p.min_stock else "En stock")
+        writer.writerow([
+            p.sku,
+            p.name,
+            p.category.name if p.category else 'Non classé',
+            p.brand.name if p.brand else '',
+            p.stock,
+            p.min_stock,
+            int(p.current_price or 0),
+            int(p.cost_price or 0),
+            p.stock_value,
+            statut,
+            "Oui" if p.is_active else "Non",
+        ])
+
+    return response
+
+
+@staff_required
+def stocks_inventory_sheet_view(request):
+    """Fiche d'inventaire officielle imprimable A4 pour comptage physique au magasin de Bamako."""
+    products = (
+        Product.objects
+        .filter(track_stock=True)
+        .select_related('category', 'brand')
+        .order_by('category__name', 'name')
+    )
+    from backoffice.models import ShopSetting
+    shop_settings = ShopSetting.get_settings()
+    total_val = sum(p.stock_value for p in products)
+    return render(request, 'backoffice/stocks_inventory_sheet.html', {
+        'products': products,
+        'settings': shop_settings,
+        'now': timezone.now(),
+        'total_refs': products.count(),
+        'total_units': sum(p.stock for p in products),
+        'total_val': total_val,
+    })
 
 
 # ---------------------------------------------------------------------------

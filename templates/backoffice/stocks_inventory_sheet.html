@@ -1,0 +1,93 @@
+{% load humanize %}<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Feuille d'Inventaire Magasin • ONIZUKA SHOP</title>
+  <style>
+    @page { size: A4 portrait; margin: 12mm; }
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; color: #0f172a; margin: 0; padding: 15px; }
+    .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 15px; }
+    .title { font-size: 18px; font-weight: 900; text-transform: uppercase; margin: 0 0 4px 0; }
+    .subtitle { font-size: 11px; color: #475569; margin: 0; }
+    .kpi-box { display: flex; gap: 15px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; font-size: 11px; }
+    .kpi { flex: 1; }
+    .kpi strong { display: block; font-size: 14px; font-weight: 800; color: #0f172a; margin-top: 2px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 10.5px; }
+    th { background: #f1f5f9; text-align: left; padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 800; text-transform: uppercase; font-size: 9px; }
+    td { padding: 6px 8px; border: 1px solid #e2e8f0; vertical-align: middle; }
+    tr:nth-child(even) td { background: #fafafa; }
+    .mono { font-family: 'Courier New', monospace; font-size: 10px; }
+    .count-box { border: 1px dashed #94a3b8; height: 18px; width: 60px; background: #fff; }
+    .signature-area { margin-top: 30px; display: flex; justify-content: space-between; border-top: 1px solid #cbd5e1; padding-top: 15px; font-size: 10px; color: #475569; }
+    @media print {
+      .no-print { display: none !important; }
+      body { padding: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="no-print" style="background:#fef3c7;border:1px solid #fde047;padding:10px 16px;border-radius:8px;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center;">
+    <strong>📄 Mode Impression Inventaire Officiel (Format A4)</strong>
+    <button onclick="window.print()" style="background:#0f172a;color:#fff;padding:8px 16px;border-radius:6px;font-weight:bold;cursor:pointer;border:none;">
+      🖨️ Imprimer la feuille d'inventaire
+    </button>
+  </div>
+
+  <div class="header">
+    <div>
+      <h1 class="title">ONIZUKA SHOP • FEUILLE D'INVENTAIRE MAGASIN</h1>
+      <p class="subtitle">Boutique &amp; Dépôt : Grand Marché de Bamako (Dibidani) • Tél : +223 92 67 37 99</p>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-weight:800;font-size:12px;">Date : {{ now|date:"d/m/Y à H:i" }}</div>
+      <div style="color:#64748b;font-size:10px;">Document de contrôle physique des stocks</div>
+    </div>
+  </div>
+
+  <div class="kpi-box">
+    <div class="kpi">Total Références Suivies : <strong>{{ total_refs }} produits</strong></div>
+    <div class="kpi">Total Unités Théoriques : <strong>{{ total_units }} pièces</strong></div>
+    <div class="kpi">Valeur Marchande Théorique : <strong>{{ total_val|floatformat:0|intcomma }} FCFA</strong></div>
+    <div class="kpi">Magasinier / Responsable : ___________________________</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:30px;">N°</th>
+        <th style="width:75px;">SKU</th>
+        <th>Appareil / Modèle</th>
+        <th>Rayon</th>
+        <th style="text-align:right;width:75px;">Prix Vente</th>
+        <th style="text-align:center;width:60px;">Théorique</th>
+        <th style="text-align:center;width:70px;">Comptage Réel</th>
+        <th style="text-align:center;width:55px;">Écart</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in products %}
+      <tr>
+        <td style="color:#64748b;text-align:center;">{{ forloop.counter }}</td>
+        <td class="mono" style="font-weight:bold;">{{ p.sku }}</td>
+        <td>
+          <strong>{{ p.name }}</strong>
+          {% if p.brand %}<span style="color:#64748b;font-size:9.5px;">({{ p.brand.name }})</span>{% endif %}
+        </td>
+        <td style="color:#64748b;">{{ p.category.short_name|default:p.category.name }}</td>
+        <td style="text-align:right;" class="mono">{{ p.current_price|floatformat:0|intcomma }} F</td>
+        <td style="text-align:center;font-weight:bold;" class="mono">{{ p.stock }}</td>
+        <td><div class="count-box"></div></td>
+        <td><div class="count-box"></div></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="signature-area">
+    <div>Visa du Magasinier / Contrôleur : ___________________________</div>
+    <div>Visa Direction Générale Onizouka Shop : ___________________________</div>
+  </div>
+
+</body>
+</html>

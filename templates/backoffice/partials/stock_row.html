@@ -1,0 +1,150 @@
+{% load humanize %}
+<tr id="stock-row-{{ p.id }}" class="hover:bg-amber-50/30 transition duration-150 border-b border-slate-100/80">
+  
+  <!-- 1. VIGNETTE HD + PRODUIT + SKU + RAYON -->
+  <td class="py-3 px-3.5 sm:px-4">
+    <div class="flex items-center gap-3">
+      <div class="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-slate-100 border border-slate-200/90 overflow-hidden shrink-0 flex items-center justify-center shadow-2xs group">
+        {% if p.primary_image %}
+        <img
+          src="{{ p.primary_image.image.url }}"
+          alt="{{ p.name }}"
+          class="w-full h-full object-contain p-1 group-hover:scale-105 transition duration-200"
+          loading="lazy"
+        >
+        {% else %}
+        <div class="w-full h-full flex flex-col items-center justify-center text-slate-300">
+          <svg class="w-6 h-6 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+        </div>
+        {% endif %}
+
+        {% if p.stock <= 0 %}
+        <span class="absolute inset-x-0 bottom-0 py-0.5 bg-rose-600/90 text-white text-[9px] font-black uppercase text-center tracking-tighter">Épuisé</span>
+        {% elif p.stock <= p.min_stock %}
+        <span class="absolute inset-x-0 bottom-0 py-0.5 bg-amber-500/95 text-slate-950 text-[9px] font-black uppercase text-center tracking-tighter">Bas</span>
+        {% endif %}
+      </div>
+
+      <div class="min-w-0 flex-1">
+        <a href="{% url 'backoffice:product_edit' p.id %}" class="font-heading font-bold text-xs sm:text-sm text-slate-950 hover:text-amber-600 transition block truncate max-w-xs sm:max-w-sm" title="{{ p.name }}">
+          {{ p.name }}
+        </a>
+        <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+          <span class="font-mono text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.2 rounded font-semibold">{{ p.sku }}</span>
+          <span class="text-[11px] text-slate-500 truncate">{{ p.category.name|default:"Général" }}</span>
+        </div>
+      </div>
+    </div>
+  </td>
+
+  <!-- 2. MARQUE -->
+  <td class="py-3 px-3.5 sm:px-4 text-xs">
+    {% if p.brand %}
+    <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 font-extrabold text-[11px] border border-slate-200/60 inline-flex items-center gap-1">
+      {{ p.brand.name }}
+    </span>
+    {% else %}
+    <span class="text-slate-400 text-[11px]">—</span>
+    {% endif %}
+  </td>
+
+  <!-- 3. PRIX UNITAIRE FCFA -->
+  <td class="py-3 px-3.5 sm:px-4 text-xs font-mono">
+    <div class="font-extrabold text-slate-900 text-xs sm:text-sm whitespace-nowrap">
+      {{ p.current_price|floatformat:0|intcomma }} <span class="text-[10px] font-bold text-slate-400">FCFA</span>
+    </div>
+    {% if p.is_on_sale %}
+    <div class="text-[10px] text-slate-400 line-through">
+      {{ p.price|floatformat:0|intcomma }} FCFA
+    </div>
+    {% endif %}
+  </td>
+
+  <!-- 4. DISPONIBILITÉ & STEPPER RAPIDE HTMX (1-CLIC) -->
+  <td class="py-3 px-3.5 sm:px-4">
+    <div class="space-y-1.5">
+      <div class="flex items-center gap-2">
+        <span class="px-2.5 py-0.8 rounded-lg text-xs font-mono font-black inline-flex items-center gap-1.5 {{ p.stock_status_info.badge_class }}">
+          <span class="w-2 h-2 rounded-full {{ p.stock_status_info.bar_color }}"></span>
+          <span>{{ p.stock_status_info.full_label }}</span>
+        </span>
+
+        <!-- Stepper Rapide +/- HTMX -->
+        <div class="inline-flex items-center rounded-lg border border-slate-200 bg-white shadow-2xs overflow-hidden shrink-0">
+          <button
+            type="button"
+            hx-post="{% url 'backoffice:stock_quick_adjust_htmx' p.id %}?action=dec"
+            hx-target="#stock-row-{{ p.id }}"
+            hx-swap="outerHTML"
+            title="Retirer 1 unité"
+            class="px-2 py-1 text-xs font-extrabold text-slate-600 hover:bg-slate-100 active:bg-slate-200 transition cursor-pointer"
+          >−</button>
+          <span class="px-2 py-1 text-[11px] font-mono font-extrabold text-slate-900 bg-slate-50 border-x border-slate-100 min-w-[28px] text-center">
+            {{ p.stock }}
+          </span>
+          <button
+            type="button"
+            hx-post="{% url 'backoffice:stock_quick_adjust_htmx' p.id %}?action=inc"
+            hx-target="#stock-row-{{ p.id }}"
+            hx-swap="outerHTML"
+            title="Ajouter 1 unité"
+            class="px-2 py-1 text-xs font-extrabold text-amber-700 hover:bg-amber-50 active:bg-amber-100 transition cursor-pointer"
+          >+</button>
+        </div>
+      </div>
+
+      <!-- Mini Jauge Visuelle -->
+      <div class="w-36 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+        <div class="h-full {{ p.stock_status_info.bar_color }} rounded-full transition-all duration-300" style="width: {{ p.stock_status_info.percent }}%;"></div>
+      </div>
+    </div>
+  </td>
+
+  <!-- 5. SEUIL MINIMUM D'ALERTE -->
+  <td class="py-3 px-3.5 sm:px-4 text-xs font-mono">
+    <div class="flex items-center gap-1.5 text-slate-600">
+      <span class="font-extrabold text-slate-900">{{ p.min_stock }}</span>
+      <span class="text-[10px] text-slate-400">unités</span>
+    </div>
+  </td>
+
+  <!-- 6. VALEUR TOTALE DU STOCK EN MAGASIN (FCFA) -->
+  <td class="py-3 px-3.5 sm:px-4 text-xs font-mono">
+    <div class="font-black text-amber-950 text-xs sm:text-sm whitespace-nowrap">
+      {{ p.stock_value|floatformat:0|intcomma }} <span class="text-[10px] font-bold text-amber-700">FCFA</span>
+    </div>
+    <div class="text-[10px] text-slate-400">
+      {{ p.stock }} × {{ p.current_price|floatformat:0|intcomma }}
+    </div>
+  </td>
+
+  <!-- 7. ACTIONS (ARRIVAGE, SORTIE, MODIFIER) -->
+  <td class="py-3 px-3.5 sm:px-4 text-right whitespace-nowrap">
+    <div class="inline-flex items-center gap-1.5">
+      <button
+        type="button"
+        @click="openSupply('{{ p.id }}', '{{ p.name|escapejs }}', {{ p.stock }})"
+        class="px-2.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-[11px] inline-flex items-center gap-1 shadow-2xs transition active:scale-95 cursor-pointer"
+      >
+        <span>+ Arrivage</span>
+      </button>
+
+      <button
+        type="button"
+        @click="openStockOut('{{ p.id }}', '{{ p.name|escapejs }}', {{ p.stock }})"
+        class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-rose-50 hover:text-rose-700 text-slate-700 font-bold text-[11px] border border-slate-200/80 transition active:scale-95 cursor-pointer"
+        title="Enregistrer une sortie (casse, vente comptoir direct, perte)"
+      >
+        <span>− Sortie</span>
+      </button>
+
+      <a
+        href="{% url 'backoffice:product_edit' p.id %}"
+        class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-[11px] transition inline-block"
+      >
+        Modifier
+      </a>
+    </div>
+  </td>
+
+</tr>

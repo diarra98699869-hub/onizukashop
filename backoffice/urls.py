@@ -46,8 +46,12 @@ urlpatterns = [
     path('emails/', views.emails_center_view, name='emails_center'),
     path('emails/apercu/<str:template_key>/', views.email_template_preview_view, name='email_template_preview'),
 
-    # Stocks & Réapprovisionnement
+    # Stocks, Arrivages, Déstockage & Inventaire
     path('stocks/', views.stocks_view, name='stocks'),
+    path('stocks/ajuster-htmx/<int:product_id>/', views.stock_quick_adjust_htmx, name='stock_quick_adjust_htmx'),
+    path('stocks/sortie/', views.stock_out_view, name='stock_out'),
+    path('stocks/export-csv/', views.export_stocks_csv_view, name='export_stocks_csv'),
+    path('stocks/fiche-inventaire/', views.stocks_inventory_sheet_view, name='stocks_inventory_sheet'),
 
     # Clients & Carnet d'adresses
     path('clients/', views.clients_view, name='clients'),
