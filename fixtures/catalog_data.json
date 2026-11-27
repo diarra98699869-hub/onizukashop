@@ -242,6 +242,42 @@
   }
 },
 {
+  "model": "shop.brand",
+  "pk": 25,
+  "fields": {
+    "name": "Pearl",
+    "slug": "pearl",
+    "logo": "",
+    "description": "Fabricant réputé d'appareils électroménagers haute performance et économes en énergie.",
+    "website": "",
+    "is_active": true
+  }
+},
+{
+  "model": "shop.brand",
+  "pk": 26,
+  "fields": {
+    "name": "TMT",
+    "slug": "tmt",
+    "logo": "",
+    "description": "Marque spécialisée en réfrigération commerciale et domestique avec vitres coulissantes isolantes.",
+    "website": "",
+    "is_active": true
+  }
+},
+{
+  "model": "shop.brand",
+  "pk": 27,
+  "fields": {
+    "name": "Telimani",
+    "slug": "telimani",
+    "logo": "",
+    "description": "Marque réputée pour ses congélateurs coffres commerciaux et domestiques à haute rétention thermique.",
+    "website": "",
+    "is_active": true
+  }
+},
+{
   "model": "shop.product",
   "pk": 113,
   "fields": {
@@ -2682,6 +2718,302 @@
   }
 },
 {
+  "model": "shop.product",
+  "pk": 168,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Pearl 375 Litres - 2 Battants & Vitres Coulissantes",
+    "slug": "congelateur-horizontal-pearl-375l",
+    "sku": "ONZ-PEARL-CH-375L",
+    "category": 11,
+    "brand": 25,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal haut de gamme Pearl d'une capacité nette de 375 litres avec technologie « Retain Freshness All Day ». Équipé d'une double ouverture à 2 battants indépendants doublée de vitres coulissantes transparentes intérieures sur les deux compartiments. Cette triple barrière thermique empêche la remontée de température lors des ouvertures répétées et conserve le froid jusqu'à 48h en cas de coupure de courant à Bamako. Dispose d'un compresseur tropicalisé ultra-silencieux, d'un panier suspendu pour accès rapide, d'un double éclairage intérieur et d'un panneau de contrôle en façade avec voyants d'alimentation. Finition soignée gris métallisé anti-rayures. Parfait pour les commerces, restaurants et grandes familles. Garanti Onizuka Shop au Grand Marché de Bamako (Dibidani).",
+    "specifications": {
+      "Capacité brute / nette": "375 Litres",
+      "Marque": "Pearl (Quality Our Priority)",
+      "Technologie": "Retain Freshness All Day (Conservation prolongée)",
+      "Type": "Congélateur coffre horizontal double battant avec vitres thermiques",
+      "Portes / Battants": "2 battants indépendants étanches",
+      "Isolation intérieure": "Double baie vitrée coulissante transparente",
+      "Sécurité": "Serrure intégrée",
+      "Rangement": "Panier métallique suspendu amovible",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé lourd spécial Bamako)",
+      "Couleur": "Gris métallisé premium",
+      "Contrôle": "Thermostat réglable frontal avec témoins lumineux",
+      "Vidange": "Bouchon de dégivrage en façade"
+    },
+    "price": "369000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T15:13:17.682Z",
+    "updated_at": "2026-11-27T15:13:17.682Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 169,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal TMT 200 Litres - Vitres Coulissantes Intérieures",
+    "slug": "congelateur-horizontal-tmt-200l",
+    "sku": "ONZ-TMT-CH-200L",
+    "category": 11,
+    "brand": 26,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal TMT 200 litres avec compresseur puissant garantissant une congélation profonde rapide jusqu'à -18°C. Son couvercle supérieur s'ouvre sur un système de vitres coulissantes transparentes montées sur glissières étanches qui emprisonnent le froid à l'intérieur. Idéal pour conserver viandes fraîches, poissons, glaces et boissons sans gaspillage énergétique. Équipé d'un éclairage intérieur automatique, d'un panier métallique pour ranger les petits sachets, d'une serrure à clé et d'un thermostat précis en façade. Carrosserie robuste en acier laqué gris anti-rouille. Disponible immédiatement au showroom Dibidani.",
+    "specifications": {
+      "Capacité brute / nette": "200 Litres",
+      "Marque": "TMT",
+      "Performance frigorifique": "Congélation profonde rapide -18°C",
+      "Type": "Congélateur coffre horizontal avec vitres coulissantes",
+      "Porte principale": "1 large battant avec éclairage intégré",
+      "Double isolation": "Vitres coulissantes intérieures transparentes",
+      "Sécurité": "Serrure de fermeture à clé",
+      "Rangement": "Panier métallique suspendu",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé Bamako)",
+      "Couleur": "Gris Silver métallisé",
+      "Vidange": "Évacuation frontale pour nettoyage"
+    },
+    "price": "215000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T15:13:18.847Z",
+    "updated_at": "2026-11-27T15:13:18.847Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 170,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal TMT 288 Litres - Vitres Coulissantes Intérieures",
+    "slug": "congelateur-horizontal-tmt-288l",
+    "sku": "ONZ-TMT-CH-288L",
+    "category": 11,
+    "brand": 26,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal TMT 288 litres grand volume, associant capacité de chargement généreuse et compresseur tropicalisé haute endurance. Intègre des doubles vitres coulissantes intérieures transparentes permettant de visualiser le contenu et de choisir ses articles sans faire monter la température de la cuve. Permet d'atteindre rapidement -18°C pour une conservation saine des aliments sur le long terme. Muni d'un éclairage intérieur sous le battant, d'un panier suspendu amovible, d'un verrou à clé et d'un bouchon de vidange frontal pour un dégivrage propre et sans effort. Livrable partout à Bamako ou retrait direct à notre boutique de Dibidani.",
+    "specifications": {
+      "Capacité brute / nette": "288 Litres",
+      "Marque": "TMT",
+      "Performance frigorifique": "Congélation rapide -18°C",
+      "Type": "Congélateur coffre horizontal grand format avec vitres coulissantes",
+      "Porte principale": "1 grand battant avec éclairage intégré",
+      "Système thermique": "Vitres coulissantes intérieures transparentes",
+      "Sécurité": "Serrure avec clé de verrouillage",
+      "Rangement": "Panier métallique pour accès rapide",
+      "Cuve intérieure": "Aluminium martelé résistant à la corrosion",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé)",
+      "Couleur": "Gris métallisé premium",
+      "Thermostat": "Réglable en façade avec témoins lumineux"
+    },
+    "price": "272000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T15:13:19.316Z",
+    "updated_at": "2026-11-27T15:13:19.316Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 171,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Sharp 450 Litres - Super Fast Freezing Réf 580",
+    "slug": "congelateur-horizontal-sharp-450l-ref-580-super-fast-freezing",
+    "sku": "ONZ-SHP-CH-450L",
+    "category": 11,
+    "brand": 10,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal haut de gamme Sharp 450 litres (Réf 580), conçu avec l'ingénierie japonaise de précision « Trusted Japanese Brand ». Équipé de la technologie puissante « Sharp Super Fast Freezing » assurant une surgélation rapide à cœur et une préservation nutritionnelle irréprochable de vos aliments. Intègre un système exclusif de vitres coulissantes intérieures transparentes étanches empêchant le froid de s'échapper lors de l'ouverture du grand couvercle principal. Doté d'un éclairage intérieur automatique, d'un panier métallique suspendu amovible, d'une serrure à clé et d'un panneau de commande électronique avec témoins lumineux de fonctionnement et alarme. Compresseur tropicalisé ultra-robuste adapté aux conditions climatiques extrêmes de Bamako et aux fluctuations du réseau EDM. Vendu avec garantie officielle Onizuka Shop au Grand Marché (Dibidani).",
+    "specifications": {
+      "Capacité nette": "450 Litres",
+      "Référence modèle": "Réf 580 / Super Fast Freezing",
+      "Marque": "Sharp (Trusted Japanese Brand)",
+      "Technologie de froid": "Super Fast Freezing (Surgélation ultra-rapide)",
+      "Système thermique": "Vitres coulissantes intérieures transparentes anti-déperdition",
+      "Porte principale": "1 très large battant avec joint antibactérien démontable",
+      "Sécurité": "Serrure à clé intégrée",
+      "Éclairage": "Éclairage intérieur LED automatique",
+      "Rangement": "Panier métallique suspendu pour accès rapide",
+      "Contrôle": "Thermostat réglable frontal avec témoins Power, Run et Alerte",
+      "Cuve intérieure": "Aluminium gaufré martelé haute conduction et anti-rouille",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé lourd spécial Bamako)",
+      "Couleur": "Gris Silver métallisé haute durabilité",
+      "Vidange": "Bouchon de dégivrage frontal pratique"
+    },
+    "price": "435000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T15:15:47.440Z",
+    "updated_at": "2026-11-27T15:15:47.440Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 172,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Sharp 520 Litres PRO - 2 Battants Réf 660",
+    "slug": "congelateur-horizontal-sharp-520l-ref-660-super-fast-freezing-2-battants",
+    "sku": "ONZ-SHP-CH-520L",
+    "category": 11,
+    "brand": 10,
+    "short_description": "",
+    "description": "Le fleuron de la réfrigération horizontale japonaise : congélateur coffre Sharp 520 litres (modèle grand format Réf 660) avec double ouverture à deux battants indépendants. Conçu pour les exigences des commerces, supermarchés, boucheries, restaurants et résidences de grand standing à Bamako. Doté de la technologie d'avant-garde « Sharp Super Fast Freezing » capable de geler de gros volumes en un temps record. Équipé d'un équipement intérieur exceptionnel comprenant 4 paniers métalliques suspendus amovibles pour un classement parfait de vos vivres, de serrures de sécurité individuelles pour chaque battant et d'un double éclairage LED. Compresseur Inverter tropicalisé lourd offrant une endurance remarquable face aux fortes chaleurs et aux coupures de courant. Produit officiel garanti disponible chez Onizuka Shop à Dibidani.",
+    "specifications": {
+      "Capacité nette": "520 Litres",
+      "Référence constructeur": "Réf 660 / Super Fast Freezing",
+      "Marque": "Sharp (Trusted Japanese Brand)",
+      "Type": "Congélateur coffre professionnel 2 battants grand volume",
+      "Portes / Battants": "2 grands battants indépendants avec serrures individuelles",
+      "Équipement de rangement": "4 paniers métalliques suspendus amovibles",
+      "Éclairage": "Double éclairage intérieur LED automatique",
+      "Sécurité": "Double serrure à clé indépendante",
+      "Cuve intérieure": "Aluminium martelé gaufré anti-corrosion haute résistance",
+      "Contrôle": "Thermostat électronique frontal avec témoins LED de statut",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé lourd spécial Bamako)",
+      "Couleur": "Gris métallisé premium anti-traces",
+      "Vidange": "Bouchon de vidange frontal pour dégivrage rapide"
+    },
+    "price": "489000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T15:15:47.811Z",
+    "updated_at": "2026-11-27T15:15:47.811Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 173,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Telimani 212 Litres - Vitres Coulissantes Intérieures",
+    "slug": "congelateur-horizontal-telimani-212-litres",
+    "sku": "ONZ-TEL-CH-212L",
+    "category": 11,
+    "brand": 27,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal Telimani (gamme Telimani Star) d'une capacité de 212 litres, spécialement pensé pour les commerces de quartier, les boutiques de glace, les épiceries et les foyers à Bamako. Intègre une double isolation remarquable : un grand couvercle supérieur doublé de vitres coulissantes transparentes avec poignées intégrées. Ce dispositif permet de servir rapidement ses clients ou de vérifier ses stocks sans laisser s'échapper le froid. Moteur tropicalisé conçu pour assurer une congélation constante à -18°C même lors des fortes chaleurs et coupures d'électricité. Livré avec un panier métallique suspendu amovible, un thermostat précis en façade avec voyants et un orifice de vidange avant. Disponible au showroom Onizuka Shop au Grand Marché de Bamako (Dibidani).",
+    "specifications": {
+      "Capacité nette": "212 Litres",
+      "Marque": "Telimani (Telimani Star)",
+      "Type": "Congélateur coffre horizontal avec vitres thermiques",
+      "Système double isolation": "Vitres coulissantes intérieures transparentes avec poignées",
+      "Porte principale": "1 large battant étanche avec joint démontable",
+      "Sécurité": "Serrure intégrée avec clé",
+      "Rangement": "Panier métallique suspendu amovible inclus",
+      "Cuve intérieure": "Aluminium gaufré martelé haute conduction et anti-corrosion",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé spécial Bamako / Afrique de l'Ouest)",
+      "Couleur": "Gris Silver métallisé anti-traces",
+      "Thermostat": "Réglable multi-niveaux en façade avec témoins LED",
+      "Vidange": "Bouchon de dégivrage frontal pour un nettoyage aisé"
+    },
+    "price": "220000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T15:17:15.365Z",
+    "updated_at": "2026-11-27T15:17:15.365Z"
+  }
+},
+{
   "model": "shop.productimage",
   "pk": 254,
   "fields": {
@@ -4129,6 +4461,138 @@
     "product": 167,
     "image": "products/congelateurs_coffres/roch_coffre_550l_ouvert.webp",
     "alt_text": "Congélateur Coffre Horizontal Roch 550 Litres PRO - 2 Battants Fast Freezing - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 471,
+  "fields": {
+    "product": 168,
+    "image": "products/congelateurs_coffres/pearl_coffre_375l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal Pearl 375 Litres - 2 Battants & Vitres Coulissantes - Vue réelle Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 472,
+  "fields": {
+    "product": 168,
+    "image": "products/congelateurs_coffres/pearl_coffre_375l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal Pearl 375 Litres - 2 Battants & Vitres Coulissantes - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 473,
+  "fields": {
+    "product": 168,
+    "image": "products/congelateurs_coffres/pearl_coffre_375l_interieur_badge.webp",
+    "alt_text": "Congélateur Coffre Horizontal Pearl 375 Litres - 2 Battants & Vitres Coulissantes - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 474,
+  "fields": {
+    "product": 169,
+    "image": "products/congelateurs_coffres/tmt_coffre_200l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal TMT 200 Litres - Vitres Coulissantes Intérieures - Vue réelle Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 475,
+  "fields": {
+    "product": 169,
+    "image": "products/congelateurs_coffres/tmt_coffre_200l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal TMT 200 Litres - Vitres Coulissantes Intérieures - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 476,
+  "fields": {
+    "product": 170,
+    "image": "products/congelateurs_coffres/tmt_coffre_288l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal TMT 288 Litres - Vitres Coulissantes Intérieures - Vue réelle Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 477,
+  "fields": {
+    "product": 170,
+    "image": "products/congelateurs_coffres/tmt_coffre_288l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal TMT 288 Litres - Vitres Coulissantes Intérieures - Vue réelle Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 478,
+  "fields": {
+    "product": 171,
+    "image": "products/congelateurs_coffres/sharp_coffre_450l_ref580.webp",
+    "alt_text": "Congélateur Coffre Horizontal Sharp 450 Litres - Super Fast Freezing Réf 580 - Vue réelle showroom Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 479,
+  "fields": {
+    "product": 172,
+    "image": "products/congelateurs_coffres/sharp_coffre_520l_ref660_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal Sharp 520 Litres PRO - 2 Battants Réf 660 - Vue réelle showroom Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 480,
+  "fields": {
+    "product": 172,
+    "image": "products/congelateurs_coffres/sharp_coffre_520l_ref660_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal Sharp 520 Litres PRO - 2 Battants Réf 660 - Vue réelle showroom Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 481,
+  "fields": {
+    "product": 173,
+    "image": "products/congelateurs_coffres/telimani_coffre_212l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal Telimani 212 Litres - Vitres Coulissantes Intérieures - Vue fermée showroom Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 482,
+  "fields": {
+    "product": 173,
+    "image": "products/congelateurs_coffres/telimani_coffre_212l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal Telimani 212 Litres - Vitres Coulissantes Intérieures - Vue intérieure vitres coulissantes et panier",
     "is_primary": false,
     "order": 1
   }
