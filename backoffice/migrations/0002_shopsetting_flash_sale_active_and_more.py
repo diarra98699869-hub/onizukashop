@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='shopsetting',
             name='address',
-            field=models.CharField(default='Grand Marché de Bamako, Dabanani, Bamako, Mali', max_length=255, verbose_name='Adresse Boutique'),
+            field=models.CharField(default='Grand Marché de Bamako, Dibidani, Bamako, Mali', max_length=255, verbose_name='Adresse Boutique'),
         ),
         migrations.AlterField(
             model_name='shopsetting',

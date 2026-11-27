@@ -1,20 +1,25 @@
 {% load humanize %}
-<!-- Carte Produit Ultra-Premium Calibre Apple Store -->
-<div class="product-card-perf group bg-white rounded-2xl sm:rounded-3xl border border-black/[0.06] p-2.5 sm:p-3.5 flex flex-col justify-between relative shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(234,179,8,0.15)] hover:border-amber-300 transition-all duration-300">
+<article class="product-card-perf group bg-white rounded-xl sm:rounded-2xl border border-slate-200/80 hover:border-amber-400 hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden relative">
 
-  <!-- Zone Image avec Fond Studio & Badges -->
-  <div class="relative w-full aspect-square rounded-xl sm:rounded-2xl bg-[#f8f9fa] group-hover:bg-[#fffaf6] flex items-center justify-center p-2.5 sm:p-4 mb-2 overflow-hidden transition-colors duration-300">
-    
-    <!-- Badge Promo en haut à gauche -->
-    {% if product.is_on_sale and product.discount_percentage %}
-    <span class="absolute top-2 left-2 z-10 px-2 py-0.5 rounded-lg bg-neutral-900 text-white text-[10px] font-extrabold tracking-tight shadow-xs">
-      -{{ product.discount_percentage }}%
-    </span>
-    {% endif %}
+  <!-- VISUEL CARRÉ PLEIN CADRE -->
+  <div class="relative w-full aspect-square bg-[#f8f9fb] flex items-center justify-center p-2 sm:p-3 overflow-hidden">
 
-    <!-- Bouton Cœur Favori en haut à droite (Instantané sans rechargement de page) -->
-    <div 
-      x-data="{ 
+    <!-- Badges Haut-Gauche -->
+    <div class="absolute top-1.5 left-1.5 z-10 flex flex-col gap-1 pointer-events-none">
+      {% if product.is_on_sale and product.discount_percentage %}
+      <span class="px-1.5 py-0.5 rounded-md bg-rose-600 text-white text-[10px] font-black leading-none shadow-sm">
+        -{{ product.discount_percentage }}%
+      </span>
+      {% elif product.is_new %}
+      <span class="px-1.5 py-0.5 rounded-md bg-slate-900/90 text-amber-300 text-[9px] font-extrabold uppercase leading-none">
+        Nouveau
+      </span>
+      {% endif %}
+    </div>
+
+    <!-- Bouton Favori Instantané Haut-Droite -->
+    <div
+      x-data="{
         favorited: {% if user.is_authenticated and product.id in user_wishlist_ids %}true{% else %}false{% endif %},
         loading: false,
         toggleFav() {
@@ -32,212 +37,204 @@
             }
             if (data.success) {
               this.favorited = data.is_favorited;
-              document.dispatchEvent(new CustomEvent('wishlistUpdated', { 
-                detail: { count: data.count, message: data.message } 
+              document.dispatchEvent(new CustomEvent('wishlistUpdated', {
+                detail: { count: data.count, message: data.message }
               }));
             }
           })
           .catch(() => { this.loading = false; });
         }
       }"
-      class="absolute top-2 right-2 z-10"
+      class="absolute top-1.5 right-1.5 z-10"
     >
-      <button 
-        type="button" 
-        @click.stop.prevent="toggleFav()" 
+      <button
+        type="button"
+        @click.stop.prevent="toggleFav()"
         :disabled="loading"
-        class="w-8 h-8 rounded-full bg-white border flex items-center justify-center transition-all duration-200 shadow-sm cursor-pointer active:scale-90 hover:scale-110"
-        :class="favorited ? 'text-rose-600 border-rose-300 bg-rose-50 shadow-rose-500/15' : 'text-slate-700 border-slate-300/90 hover:text-rose-600 hover:border-rose-300 hover:bg-rose-50'"
-        :title="favorited ? 'Retirer des favoris' : 'Ajouter aux favoris'"
-        aria-label="Favoris"
+        class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/95 border flex items-center justify-center shadow-2xs active:scale-90 transition cursor-pointer"
+        :class="favorited ? 'text-rose-600 border-rose-200 bg-rose-50' : 'text-slate-600 border-slate-200/90 hover:text-rose-600'"
+        aria-label="Ajouter {{ product.name }} aux favoris"
       >
-        <svg 
-          class="w-4 h-4 transition-all duration-200" 
-          :class="favorited ? '!fill-rose-500 !stroke-rose-600 scale-110' : 'fill-none !stroke-slate-700'" 
-          stroke="currentColor"
-          stroke-width="2.2" 
+        <svg
+          class="w-3.5 h-3.5 sm:w-4 sm:h-4"
+          :class="favorited ? 'fill-rose-500 stroke-rose-600' : 'fill-none stroke-current'"
+          stroke-width="2.1"
           viewBox="0 0 24 24"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
         </svg>
       </button>
     </div>
 
-    <!-- Photo Produit Détourée en Haute Définition -->
+    <!-- Lien & Photo Produit -->
     <a href="{{ product.get_absolute_url }}" class="w-full h-full flex items-center justify-center">
       {% if product.primary_image %}
-      <img 
-        src="{{ product.primary_image.image.url }}" 
+      <img
+        src="{{ product.primary_image.medium.url|default:product.primary_image.image.url }}"
         alt="{{ product.name }}"
-        class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500 ease-out"
+        class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
         loading="lazy"
         decoding="async"
       >
       {% else %}
-      <div class="w-full h-full flex flex-col items-center justify-center text-neutral-300">
-        <svg class="w-12 h-12 stroke-[1.2]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <rect x="4" y="4" width="16" height="16" rx="2" />
+      <div class="w-full h-full flex items-center justify-center text-slate-300">
+        <svg class="w-10 h-10 stroke-[1.4]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <rect x="4" y="4" width="16" height="16" rx="2"/>
         </svg>
       </div>
       {% endif %}
     </a>
 
-    <!-- Badge Épuisé si hors stock -->
-    {% if not product.is_in_stock %}
-    <div class="absolute inset-0 bg-white/75 backdrop-blur-xs flex items-center justify-center">
-      <span class="px-2.5 py-1 bg-neutral-900 text-white text-[10px] font-bold rounded-lg shadow-sm">
-        Épuisé
-      </span>
-    </div>
+    {% if product.has_video %}
+    <a href="{{ product.get_absolute_url }}#video" class="absolute bottom-1.5 left-1.5 z-10 px-2 py-0.5 rounded-full bg-slate-950/90 text-amber-300 text-[9px] font-black inline-flex items-center gap-1 shadow-sm">
+      <span>▶</span>
+      <span>Vidéo</span>
+    </a>
     {% endif %}
 
+    {% if not product.is_in_stock %}
+    <div class="absolute inset-0 bg-white/75 backdrop-blur-[1px] flex items-center justify-center">
+      <span class="px-2.5 py-1 bg-slate-900 text-white text-[10px] font-bold rounded-md">Rupture</span>
+    </div>
+    {% endif %}
   </div>
 
-  <!-- Informations Produit : Marque, Titre, Reassurance Stock & Prix -->
-  <div class="flex-1 flex flex-col justify-between">
-    
+  <!-- CORPS DENSE MARKETPLACE -->
+  <div class="p-2 sm:p-2.5 flex-1 flex flex-col justify-between">
     <div>
-      <!-- Micro-Badge Marque en Majuscule Orange -->
-      <p class="text-xs font-black tracking-wider text-amber-600 uppercase mb-1 truncate">
-        {{ product.brand.name|default:product.category.name }}
-      </p>
+      <!-- Marque + Statut Stock -->
+      <div class="flex items-center justify-between gap-1 mb-0.5">
+        <span class="text-[10px] font-extrabold uppercase tracking-wide text-amber-600 truncate">
+          {{ product.brand.name|default:product.category.short_name }}
+        </span>
+        {% if product.is_in_stock %}
+        <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded shrink-0">Stock</span>
+        {% endif %}
+      </div>
 
-      <!-- Titre Produit avec hauteur uniforme sans aucune coupure de lettre -->
+      <!-- Titre 2 lignes -->
       <a href="{{ product.get_absolute_url }}" class="block">
-        <h3 class="product-card-title text-xs sm:text-sm font-bold text-slate-900 group-hover:text-amber-600 transition-colors" title="{{ product.name }}">
+        <h3 class="product-card-title text-xs sm:text-[13px] font-semibold text-slate-800 group-hover:text-amber-600 transition-colors" title="{{ product.name }}">
           {{ product.name }}
         </h3>
       </a>
 
-      <!-- Reassurance Stock Bamako & Avis Étoiles -->
-      <div class="flex items-center justify-between mt-2 text-xs">
-        <div class="flex items-center gap-1.5 truncate">
-          <span class="w-2 h-2 rounded-full {% if product.is_in_stock %}bg-emerald-500 ring-2 ring-emerald-500/20{% else %}bg-rose-500{% endif %} shrink-0"></span>
-          <span class="truncate font-bold {% if product.is_in_stock %}text-emerald-700{% else %}text-rose-600{% endif %}">
-            {% if product.is_in_stock %}En stock{% else %}Épuisé{% endif %}
+      <!-- Prix Fort en FCFA -->
+      <div class="mt-1.5">
+        <div class="flex items-baseline gap-1 flex-wrap">
+          <span class="font-display text-sm sm:text-base font-black text-slate-950 tracking-tight whitespace-nowrap">
+            {{ product.current_price|floatformat:0|intcomma }}
           </span>
+          <span class="text-[10px] font-extrabold text-slate-700">FCFA</span>
         </div>
-        <div class="flex items-center gap-1 font-bold text-slate-700 shrink-0">
-          <svg class="w-3.5 h-3.5 text-amber-400 fill-current" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
-          <span class="text-slate-800 font-extrabold text-xs">4.8</span>
-        </div>
-      </div>
-    </div>
 
-    <!-- Prix en Francs CFA (Bloc Pro structuré sans rupture de devise) -->
-    <div class="mt-2.5 mb-2.5">
-      <!-- Ligne 1 : Prix Actuel Net + Badge Garantie 24m -->
-      <div class="flex items-baseline justify-between gap-1.5">
-        <span class="font-display text-base sm:text-lg font-black text-slate-950 tracking-tight whitespace-nowrap">
-          {{ product.current_price|floatformat:0|intcomma }} <span class="font-sans text-xs font-black text-amber-600 ml-0.5">FCFA</span>
-        </span>
-        <span class="text-[10px] sm:text-xs font-bold text-slate-700 bg-slate-100 border border-slate-200/80 px-2 py-0.5 rounded-md shrink-0">
-          Gar. 24m
-        </span>
-      </div>
-
-      <!-- Ligne 2 : Ancien Prix Barré (si promo) ou espacement constant -->
-      {% if product.is_on_sale %}
-      <div class="flex items-center gap-1.5 mt-1">
-        <span class="text-xs sm:text-sm text-slate-400 line-through whitespace-nowrap font-semibold">
+        {% if product.is_on_sale %}
+        <div class="text-[10px] text-slate-400 line-through font-medium leading-tight">
           {{ product.price|floatformat:0|intcomma }} FCFA
-        </span>
-        {% if product.discount_percentage %}
-        <span class="text-[10px] font-black text-rose-700 bg-rose-50 border border-rose-200/60 px-1.5 py-0.5 rounded-md">
-          -{{ product.discount_percentage }}%
-        </span>
+        </div>
         {% endif %}
       </div>
-      {% else %}
-      <div class="h-4 sm:h-5"></div>
-      {% endif %}
+
+      <!-- Micro-Tags Confiance type Alibaba -->
+      <div class="mt-1.5 flex items-center gap-1 flex-wrap text-[9px] sm:text-[10px] font-semibold text-slate-500">
+        {% if product.is_eco_solar %}
+        <span class="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold">☀ Solaire/Éco</span>
+        {% else %}
+        <span class="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">Livraison 24h</span>
+        {% endif %}
+        <span class="px-1.5 py-0.5 rounded bg-amber-50 text-amber-800">Qualité certifiée</span>
+      </div>
     </div>
 
-    <!-- Bouton Acheter Calibré Ergonomie Mobile & Desktop (Ajout Instantané sans rechargement) -->
-    {% if product.is_in_stock %}
-    <form 
-      method="post" 
-      action="{% url 'orders:cart_add' product.pk %}"
-      class="w-full mt-auto"
-      x-data="{ adding: false, added: false }"
-      @submit.prevent="
-        if (adding) return;
-        adding = true;
-        fetch($el.action, {
-          method: 'POST',
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json',
-            'X-CSRFToken': $el.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
-          },
-          body: new FormData($el)
-        })
-        .then(r => r.json())
-        .then(data => {
-          adding = false;
-          if (data.success) {
-            added = true;
-            document.dispatchEvent(new CustomEvent('cartUpdated', { 
-              detail: { count: data.cart_count, message: data.message } 
-            }));
-            setTimeout(() => { added = false; }, 2000);
-          } else {
-            alert(data.error || 'Impossible d\'ajouter au panier');
-          }
-        })
-        .catch(() => {
-          adding = false;
-          $el.submit();
-        });
-      "
-    >
-      {% csrf_token %}
-      <input type="hidden" name="quantity" value="1">
-      <input type="hidden" name="next" value="{{ request.get_full_path }}">
-      <button 
-        type="submit" 
-        :disabled="adding"
-        class="w-full h-9 sm:h-10 rounded-xl font-extrabold text-xs sm:text-sm transition-all duration-300 active:scale-[0.98] shadow-sm flex items-center justify-center gap-1.5 cursor-pointer select-none"
-        :class="added ? 'bg-emerald-600 text-white shadow-emerald-500/20' : (adding ? 'bg-amber-600 text-white cursor-wait opacity-90' : 'bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white shadow-amber-500/15')"
-        aria-label="Ajouter {{ product.name }} au panier"
+    <!-- BARRE D'ACTION RAPIDE : AJOUT PANIER + WHATSAPP 1-CLIC -->
+    <div class="mt-2 pt-1.5 border-t border-slate-100 flex items-center gap-1.5">
+      {% if product.is_in_stock %}
+      <form
+        method="post"
+        action="{% url 'orders:cart_add' product.pk %}"
+        class="flex-1 min-w-0"
+        x-data="{ adding: false, added: false }"
+        @submit.prevent="
+          if (adding) return;
+          adding = true;
+          fetch($el.action, {
+            method: 'POST',
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest',
+              'Accept': 'application/json',
+              'X-CSRFToken': $el.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+            },
+            body: new FormData($el)
+          })
+          .then(r => r.json())
+          .then(data => {
+            adding = false;
+            if (data.success) {
+              added = true;
+              if (typeof window.trackMetaEvent === 'function') {
+                window.trackMetaEvent('AddToCart', {
+                  content_name: '{{ product.name|escapejs }}',
+                  content_ids: ['{{ product.sku|default:product.id|escapejs }}'],
+                  value: {{ product.current_price|floatformat:0 }},
+                  currency: 'XOF'
+                });
+              }
+              document.dispatchEvent(new CustomEvent('cartUpdated', {
+                detail: { count: data.cart_count, message: data.message }
+              }));
+              setTimeout(() => { added = false; }, 1800);
+            }
+          })
+          .catch(() => { adding = false; $el.submit(); });
+        "
       >
-        <!-- État Initial -->
-        <span x-show="!adding && !added" class="flex items-center gap-1.5">
-          <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-          </svg>
-          <span>Ajouter <span class="hidden sm:inline">au panier</span></span>
-        </span>
+        {% csrf_token %}
+        <input type="hidden" name="quantity" value="1">
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button
+          type="submit"
+          :disabled="adding"
+          class="w-full h-8 rounded-lg font-extrabold text-[11px] sm:text-xs transition active:scale-[0.97] flex items-center justify-center gap-1 cursor-pointer select-none"
+          :class="added ? 'bg-emerald-600 text-white' : 'bg-amber-400 hover:bg-amber-500 text-slate-950'"
+          aria-label="Ajouter {{ product.name }} au panier"
+        >
+          <span x-show="!adding && !added" class="flex items-center gap-1 truncate">
+            <svg class="w-3.5 h-3.5 stroke-[2.4] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+            </svg>
+            <span>Panier</span>
+          </span>
+          <span x-show="adding" x-cloak class="text-[10px]">...</span>
+          <span x-show="added" x-cloak class="flex items-center gap-0.5 font-black">
+            <svg class="w-3.5 h-3.5 stroke-[2.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            <span>OK</span>
+          </span>
+        </button>
+      </form>
 
-        <!-- État Chargement -->
-        <span x-show="adding" x-cloak class="flex items-center gap-1.5" style="display: none;">
-          <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <span>Ajout...</span>
-        </span>
-
-        <!-- État Succès Confirmé -->
-        <span x-show="added" x-cloak class="flex items-center gap-1.5 font-black" style="display: none;">
-          <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-          </svg>
-          <span>Ajouté !</span>
-        </span>
-      </button>
-    </form>
-    {% else %}
-    <button 
-      disabled 
-      class="w-full h-9 sm:h-10 rounded-xl bg-slate-100 text-slate-400 font-bold text-xs sm:text-sm cursor-not-allowed text-center"
-    >
-      Épuisé
-    </button>
-    {% endif %}
-
+      <!-- Commande Directe WhatsApp 1-Tap depuis la carte (avec Lien Fiche Produit pour Aperçu Photo WhatsApp) -->
+      <a
+        href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text={{ 'Bonjour ONIZUKA SHOP, je souhaite commander :'|urlencode }}%0A*{{ product.name|urlencode }}*%0A{{ 'Prix : '|urlencode }}*{{ product.current_price|floatformat:0|intcomma|urlencode }}%20FCFA*%0A{{ 'Réf : '|urlencode }}{{ product.sku|urlencode }}%0A{{ 'Lien & Photo : '|urlencode }}{{ request.scheme }}://{{ request.get_host }}{{ product.get_absolute_url }}"
+        target="_blank"
+        rel="noopener"
+        onclick="if(window.trackMetaEvent){window.trackMetaEvent('Contact',{content_name:'{{ product.name|escapejs }}',content_ids:['{{ product.sku|default:product.id|escapejs }}'],content_type:'product',value:{{ product.current_price|floatformat:0 }},currency:'XOF'});}"
+        class="w-8 h-8 rounded-lg bg-emerald-50 hover:bg-emerald-600 text-emerald-600 hover:text-white border border-emerald-200 hover:border-emerald-600 flex items-center justify-center shrink-0 transition active:scale-95"
+        title="Commander sur WhatsApp"
+        aria-label="Commander {{ product.name }} sur WhatsApp"
+      >
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+          <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.588-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.45 1.054 1.325 1.833.687.612 1.267.801 1.447.888.181.087.289.073.397-.051.108-.124.462-.538.585-.722.123-.184.246-.153.411-.092.166.061 1.052.496 1.233.587.181.091.303.136.347.212.043.076.043.439-.101.844z"/>
+        </svg>
+      </a>
+      {% else %}
+      <a
+        href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text={{ 'Bonjour Onizouka Shop, quand sera disponible : '|urlencode }}{{ product.name|urlencode }}"
+        target="_blank"
+        rel="noopener"
+        class="w-full h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[11px] flex items-center justify-center"
+      >Demander dispo</a>
+      {% endif %}
+    </div>
   </div>
 
-</div>
+</article>

@@ -55,11 +55,16 @@
           </form>
         </div>
 
-        <!-- Prix Unitaire -->
+        <!-- Prix Unitaire + Option Service éventuelle -->
         <p class="text-[11px] sm:text-xs text-slate-500 mt-1">
           <span class="font-bold text-slate-800">{{ item.product.current_price|floatformat:0|intcomma }} FCFA</span>
           <span class="text-[10px] text-slate-400">/ unité</span>
         </p>
+        {% if item.addon_details %}
+        <p class="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-[10px] font-bold text-amber-900">
+          <span>+ {{ item.addon_details.label }} ({{ item.addon_details.price|intcomma }} F)</span>
+        </p>
+        {% endif %}
       </div>
 
       <!-- 3. Barre Inférieure : Quantité + Sous-total net -->

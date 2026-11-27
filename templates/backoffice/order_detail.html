@@ -1,290 +1,297 @@
 {% extends "backoffice/base.html" %}
 {% load humanize %}
 
-{% block title %}Commande #{{ order.order_number }} - Direction Onizouka ERP{% endblock %}
+{% block title %}Commande #{{ order.order_number }} • Gestion Onizouka{% endblock %}
 
 {% block content %}
 <div class="space-y-3.5">
 
-    <!-- BREADCRUMB & ENTÊTE LUMINEUX APPLE -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200/80">
+  <!-- EN-TÊTE + CONTACT CLIENT DIRECT (APPEL + WHATSAPP + FACTURE) -->
+  <div class="bg-white rounded-2xl border border-slate-200/80 p-3.5 sm:p-4 shadow-2xs space-y-3">
+    <div class="flex items-start justify-between gap-2">
+      <div>
+        <a href="{% url 'backoffice:orders' %}" class="text-xs font-bold text-slate-400 hover:text-slate-700">← Commandes</a>
+        <div class="flex items-center gap-2 mt-1 flex-wrap">
+          <h1 class="text-base sm:text-xl font-black text-slate-950 font-mono">#{{ order.order_number }}</h1>
+          {% include "backoffice/partials/order_status_badge.html" with order=order %}
+          <span class="px-2 py-0.5 rounded text-[11px] font-bold {% if order.payment_status %}bg-emerald-50 text-emerald-700{% else %}bg-amber-50 text-amber-800{% endif %}">
+            {% if order.payment_status %}✓ Payé{% else %}À encaisser{% endif %}
+          </span>
+        </div>
+        <p class="text-[11px] text-slate-500 mt-0.5">{{ order.created_at|date:"d/m/Y à H:i" }} • {{ order.get_payment_method_display }}</p>
+      </div>
+
+      <a href="{% url 'backoffice:order_invoice' order.id %}" target="_blank" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold shrink-0">
+        Facture PDF
+      </a>
+    </div>
+
+    <!-- Barre Contact Client 1-Tap (Ultra-pratique sur Smartphone) -->
+    <div class="grid grid-cols-2 sm:flex items-center gap-2 pt-2 border-t border-slate-100">
+      {% if order.delivery_phone %}
+      <a
+        href="tel:{{ order.delivery_phone }}"
+        class="py-2.5 px-4 rounded-xl bg-slate-900 text-white text-xs font-extrabold flex items-center justify-center gap-1.5 active:scale-95 transition"
+      >
+        <span>Appeler {{ order.delivery_phone }}</span>
+      </a>
+      <a
+        href="https://wa.me/{{ client_wa_phone|default:order.whatsapp_client_phone }}?text={{ 'Bonjour '|urlencode }}{{ order.delivery_name|urlencode }}{{ ', ici Onizouka Shop (Grand Marché Bamako). Votre commande #'|urlencode }}{{ order.order_number|urlencode }}{{ ' d\'un montant de '|urlencode }}{{ order.total|floatformat:0 }}{{ ' FCFA est bien prise en charge.'|urlencode }}"
+        target="_blank"
+        rel="noopener"
+        class="py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold flex items-center justify-center gap-1.5 active:scale-95 transition"
+      >
+        <span>Écrire sur WhatsApp</span>
+      </a>
+      {% endif %}
+    </div>
+
+    <!-- BOUTONS D'ACTION RAPIDE 1-CLIC SUR LE STATUT -->
+    <div class="pt-2 border-t border-slate-100 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+      <span class="text-[10px] font-extrabold uppercase text-slate-400 mr-1 shrink-0">Action 1-clic :</span>
+
+      {% if order.status == 'pending' %}
+      <form method="POST" class="shrink-0">
+        {% csrf_token %}
+        <input type="hidden" name="quick_action" value="confirm">
+        <button type="submit" class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-extrabold cursor-pointer">
+          ✓ Confirmer
+        </button>
+      </form>
+      {% endif %}
+
+      {% if not order.payment_status %}
+      <form method="POST" class="shrink-0">
+        {% csrf_token %}
+        <input type="hidden" name="quick_action" value="mark_paid">
+        <button type="submit" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-extrabold cursor-pointer">
+          ✓ Marquer Payé
+        </button>
+      </form>
+      {% endif %}
+
+      {% if order.status != 'shipped' and order.status != 'delivered' and order.status != 'cancelled' %}
+      <form method="POST" class="shrink-0">
+        {% csrf_token %}
+        <input type="hidden" name="quick_action" value="ship">
+        <button type="submit" class="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 text-xs font-bold cursor-pointer">
+          En livraison
+        </button>
+      </form>
+      {% endif %}
+
+      {% if order.status != 'delivered' and order.status != 'cancelled' %}
+      <form method="POST" class="shrink-0">
+        {% csrf_token %}
+        <input type="hidden" name="quick_action" value="deliver">
+        <button type="submit" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold cursor-pointer">
+          ✓ Livrée &amp; Payée
+        </button>
+      </form>
+      {% endif %}
+
+      <form method="POST" class="shrink-0">
+        {% csrf_token %}
+        <input type="hidden" name="quick_action" value="send_payment_reminder">
+        <button type="submit" class="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-extrabold cursor-pointer" title="Envoyer un email de rappel de finalisation / paiement au client">
+          ✉ Relance Finalisation
+        </button>
+      </form>
+
+      <form method="POST" class="shrink-0">
+        {% csrf_token %}
+        <input type="hidden" name="quick_action" value="resend_confirmation">
+        <button type="submit" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold cursor-pointer" title="Renvoyer l'email de confirmation de commande">
+          ✉ Renvoyer Confirmation
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- GRILLE DÉTAIL -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-3.5">
+
+    <!-- ARTICLES + FORMULAIRE COMPLET (2/3) -->
+    <div class="lg:col-span-2 space-y-3.5">
+      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
+        <div class="px-4 py-3 border-b border-slate-100 font-heading font-black text-xs sm:text-sm text-slate-950">
+          Articles commandés ({{ order.items.count }})
+        </div>
+
+        <div class="divide-y divide-slate-100">
+          {% for item in order.items.all %}
+          <div class="p-3.5 flex items-center justify-between gap-3 text-xs">
+            <div class="flex items-center gap-3 min-w-0">
+              {% if item.product and item.product.primary_image %}
+              <img src="{{ item.product.primary_image.thumbnail.url|default:item.product.primary_image.image.url }}" alt="{{ item.product_name }}" class="w-12 h-12 rounded-xl object-contain bg-slate-50 border border-slate-100 p-1 shrink-0">
+              {% else %}
+              <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-400 shrink-0">IMG</div>
+              {% endif %}
+              <div class="min-w-0">
+                <p class="font-bold text-slate-900 truncate">{{ item.product_name }}</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">
+                  {{ item.unit_price|floatformat:0|intcomma }} F × <strong class="text-slate-900">{{ item.quantity }}</strong>
+                </p>
+              </div>
+            </div>
+            <span class="font-heading font-black text-sm text-slate-950 whitespace-nowrap">{{ item.total_price|floatformat:0|intcomma }} F</span>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="p-4 bg-slate-50 border-t border-slate-100 space-y-1.5 text-xs">
+          <div class="flex justify-between text-slate-600">
+            <span>Sous-total</span>
+            <span class="font-semibold">{{ order.subtotal|floatformat:0|intcomma }} FCFA</span>
+          </div>
+          <div class="flex justify-between text-slate-600">
+            <span>Livraison</span>
+            <span class="font-semibold">{% if order.delivery_fee > 0 %}{{ order.delivery_fee|floatformat:0|intcomma }} FCFA{% else %}Offerte{% endif %}</span>
+          </div>
+          {% if order.discount > 0 %}
+          <div class="flex justify-between text-emerald-700 font-bold">
+            <span>Remise</span>
+            <span>-{{ order.discount|floatformat:0|intcomma }} FCFA</span>
+          </div>
+          {% endif %}
+          <div class="flex justify-between items-baseline pt-2 border-t border-slate-200">
+            <span class="font-extrabold text-sm text-slate-950">Total Net</span>
+            <span class="font-heading font-black text-lg text-amber-600">{{ order.total|floatformat:0|intcomma }} FCFA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modification Complète : Statut, Paiement, Remise, Livraison & Coordonnées Client -->
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-2xs" x-data="{ editDelivery: false }">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-heading font-black text-xs sm:text-sm text-slate-950">Contrôle Complet de la Commande</h3>
+          <button type="button" @click="editDelivery = !editDelivery" class="text-xs font-extrabold text-amber-600 hover:underline cursor-pointer">
+            <span x-text="editDelivery ? 'Masquer adresse & frais' : '✎ Modifier adresse / remise / frais'"></span>
+          </button>
+        </div>
+        <form method="POST" class="space-y-3">
+          {% csrf_token %}
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Statut de la commande</label>
+              {{ form.status }}
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Mode de règlement</label>
+              {{ form.payment_method }}
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Référence transaction / SMS</label>
+              {{ form.payment_reference }}
+            </div>
+            <div class="flex items-end">
+              <label class="w-full flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer text-xs font-bold text-slate-800">
+                {{ form.payment_status }}
+                <span>Paiement encaissé ✓</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Section modifiable : Frais de livraison, Remise commerciale & Coordonnées Client -->
+          <div x-show="editDelivery" x-cloak class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+            <p class="text-[11px] font-extrabold uppercase text-slate-500">Ajustement Financier &amp; Coordonnées Client</p>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Frais de livraison (FCFA)</label>
+                {{ form.delivery_fee }}
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-emerald-800 mb-1">Remise accordée (FCFA)</label>
+                {{ form.discount }}
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Nom du client</label>
+                {{ form.delivery_name }}
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Téléphone</label>
+                {{ form.delivery_phone }}
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Email (Facture &amp; Rappels)</label>
+                {{ form.delivery_email }}
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Quartier / Commune</label>
+                {{ form.delivery_district }}
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Ville</label>
+                {{ form.delivery_city }}
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Adresse &amp; Repère</label>
+              {{ form.delivery_address }}
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Note interne Direction (livreur, heure, série...)</label>
+            {{ form.admin_notes }}
+          </div>
+          <div class="flex items-center justify-between gap-2 pt-1 flex-wrap">
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs cursor-pointer">
+              Enregistrer les modifications
+            </button>
+            {% if order.status != 'cancelled' %}
+            <button
+              type="submit"
+              name="quick_action"
+              value="cancel"
+              onclick="return confirm('Annuler cette commande et remettre automatiquement les articles en stock ?')"
+              class="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs cursor-pointer"
+            >
+              Annuler la commande (+ retour stock)
+            </button>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ADRESSE & INFOS LIVRAISON (1/3) -->
+    <div class="space-y-3.5">
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-2xs space-y-2.5 text-xs">
+        <h3 class="font-heading font-black text-sm text-slate-950 pb-2 border-b border-slate-100">Adresse de livraison</h3>
         <div>
-            <div class="flex items-center gap-1.5 text-xs text-slate-500 mb-1">
-                <a href="{% url 'backoffice:dashboard' %}" class="hover:text-slate-800">Tableau de bord</a>
-                <span>/</span>
-                <a href="{% url 'backoffice:orders' %}" class="hover:text-slate-800">Commandes</a>
-                <span>/</span>
-                <span class="text-slate-800 font-medium font-mono">#{{ order.order_number }}</span>
-            </div>
-            <div class="flex items-center gap-2.5">
-                <h1 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight font-heading leading-tight font-mono">
-                    Commande #{{ order.order_number }}
-                </h1>
-                {% include "backoffice/partials/order_status_badge.html" with order=order %}
-            </div>
-            <p class="text-xs text-slate-500 mt-0.5">
-                Enregistrée le {{ order.created_at|date:"d/m/Y à H:i" }} &bull; Bamako, Mali
-            </p>
+          <span class="text-[10px] font-bold text-slate-400 uppercase block">Client</span>
+          <p class="font-bold text-sm text-slate-900">{{ order.delivery_name }}</p>
         </div>
-
-        <div class="flex items-center gap-2">
-            <a href="{% url 'backoffice:order_invoice' order.id %}" target="_blank"
-               class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-amber-300 text-slate-700 hover:text-slate-900 text-xs font-bold rounded-xl shadow-2xs transition">
-                <svg class="w-3.5 h-3.5 text-amber-600 stroke-[2.2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                </svg>
-                <span>Imprimer Facture / Bon</span>
-            </a>
-            <a href="{% url 'backoffice:orders' %}" class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 text-slate-700 text-xs font-semibold rounded-xl transition shadow-2xs">
-                ← Liste
-            </a>
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase block">Téléphone</span>
+          <a href="tel:{{ order.delivery_phone }}" class="font-mono font-bold text-sm text-amber-600">{{ order.delivery_phone }}</a>
         </div>
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase block">Quartier / Ville</span>
+          <p class="font-semibold text-slate-800">{{ order.delivery_district|default:"Bamako" }} — {{ order.delivery_city }}</p>
+        </div>
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase block">Indications précises</span>
+          <p class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 mt-1 whitespace-pre-line">{{ order.delivery_address }}</p>
+        </div>
+        {% if order.notes %}
+        <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950">
+          <span class="text-[10px] font-extrabold uppercase block">Note du client :</span>
+          <p class="mt-0.5">{{ order.notes }}</p>
+        </div>
+        {% endif %}
+      </div>
     </div>
 
-    <!-- MAIN TWO COLUMN GRID -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3.5">
-
-        <!-- Colonne Gauche (2/3) : Articles et Formulaire de mise à jour du statut -->
-        <div class="lg:col-span-2 space-y-3.5">
-
-            <!-- ARTICLES COMMANDES EFFET GLACE -->
-            <div class="bg-white/90 backdrop-blur-xl rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-                <div class="p-3 sm:p-4 border-b border-slate-200/80 bg-slate-50/50 flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                        <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Articles Commandés ({{ order.items.count }})</h2>
-                    </div>
-                    <span class="text-[11px] text-slate-400 font-mono">Devise : FCFA</span>
-                </div>
-
-                <div class="divide-y divide-slate-100">
-                    {% for item in order.items.all %}
-                    <div class="p-3.5 flex items-center justify-between gap-3 text-xs hover:bg-amber-50/20 transition">
-                        <div class="flex items-center gap-3 min-w-0">
-                            {% if item.product and item.product.primary_image and item.product.primary_image.image %}
-                            <img src="{{ item.product.primary_image.image.url }}" alt="{{ item.product_name }}" class="w-12 h-12 object-contain rounded-xl border border-slate-200/80 shrink-0 bg-white p-1 shadow-2xs">
-                            {% elif item.product and item.product.images.all %}
-                            <img src="{{ item.product.images.all.0.image.url }}" alt="{{ item.product_name }}" class="w-12 h-12 object-contain rounded-xl border border-slate-200/80 shrink-0 bg-white p-1 shadow-2xs">
-                            {% else %}
-                            <div class="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 text-[10px] font-bold shrink-0">
-                                PROD
-                            </div>
-                            {% endif %}
-                            <div class="min-w-0">
-                                <div class="font-bold text-slate-900 truncate leading-snug">{{ item.product_name }}</div>
-                                <div class="text-[10px] text-slate-400 font-mono mt-0.5">SKU: {{ item.product_sku }}</div>
-                                <div class="text-[11px] text-slate-500 mt-1">
-                                    {{ item.unit_price|floatformat:0|intcomma }} FCFA &times; <strong class="text-slate-800">{{ item.quantity }}</strong>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-right whitespace-nowrap">
-                            <span class="font-black text-slate-900 text-sm tabular-nums font-heading">{{ item.total_price|floatformat:0|intcomma }}</span>
-                            <span class="text-[10px] text-slate-400 ml-0.5">FCFA</span>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <!-- SOUS-TOTAL ET TOTAL -->
-                <div class="p-4 bg-slate-50/70 border-t border-slate-200/80 space-y-2 text-xs">
-                    <div class="flex justify-between text-slate-600">
-                        <span>Sous-total articles :</span>
-                        <span class="font-medium text-slate-800 tabular-nums">{{ order.subtotal|floatformat:0|intcomma }} FCFA</span>
-                    </div>
-                    <div class="flex justify-between text-slate-600">
-                        <span>Frais de livraison (Bamako) :</span>
-                        <span class="font-medium text-slate-800 tabular-nums">
-                            {% if order.delivery_fee > 0 %}
-                            {{ order.delivery_fee|floatformat:0|intcomma }} FCFA
-                            {% else %}
-                            <span class="text-emerald-700 font-bold">Gratuit</span>
-                            {% endif %}
-                        </span>
-                    </div>
-                    {% if order.discount > 0 %}
-                    <div class="flex justify-between text-emerald-700">
-                        <span>Remise promotionnelle :</span>
-                        <span class="font-bold tabular-nums">-{{ order.discount|floatformat:0|intcomma }} FCFA</span>
-                    </div>
-                    {% endif %}
-                    <div class="flex justify-between items-center pt-2.5 border-t border-slate-200">
-                        <span class="font-bold text-slate-900 text-sm">Total Commande :</span>
-                        <span class="font-black text-lg text-amber-700 tabular-nums font-heading">
-                            {{ order.total|floatformat:0|intcomma }} <span class="text-xs font-semibold text-slate-600">FCFA</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- FORMULAIRE DE MODIFICATION STATUT & NOTES DIRECTION -->
-            <div class="bg-white/90 backdrop-blur-xl rounded-2xl border border-slate-200/80 shadow-xs p-4 space-y-3.5">
-                <div class="border-b border-slate-100 pb-2.5 flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                        <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Pilotage du Statut & Notes Internes</h3>
-                    </div>
-                </div>
-
-                <form method="POST" class="space-y-3.5">
-                    {% csrf_token %}
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-700 mb-1">
-                                Statut de traitement
-                            </label>
-                            <div class="text-xs">
-                                {{ form.status }}
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-700 mb-1">
-                                Validation financière
-                            </label>
-                            <label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition cursor-pointer text-xs">
-                                {{ form.payment_status }}
-                                <span class="font-bold text-slate-800">Montant intégralement encaissé</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1">
-                            Notes internes de gestion (confidentiel Direction)
-                        </label>
-                        <div class="text-xs">
-                            {{ form.admin_notes }}
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
-                        <button type="submit" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold rounded-xl shadow-xs transition active:scale-95 cursor-pointer flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                            </svg>
-                            <span>Enregistrer modifications</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            {% if order.notes %}
-            <!-- Instructions du client lors de l'achat -->
-            <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-3.5 text-xs">
-                <div class="font-bold text-amber-900 uppercase tracking-wider text-[10px] mb-1">
-                    Instruction transmise par le client :
-                </div>
-                <div class="text-amber-950 italic">
-                    « {{ order.notes }} »
-                </div>
-            </div>
-            {% endif %}
-
-        </div>
-
-        <!-- Colonne Droite (1/3) : Coordonnées Client & Livraison Bamako -->
-        <div class="space-y-3.5">
-
-            <!-- DESTINATAIRE & LIVRAISON BAMAKO -->
-            <div class="bg-white/90 backdrop-blur-xl rounded-2xl border border-slate-200/80 shadow-xs p-4 space-y-3">
-                <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                    <h3 class="font-bold text-slate-900 text-xs uppercase tracking-wider">
-                        Livraison & Déchargement
-                    </h3>
-                </div>
-
-                <div class="space-y-2.5 text-xs">
-                    <div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase">Destinataire</div>
-                        <div class="font-bold text-slate-900 mt-0.5 text-sm">{{ order.delivery_name }}</div>
-                    </div>
-
-                    <div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase">Téléphone de livraison</div>
-                        <a href="tel:{{ order.delivery_phone }}" class="font-mono font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1.5 mt-0.5 text-sm">
-                            {{ order.delivery_phone }}
-                        </a>
-                    </div>
-
-                    <div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase">Commune / Quartier</div>
-                        <div class="font-medium text-slate-800 mt-0.5">{{ order.delivery_district|default:"Bamako" }} - {{ order.delivery_city }}</div>
-                    </div>
-
-                    <div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase">Adresse / Précisions</div>
-                        <div class="text-xs text-slate-700 bg-slate-50/80 p-3 rounded-xl border border-slate-200 mt-1 whitespace-pre-line leading-relaxed">
-                            {{ order.delivery_address }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- REGLEMENT & PAIEMENT -->
-            <div class="bg-white/90 backdrop-blur-xl rounded-2xl border border-slate-200/80 shadow-xs p-4 space-y-2.5">
-                <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                    <h3 class="font-bold text-slate-900 text-xs uppercase tracking-wider">
-                        Règlement Financier
-                    </h3>
-                </div>
-
-                <div class="space-y-2 text-xs">
-                    <div class="flex justify-between py-0.5">
-                        <span class="text-slate-500">Moyen choisi :</span>
-                        <span class="font-bold text-slate-900">{{ order.get_payment_method_display }}</span>
-                    </div>
-                    <div class="flex justify-between py-0.5 items-center">
-                        <span class="text-slate-500">Statut :</span>
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold {% if order.payment_status %}bg-emerald-50 text-emerald-800 border border-emerald-200/80{% else %}bg-amber-50 text-amber-800 border border-amber-200/80{% endif %}">
-                            {% if order.payment_status %}✓ Encaissé{% else %}En attente{% endif %}
-                        </span>
-                    </div>
-                    {% if order.payment_reference %}
-                    <div class="flex justify-between py-0.5">
-                        <span class="text-slate-500">Réf. transaction :</span>
-                        <span class="font-mono text-slate-700 font-medium">{{ order.payment_reference }}</span>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- HISTORIQUE DU CLIENT -->
-            {% if order.user and client_previous_orders %}
-            <div class="bg-white/90 backdrop-blur-xl rounded-2xl border border-slate-200/80 shadow-xs p-4 space-y-2.5">
-                <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                    <h3 class="font-bold text-slate-900 text-xs uppercase tracking-wider">
-                        Autres Commandes du Client
-                    </h3>
-                </div>
-                <div class="divide-y divide-slate-100 text-xs">
-                    {% for prev in client_previous_orders %}
-                    <div class="py-2.5 flex items-center justify-between">
-                        <div>
-                            <a href="{% url 'backoffice:order_detail' prev.id %}" class="font-mono font-bold text-slate-900 hover:text-amber-600 transition">
-                                #{{ prev.order_number }}
-                            </a>
-                            <div class="text-[10px] text-slate-400 mt-0.5">{{ prev.created_at|date:"d/m/Y" }}</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="font-bold text-slate-800 tabular-nums font-heading">{{ prev.total|floatformat:0|intcomma }} FCFA</div>
-                            <div class="mt-0.5">
-                                {% include "backoffice/partials/order_status_badge.html" with order=prev %}
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-
-        </div>
-
-    </div>
+  </div>
 
 </div>
 {% endblock %}

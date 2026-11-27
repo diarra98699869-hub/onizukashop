@@ -48,7 +48,7 @@ def categories_menu(request):
 
 
 def shop_settings(request):
-    """Paramètres officiels de l'entreprise (avec cache mémoire 10 min)"""
+    """Paramètres officiels de l'entreprise + compteurs temps réel Backoffice"""
     try:
         settings_obj = cache.get('shop_settings_cached')
         if settings_obj is None:
@@ -57,7 +57,22 @@ def shop_settings(request):
             cache.set('shop_settings_cached', settings_obj, 600)
     except Exception:
         settings_obj = None
-    return {'shop_settings': settings_obj}
+
+    ctx = {'shop_settings': settings_obj}
+    if getattr(request, 'path', '').startswith('/gestion/') and hasattr(request, 'user') and request.user.is_authenticated and request.user.is_staff:
+        try:
+            from orders.models import Order
+            from shop.models import Product
+            from django.db.models import F
+            ctx['bo_pending_orders'] = Order.objects.filter(
+                status__in=[Order.Status.PENDING, Order.Status.CONFIRMED, Order.Status.PROCESSING]
+            ).count()
+            ctx['bo_low_stock'] = Product.objects.filter(
+                track_stock=True, stock__lte=F('min_stock'), is_active=True
+            ).count()
+        except Exception:
+            pass
+    return ctx
 
 
 def wishlist_data(request):

@@ -70,7 +70,9 @@
               <span>Livraison à Bamako</span>
               <svg class="w-3.5 h-3.5 text-emerald-600 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
             </span>
-            <span class="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md text-[11px]">Offerte</span>
+            <span class="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md text-[11px]">
+              {% if delivery_fee == 0 %}Offerte{% else %}{{ delivery_fee|floatformat:0|intcomma }} FCFA{% endif %}
+            </span>
           </div>
 
           {% if coupon %}
@@ -162,25 +164,6 @@
 
   </div>
 
-  <!-- BARRE FLOTTANTE MOBILE DE COMMANDE RAPIDE (STYLE APPLE STORE MOBILE) -->
-  <div class="md:hidden fixed bottom-16 left-0 right-0 z-30 bg-white/95 backdrop-blur-xl border-t border-slate-200/90 px-3.5 py-2.5 shadow-[0_-4px_25px_rgba(0,0,0,0.08)]">
-    <div class="flex items-center justify-between gap-3">
-      <div>
-        <span class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider block">Total à payer</span>
-        <span class="text-base font-black text-slate-950 font-mono leading-none">
-          {{ total|floatformat:0|intcomma }} <span class="text-[11px] font-sans font-bold text-amber-600">FCFA</span>
-        </span>
-      </div>
-      <a 
-        href="{% url 'orders:checkout' %}"
-        class="py-2.5 px-5 rounded-xl bg-amber-500 active:bg-amber-600 text-slate-950 font-black text-xs shadow-md shadow-amber-500/25 flex items-center gap-1.5 transition active:scale-95"
-      >
-        <span>Commander</span>
-        <svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-      </a>
-    </div>
-  </div>
-
   {% else %}
   <!-- État Panier Vide -->
   <div class="bg-white rounded-3xl p-10 sm:p-14 text-center border border-neutral-100 shadow-sm max-w-lg mx-auto my-8">
@@ -204,4 +187,42 @@
   {% endif %}
 
 </div>
+{% endblock %}
+
+{% block bottom_nav %}
+{% if items %}
+<div class="lg:hidden app-bottom-bar px-2.5 flex items-center justify-between gap-2 select-none">
+  <a href="{% url 'shop:home' %}" class="flex flex-col items-center justify-center px-1.5 py-1 text-slate-500 shrink-0">
+    <svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/>
+    </svg>
+    <span class="text-[9px] font-semibold mt-0.5">Boutique</span>
+  </a>
+
+  <div class="min-w-0">
+    <span class="block text-[9px] font-bold text-slate-400 uppercase leading-none">Total</span>
+    <span class="font-display text-sm font-black text-slate-950 whitespace-nowrap">{{ total|floatformat:0|intcomma }} F</span>
+  </div>
+
+  <div class="flex items-center gap-1.5 shrink-0">
+    <a
+      href="{{ cart.get_whatsapp_cart_url }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="h-10 px-3 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white font-extrabold text-xs flex items-center gap-1.5 transition active:scale-95"
+    >
+      <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.588-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.45 1.054 1.325 1.833.687.612 1.267.801 1.447.888.181.087.289.073.397-.051.108-.124.462-.538.585-.722.123-.184.246-.153.411-.092.166.061 1.052.496 1.233.587.181.091.303.136.347.212.043.076.043.439-.101.844z"/>
+      </svg>
+      <span>WhatsApp</span>
+    </a>
+    <a
+      href="{% url 'orders:checkout' %}"
+      class="h-10 px-3.5 rounded-xl bg-amber-400 active:bg-amber-500 text-slate-950 font-extrabold text-xs flex items-center justify-center transition active:scale-95"
+    >Valider →</a>
+  </div>
+</div>
+{% else %}
+  {{ block.super }}
+{% endif %}
 {% endblock %}

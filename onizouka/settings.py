@@ -33,6 +33,10 @@ else:
     CSRF_TRUSTED_ORIGINS = []
 
 for origin in [
+    'https://onizukashop.com',
+    'http://onizukashop.com',
+    'https://www.onizukashop.com',
+    'http://www.onizukashop.com',
     'https://onizouka.danayaplus.com',
     'http://onizouka.danayaplus.com',
     'https://danayaplus.com',
@@ -154,20 +158,38 @@ else:
 
 REDIS_URL = config('REDIS_URL', default='')
 
-if REDIS_URL:
+
+def _is_redis_reachable(redis_url: str) -> bool:
+    """Vérifie en 150ms si le serveur Redis répond réellement pour éviter les timeouts TCP Windows de 2s par requête."""
+    if not redis_url:
+        return False
+    try:
+        import socket
+        from urllib.parse import urlparse
+        parsed = urlparse(redis_url)
+        host = parsed.hostname or '127.0.0.1'
+        port = parsed.port or 6379
+        with socket.create_connection((host, port), timeout=0.15):
+            return True
+    except Exception:
+        return False
+
+
+if REDIS_URL and _is_redis_reachable(REDIS_URL):
     CACHES = {
         'default': {
             'BACKEND': 'django_redis.cache.RedisCache',
             'LOCATION': REDIS_URL,
             'OPTIONS': {
                 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-                'IGNORE_EXCEPTIONS': True,  # Résilience : si Redis s'arrête, Django ne crashe pas
+                'IGNORE_EXCEPTIONS': True,
+                'SOCKET_CONNECT_TIMEOUT': 1,
+                'SOCKET_TIMEOUT': 1,
             },
             'KEY_PREFIX': 'onizouka',
             'TIMEOUT': 300,
         }
     }
-    # Utiliser cached_db pour garantir la persistance BDD même si Redis est indisponible
     SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
     SESSION_CACHE_ALIAS = 'default'
 else:
@@ -214,14 +236,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuration Emails Transactionnels (Console en local, SMTP SSL en production)
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend' if not DEBUG else 'django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST = config('EMAIL_HOST', default='onizouka.danayaplus.com')
+EMAIL_HOST = config('EMAIL_HOST', default='mail.onizukashop.com')
 EMAIL_PORT = config('EMAIL_PORT', default=465, cast=int)
 EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=True, cast=bool)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='admin@onizouka.danayaplus.com')
+EMAIL_TIMEOUT = 4
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='contact@onizukashop.com')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Onizouka Shop <admin@onizouka.danayaplus.com>')
-SERVER_EMAIL = config('SERVER_EMAIL', default='admin@onizouka.danayaplus.com')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='ONIZUKA SHOP <contact@onizukashop.com>')
+SERVER_EMAIL = config('SERVER_EMAIL', default='contact@onizukashop.com')
 
 
 AUTHENTICATION_BACKENDS = [

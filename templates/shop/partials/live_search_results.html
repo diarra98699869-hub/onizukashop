@@ -1,0 +1,54 @@
+{% load humanize %}
+{% if query|length >= 2 %}
+<div class="mt-1.5 bg-white text-slate-900 rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden z-50">
+  {% if categories %}
+  <div class="px-3 py-2 bg-slate-50 border-b border-slate-100 flex items-center gap-1.5 flex-wrap">
+    <span class="text-[10px] font-extrabold text-slate-400 uppercase">Rayons :</span>
+    {% for c in categories %}
+    <a href="{{ c.get_absolute_url }}" class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[11px] font-extrabold hover:bg-amber-400 transition">
+      {{ c.name }} →
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if results %}
+  <div class="divide-y divide-slate-100 max-h-80 overflow-y-auto">
+    {% for item in results %}
+    <a href="{{ item.get_absolute_url }}" class="flex items-center justify-between gap-3 p-2.5 hover:bg-amber-50/50 transition">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200/70 p-1 flex items-center justify-center shrink-0 overflow-hidden relative">
+          {% if item.primary_image %}
+          <img src="{{ item.primary_image.thumbnail.url|default:item.primary_image.image.url }}" alt="{{ item.name }}" class="max-w-full max-h-full object-contain">
+          {% endif %}
+          {% if item.has_video %}
+          <span class="absolute bottom-0.5 right-0.5 w-4 h-4 rounded-full bg-slate-950/85 text-amber-400 text-[8px] flex items-center justify-center font-black">▶</span>
+          {% endif %}
+        </div>
+        <div class="min-w-0">
+          <p class="text-xs font-bold text-slate-900 truncate">{{ item.name }}</p>
+          <p class="text-[10px] text-slate-400 truncate">{{ item.category.short_name }}{% if item.brand %} • {{ item.brand.name }}{% endif %}</p>
+        </div>
+      </div>
+      <span class="font-display font-black text-xs sm:text-sm text-amber-600 shrink-0 whitespace-nowrap">
+        {{ item.current_price|floatformat:0|intcomma }} F
+      </span>
+    </a>
+    {% endfor %}
+  </div>
+  <a href="{% url 'shop:search' %}?q={{ query|urlencode }}" class="block py-2.5 px-3 bg-slate-950 hover:bg-slate-900 text-amber-400 text-center text-xs font-extrabold transition">
+    Voir tous les résultats pour « {{ query }} » →
+  </a>
+  {% else %}
+  <div class="p-3.5 text-center space-y-2">
+    <p class="text-xs text-slate-500">Aucun article trouvé pour « <strong>{{ query }}</strong> »</p>
+    <a
+      href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text={{ 'Bonjour Onizouka Shop, avez-vous disponible : '|urlencode }}{{ query|urlencode }}"
+      target="_blank"
+      rel="noopener"
+      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-[11px] font-extrabold"
+    >Demander « {{ query }} » sur WhatsApp</a>
+  </div>
+  {% endif %}
+</div>
+{% endif %}

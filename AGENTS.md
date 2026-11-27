@@ -7,7 +7,7 @@
 ## Description du projet
 Site e-commerce ultra-premium pour electronique (frigos, clims, TV, 1000+ produits).
 - Client : vendeur electronique au Mali / Afrique de l'Ouest
-- Boutique physique & Siège : Grand Marché de Bamako (Dabanani, Bamako)
+- Boutique physique & Siège : Grand Marché de Bamako (Dibidani, Bamako)
 - Téléphone & WhatsApp officiel : +223 92 67 37 99 (wa.me/22392673799)
 - Monnaie : FCFA (aucune decimale sur les prix)
 - Langue : Francais
@@ -138,7 +138,7 @@ COMPLETS (100% de la base de code rédigée) :
 ### 3. Facture / Reçu PDF 1-Clic
 - Accessible pour le client sur toutes les commandes validées (`/panier/mes-commandes/<order_number>/facture/`).
 - Accessible pour la Direction (`/gestion/commandes/<order_id>/facture/`).
-- Mise en page officielle A4, logo Onizouka Shop, mentions légales Grand Marché de Bamako, Dabanani, contact `+223 92 67 37 99`, bouton d'impression / export PDF direct (`window.print()`).
+- Mise en page officielle A4, logo Onizouka Shop, mentions légales Grand Marché de Bamako, Dibidani, contact `+223 92 67 37 99`, bouton d'impression / export PDF direct (`window.print()`).
 
 ### 4. Commande et Suivi Direct via WhatsApp (+223 92 67 37 99)
 - **Depuis le Panier (`/panier/`)** : Bouton *"Commander le Panier sur WhatsApp"* générant automatiquement la liste complète des articles, quantités, prix unitaires et montant total.

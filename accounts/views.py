@@ -15,7 +15,7 @@ from orders.models import Order, Address
 @login_required
 def dashboard(request):
     """Tableau de bord du compte client"""
-    profile = request.user.profile
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
     recent_orders = Order.objects.filter(
         user=request.user
     ).prefetch_related('items').order_by('-created_at')[:5]
@@ -36,7 +36,7 @@ def dashboard(request):
 @login_required
 def profile_edit(request):
     """Modifier le profil"""
-    profile = request.user.profile
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
         # Infos utilisateur

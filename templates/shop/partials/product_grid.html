@@ -1,63 +1,81 @@
-{% if products %}
-<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
-     id="product-grid">
+{% if append_mode %}
   {% for product in products %}
-  {% include 'shop/partials/product_card.html' with product=product %}
+    {% include 'shop/partials/product_card.html' with product=product %}
   {% endfor %}
-</div>
-
-<!-- Pagination -->
-{% if products.has_other_pages %}
-<div class="flex justify-center items-center gap-2 mt-8">
-  {% if products.has_previous %}
-  <a href="?page={{ products.previous_page_number }}&{{ request.GET.urlencode }}"
-     class="flex items-center gap-1 px-4 py-2 rounded-xl border border-gray-200
-            text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
-    <span class="material-icons-round text-sm">chevron_left</span>
-    Precedent
-  </a>
-  {% endif %}
-
-  <div class="flex items-center gap-1">
-    {% for num in products.paginator.page_range %}
-    {% if products.number == num %}
-    <span class="w-9 h-9 bg-amber-500 text-white text-sm font-bold rounded-xl flex items-center justify-center">
-      {{ num }}
-    </span>
-    {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
-    <a href="?page={{ num }}&{{ request.GET.urlencode }}"
-       class="w-9 h-9 border border-gray-200 text-gray-600 text-sm rounded-xl
-              flex items-center justify-center hover:bg-gray-50 transition">
-      {{ num }}
-    </a>
-    {% endif %}
-    {% endfor %}
-  </div>
 
   {% if products.has_next %}
-  <a href="?page={{ products.next_page_number }}&{{ request.GET.urlencode }}"
-     class="flex items-center gap-1 px-4 py-2 rounded-xl border border-gray-200
-            text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
-    Suivant
-    <span class="material-icons-round text-sm">chevron_right</span>
-  </a>
-  {% endif %}
-</div>
-{% endif %}
-
-{% else %}
-<!-- Etat vide -->
-<div class="text-center py-16">
-  <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-    <span class="material-icons-round text-4xl text-gray-300">search_off</span>
+  <div
+    id="catalog-load-more"
+    class="col-span-full pt-3 pb-1 text-center"
+    hx-get="{{ request.path }}?page={{ products.next_page_number }}&amp;append=1{% for k, v in request.GET.items %}{% if k != 'page' and k != 'append' %}&amp;{{ k }}={{ v|urlencode }}{% endif %}{% endfor %}"
+    hx-trigger="revealed"
+    hx-target="#catalog-load-more"
+    hx-indicator="#catalog-load-more"
+    hx-swap="outerHTML"
+  >
+    <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 pt-1">
+      <div class="rounded-2xl bg-white p-2.5 border border-slate-100 space-y-2">
+        <div class="aspect-square rounded-xl skeleton-shimmer"></div>
+        <div class="h-3 w-3/4 rounded skeleton-shimmer"></div>
+        <div class="h-4 w-1/2 rounded skeleton-shimmer"></div>
+      </div>
+      <div class="rounded-2xl bg-white p-2.5 border border-slate-100 space-y-2">
+        <div class="aspect-square rounded-xl skeleton-shimmer"></div>
+        <div class="h-3 w-2/3 rounded skeleton-shimmer"></div>
+        <div class="h-4 w-1/2 rounded skeleton-shimmer"></div>
+      </div>
+    </div>
   </div>
-  <h3 class="font-heading font-semibold text-xl text-gray-700 mb-2">Aucun produit trouve</h3>
-  <p class="text-gray-500 text-sm mb-6">Essayez de modifier vos filtres de recherche.</p>
-  <a href="{% url 'shop:catalog' %}"
-     class="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-600
-            text-white font-medium rounded-xl transition">
-    <span class="material-icons-round text-sm">refresh</span>
-    Reinitialiser les filtres
-  </a>
-</div>
+  {% endif %}
+{% else %}
+  {% if products %}
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3" id="product-grid">
+    {% for product in products %}
+      {% include 'shop/partials/product_card.html' with product=product %}
+    {% endfor %}
+
+    {% if products.has_next %}
+    <div
+      id="catalog-load-more"
+      class="col-span-full pt-3 pb-1 text-center"
+      hx-get="{{ request.path }}?page={{ products.next_page_number }}&amp;append=1{% for k, v in request.GET.items %}{% if k != 'page' and k != 'append' %}&amp;{{ k }}={{ v|urlencode }}{% endif %}{% endfor %}"
+      hx-trigger="revealed"
+      hx-target="#catalog-load-more"
+    hx-indicator="#catalog-load-more"
+      hx-swap="outerHTML"
+    >
+      <button
+        type="button"
+        class="w-full sm:w-auto min-w-[220px] px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-extrabold text-xs shadow-sm"
+      >Chargement de la suite...</button>
+    </div>
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="bg-white rounded-2xl border border-slate-200/80 p-8 sm:p-12 text-center max-w-md mx-auto my-4 space-y-3">
+    <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto">
+      <svg class="w-6 h-6 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+      </svg>
+    </div>
+    <h3 class="font-display font-black text-base text-slate-900">Aucun article ne correspond</h3>
+    <p class="text-xs text-slate-500">Touchez Effacer ou demandez la disponibilité directe sur WhatsApp.</p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-2 pt-1">
+      <a
+        href="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'shop:catalog' %}{% endif %}"
+        hx-get="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'shop:catalog' %}{% endif %}"
+        hx-target="#catalog-workspace"
+        hx-swap="outerHTML"
+        hx-push-url="true"
+        class="px-4 py-2 rounded-xl bg-amber-400 text-slate-950 font-extrabold text-xs"
+      >Réinitialiser les filtres</a>
+      <a
+        href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text=Bonjour%20Onizouka%20Shop,%20je%20recherche%20un%20article%20particulier"
+        target="_blank"
+        rel="noopener"
+        class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs"
+      >Demander sur WhatsApp</a>
+    </div>
+  </div>
+  {% endif %}
 {% endif %}

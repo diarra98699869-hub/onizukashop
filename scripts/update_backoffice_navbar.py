@@ -250,7 +250,7 @@ new_desktop_topbar = """            <!-- TOPBAR DESKTOP EXECUTIVE HAUTE PRÉCISI
                     </span>
 
                     <span class="text-slate-200">|</span>
-                    <span class="text-slate-400 text-[11px]">Grand Marché (Dabanani, Bamako)</span>
+                    <span class="text-slate-400 text-[11px]">Grand Marché (Dibidani, Bamako)</span>
                     <span class="text-slate-200">|</span>
                     <span class="font-mono text-[11px] text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">FCFA (XOF)</span>
                 </div>

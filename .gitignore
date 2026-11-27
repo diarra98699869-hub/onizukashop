@@ -29,5 +29,6 @@ backups/
 test_*.py
 scratch_*
 populate_*.py
+media/test_preview/
 
 

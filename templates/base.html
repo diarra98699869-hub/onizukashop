@@ -1,28 +1,37 @@
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>{% block title %}{{ page_title|default:"Onizouka • Électroménager & Froid au Mali" }}{% endblock %}</title>
-  <meta name="description" content="{% block meta_description %}{{ meta_description|default:"Onizouka Shop : Équipements électroménagers certifiés d'origine à Bamako. Climatisation, réfrigération, TV 4K avec garantie officielle et livraison express." }}{% endblock %}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>{% block title %}{{ page_title|default:"Onizouka Shop • Électroménager, Meubles & Déco à Bamako" }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ meta_description|default:"Onizouka Shop au Grand Marché de Bamako : Électroménager, Meubles, Décoration, Climatiseurs, Frigos et Smart TV. Vidéos réelles, livraison 24h et commande WhatsApp." }}{% endblock %}">
 
-  <!-- Code de vérification de domaine Meta (Facebook / Instagram Business) -->
+  <!-- PWA Pro & Capacitor Mobile Native Meta -->
+  <link rel="manifest" href="{% url 'shop:pwa_manifest' %}">
+  <meta name="theme-color" content="#0d0e12">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Onizuka Shop">
+  <link rel="icon" type="image/png" sizes="192x192" href="{% static 'images/pwa/icon-192.png' %}">
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/app-icon.svg' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/pwa/apple-touch-icon.png' %}">
+
   {% if shop_settings.meta_domain_verification %}
   <meta name="facebook-domain-verification" content="{{ shop_settings.meta_domain_verification }}">
   {% endif %}
 
-  <!-- Balises Open Graph par défaut (Partage Facebook, WhatsApp, Réseaux) -->
+  <!-- Open Graph (Partage WhatsApp & Facebook) -->
   <meta property="og:site_name" content="{{ shop_settings.site_name|default:'Onizouka Shop' }}">
   <meta property="og:locale" content="fr_FR">
   {% block open_graph %}
   <meta property="og:type" content="website">
   <meta property="og:title" content="{{ page_title|default:'Onizouka Shop • Électroménager & Froid à Bamako' }}">
-  <meta property="og:description" content="{{ meta_description|default:'Boutique officielle au Grand Marché de Bamako (Dabanani). Frigos, Climatiseurs, Smart TV avec garantie officielle et livraison express.' }}">
+  <meta property="og:description" content="{{ meta_description|default:'Boutique officielle au Grand Marché de Bamako (Dibidani). Frigos, Climatiseurs, Smart TV avec garantie officielle et livraison express.' }}">
   <meta property="og:url" content="{{ request.build_absolute_uri }}">
-  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}/static/images/hero_banner_appliances.jpg">
+  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/hero_banner_appliances.jpg' %}">
   {% endblock %}
 
-  <!-- Script Officiel Meta Pixel (Facebook Ads) -->
   {% if shop_settings.meta_pixel_id %}
   <script>
     !function(f,b,e,v,n,t,s)
@@ -37,26 +46,29 @@
     fbq('track', 'PageView');
   </script>
   <noscript>
-    <img height="1" width="1" style="display:none" 
-         src="https://www.facebook.com/tr?id={{ shop_settings.meta_pixel_id }}&ev=PageView&noscript=1"/>
+    <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ shop_settings.meta_pixel_id }}&ev=PageView&noscript=1"/>
   </noscript>
   {% endif %}
 
   <script>
-    // Helper global de tracking sécurisé (appelable en toute sécurité partout)
     window.trackMetaEvent = function(eventName, params) {
       if (typeof window.fbq === 'function') {
         window.fbq('track', eventName, params || {});
       }
     };
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('{% url "shop:pwa_sw" %}').catch(function() {});
+      });
+    }
   </script>
 
-  <!-- Polices Outfit (titres/prix Apple style) & Inter (corps) -->
+  <!-- Polices Outfit & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -65,6 +77,24 @@
           fontFamily: {
             sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
             display: ['Outfit', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            heading: ['Outfit', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          },
+          spacing: {
+            '4.5': '1.125rem',
+            '5.5': '1.375rem',
+            '7.5': '1.875rem',
+            '8.5': '2.125rem',
+            '9.5': '2.375rem',
+            '13': '3.25rem',
+            '15': '3.75rem',
+            '88': '22rem',
+          },
+          boxShadow: {
+            '2xs': '0 1px 2px 0 rgba(15, 23, 42, 0.04)',
+            'xs': '0 1px 2px 0 rgba(15, 23, 42, 0.06)',
+          },
+          backdropBlur: {
+            'xs': '2px',
           },
           colors: {
             brand: {
@@ -76,8 +106,20 @@
               500: '#eab308',
               600: '#ca8a04',
               700: '#a16207',
-              800: '#9a3412',
-              900: '#7c2d12',
+              800: '#854d0e',
+              900: '#713f12',
+            },
+            primary: {
+              50:  '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+              900: '#78350f',
             }
           }
         }
@@ -85,794 +127,460 @@
     }
   </script>
 
-  <!-- CSS Pro -->
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'css/main.css' %}?v=20260925.1">
-
-  <!-- HTMX & Alpine.js -->
+  <link rel="stylesheet" href="{% static 'css/main.css' %}?v=20261126.4">
   <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script defer src="{% static 'js/capacitor-bridge.js' %}?v=20261127.1"></script>
 
-    <style>
-    [x-cloak] { display: none !important; }
-  </style>
   {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-white text-neutral-900 font-sans antialiased selection:bg-amber-400 selection:text-neutral-900 pb-24 lg:pb-0 overflow-x-clip w-full max-w-full relative" x-data="{ searchModal: false, searchInput: '' }" :class="{ 'overflow-hidden': searchModal }">
+<body
+  class="bg-[#f2f4f7] text-slate-900 font-sans antialiased selection:bg-amber-400 selection:text-slate-950 pb-20 lg:pb-0 overflow-x-clip w-full max-w-full relative"
+  x-data="{ searchSheet: false, catDrawer: false, searchInput: '{{ request.GET.q|default:''|escapejs }}', activePath: window.location.pathname }"
+  @app-navigated.window="activePath = window.location.pathname; catDrawer = false; searchSheet = false"
+  :class="{ 'overflow-hidden': searchSheet || catDrawer }"
+>
+  <!-- Barre de progression native ultra-fluide -->
+  <div id="app-progress-bar" aria-hidden="true"></div>
 
-  <!-- ===== BANDEAU SUPÉRIEUR SIGNATURE ONIZOUKA SHOP (REPRODUCTION EXACTE MODÈLE RÉFÉRENCE) ===== -->
-  <div class="relative bg-[#0d0e12] text-white py-2 px-3 sm:px-6 select-none border-b border-black/40 overflow-hidden">
-    
-    <!-- MOTIF GÉOMÉTRIQUE GAUCHE : Bandes obliques Jaune Or & Noir -->
-    <div class="absolute left-0 top-0 bottom-0 w-20 sm:w-36 pointer-events-none overflow-hidden z-0">
-      <div class="absolute -left-6 -top-4 -bottom-4 w-12 sm:w-20 bg-gradient-to-r from-amber-400 to-amber-500 transform -skew-x-[26deg] shadow-lg"></div>
-      <div class="absolute left-9 sm:left-17 -top-4 -bottom-4 w-2.5 sm:w-3.5 bg-amber-400 transform -skew-x-[26deg]"></div>
-      <div class="absolute left-14 sm:left-23 -top-4 -bottom-4 w-1.5 sm:w-2 bg-amber-400/80 transform -skew-x-[26deg]"></div>
-    </div>
-
-    <!-- MOTIF GÉOMÉTRIQUE DROIT : Bandes obliques Jaune Or & Noir (Effet Miroir) -->
-    <div class="absolute right-0 top-0 bottom-0 w-20 sm:w-36 pointer-events-none overflow-hidden z-0">
-      <div class="absolute -right-6 -top-4 -bottom-4 w-12 sm:w-20 bg-gradient-to-l from-amber-400 to-amber-500 transform skew-x-[26deg] shadow-lg"></div>
-      <div class="absolute right-9 sm:right-17 -top-4 -bottom-4 w-2.5 sm:w-3.5 bg-amber-400 transform skew-x-[26deg]"></div>
-      <div class="absolute right-14 sm:right-23 -top-4 -bottom-4 w-1.5 sm:w-2 bg-amber-400/80 transform skew-x-[26deg]"></div>
-    </div>
-
-    <!-- CONTENU PRINCIPAL CENTRAL -->
-    <div class="max-w-7xl mx-auto flex items-center justify-between relative z-10 pl-8 pr-8 sm:pl-16 sm:pr-16 lg:pl-10 lg:pr-10 gap-3">
-      
-      <!-- Côté Gauche : Badge Boutique + Points de Réassurance avec Icônes -->
-      <div class="flex items-center gap-3 sm:gap-4 min-w-0">
-        
-        <!-- 1. Badge Plein Jaune Or "Boutique Ouverte 7j/7" -->
-        <div class="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-[#facc15] text-neutral-950 font-black text-[11px] sm:text-xs shadow-[0_0_18px_rgba(250,204,21,0.45)] shrink-0 cursor-default">
-          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-neutral-950 shrink-0" viewBox="0 0 24 24">
-            <path d="M4 4h16l1 5H3L4 4zm-1 6h18v2H3v-2zm2 3h14v7H5v-7zm2 2v3h10v-3H7z"/>
-          </svg>
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-          <span class="tracking-tight whitespace-nowrap">Boutique Ouverte 7j/7</span>
-        </div>
-
-        <!-- 2. Localisation Grand Marché Dabanani -->
-        <div class="hidden md:flex items-center gap-1.5 text-neutral-200 text-xs font-semibold truncate">
-          <svg class="w-4 h-4 fill-[#facc15] shrink-0" viewBox="0 0 24 24">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-          </svg>
-          <span>Grand Marché (Dabanani, Bamako)</span>
-        </div>
-
-        <!-- Séparateur vertical -->
-        <span class="hidden md:inline-block w-px h-3.5 bg-neutral-700 mx-0.5"></span>
-
-        <!-- 3. Livraison express 24h -->
-        <div class="hidden lg:flex items-center gap-1.5 text-neutral-200 text-xs font-semibold whitespace-nowrap">
-          <svg class="w-4 h-4 fill-[#facc15] shrink-0" viewBox="0 0 24 24">
-            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
-          </svg>
-          <span>Livraison express 24h au Mali</span>
-        </div>
-
-        <!-- Séparateur vertical -->
-        <span class="hidden xl:inline-block w-px h-3.5 bg-neutral-700 mx-0.5"></span>
-
-        <!-- 4. Garantie constructeur -->
-        <div class="hidden xl:flex items-center gap-1.5 text-neutral-200 text-xs font-semibold whitespace-nowrap">
-          <svg class="w-4 h-4 fill-[#facc15] shrink-0" viewBox="0 0 24 24">
-            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-          </svg>
-          <span>Garantie constructeur 12 à 24 mois</span>
-        </div>
-
+  <!-- ===================================================================== -->
+  <!-- TOP UTILITY BAR (DESKTOP UNIQUEMENT - ZÉRO SURCHARGE SUR MOBILE)      -->
+  <!-- ===================================================================== -->
+  <div class="hidden lg:block bg-[#08090c] text-slate-300 border-b border-white/10 text-[11px] select-none">
+    <div class="max-w-[1400px] mx-auto px-4 xl:px-6 h-8 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-4 min-w-0">
+        <span class="inline-flex items-center gap-1.5 text-amber-400 font-bold">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Grand Marché Bamako (Dibidani) • Ouvert 7j/7</span>
+        </span>
+        <span class="text-slate-700">|</span>
+        <span class="truncate">Livraison Express 24h &amp; Retrait Magasin 15 min</span>
+        <span class="text-slate-700">|</span>
+        <span class="hidden xl:inline">Paiement à la livraison, Orange Money &amp; Wave</span>
       </div>
-
-      <!-- Côté Droit : Bouton FCFA (XOF) + Bouton WhatsApp Contour Or -->
-      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
-        
-        <!-- Bouton Monnaie Jaune Or -->
-        <div class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#facc15] text-neutral-950 font-black text-[11px] sm:text-xs shadow-xs cursor-default">
-          <svg class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
-            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-          </svg>
-          <span>FCFA (XOF)</span>
-          <svg class="w-3 h-3 stroke-[2.5] stroke-current fill-none" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
-          </svg>
-        </div>
-
-        <!-- Bouton WhatsApp Officiel Noir avec Bordure Or -->
-        <a 
-          href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text=Bonjour%20Onizouka%20Shop,%20je%20souhaite%20des%20informations" 
-          target="_blank" 
-          rel="noopener" 
-          class="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-neutral-950 border border-[#facc15] hover:bg-neutral-900 text-white font-bold text-[11px] sm:text-xs shadow-xs transition group"
-          title="Contacter le service client WhatsApp officiel"
+      <div class="flex items-center gap-4 shrink-0">
+        <a href="{% url 'orders:track' %}" class="hover:text-amber-400 transition font-semibold">Suivre ma commande</a>
+        <a href="{% url 'shop:shipping_warranty' %}" class="hover:text-amber-400 transition font-medium">Livraison &amp; Garantie</a>
+        <a
+          href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text=Bonjour%20Onizouka%20Shop,%20je%20souhaite%20commander%20un%20appareil"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 font-bold transition"
         >
-          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-[#25D366] shrink-0 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
-            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.588-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.45 1.054 1.325 1.833.687.612 1.267.801 1.447.888.181.087.289.073.397-.051.108-.124.462-.538.585-.722.123-.184.246-.153.411-.092.166.061 1.052.496 1.233.587.181.091.303.136.347.212.043.076.043.439-.101.844z"/>
-          </svg>
-          <span class="font-mono text-white tracking-tight">{{ shop_settings.phone_whatsapp|default:'+223 92 67 37 99' }}</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span>WhatsApp : {{ shop_settings.phone_whatsapp|default:'+223 92 67 37 99' }}</span>
         </a>
-
       </div>
-
     </div>
   </div>
 
-  <!-- ===== GRAND HEADER ULTRA-PREMIUM (DESIGN APPLE & OBSIDIAN CHARTE GESTION) ===== -->
-  <header 
-    x-data="{ megaMenu: false, userMenu: false, boutiqueHover: false }" 
-    class="sticky top-0 z-40 shadow-sm transition-all duration-300"
+  <!-- ===================================================================== -->
+  <!-- HEADER MARKETPLACE ALIBABA STYLE (APP NATIVE MOBILE + PRO DESKTOP)    -->
+  <!-- ===================================================================== -->
+  <header
+    x-data="{ megaMenu: false, userMenu: false }"
+    class="sticky top-0 z-40 bg-[#0d0e12] text-white shadow-md pt-safe-top"
   >
-    <!-- 1. PARTIE HAUTE BLANCHE/GLASS APPLE (LOGO, RECHERCHE CENTRALE, ACTIONS) -->
-    <div class="relative z-30 bg-white/95 backdrop-blur-xl border-b border-slate-200/70">
-      <div class="max-w-7xl mx-auto px-3 sm:px-6">
-        
-        <div class="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-3 lg:gap-3 xl:gap-5">
-          
-          <!-- Logo Principal Grande Envergure -->
-          <a href="{% url 'shop:home' %}" class="flex items-center gap-2.5 group select-none shrink-0" aria-label="Onizouka Shop Accueil">
-            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-950 flex items-center justify-center shrink-0 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform duration-200">
-              <svg class="w-6 h-6 fill-slate-950" viewBox="0 0 24 24">
-                <path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/>
-              </svg>
+    <!-- 1. BARRE PRINCIPALE -->
+    <div class="max-w-[1400px] mx-auto px-2.5 sm:px-4 xl:px-6">
+      <div class="flex items-center justify-between gap-2 sm:gap-4 h-12 sm:h-16">
+
+        <!-- Logo Officiel ONIZUKA SHOP -->
+        <a href="{% url 'shop:home' %}" class="flex items-center gap-2 sm:gap-2.5 shrink-0 select-none group" aria-label="Accueil Onizuka Shop">
+          <img src="{% static 'images/logo_icon.png' %}" alt="Onizuka Shop" class="w-8 h-8 sm:w-10 sm:h-10 object-contain shrink-0 filter drop-shadow-[0_2px_8px_rgba(245,158,11,0.3)]">
+          <div class="leading-none">
+            <div class="flex items-baseline">
+              <span class="font-display text-base sm:text-xl font-black tracking-tight text-white">ONIZUKA</span>
+              <span class="font-display text-base sm:text-xl font-black text-amber-400 ml-0.5">SHOP</span>
             </div>
-            <div class="flex flex-col">
-              <div class="flex items-baseline">
-                <span class="font-heading text-xl sm:text-2xl font-black tracking-tight text-slate-950">ONIZOUKA</span>
-                <span class="text-amber-500 font-heading text-xl sm:text-2xl font-black ml-0.5">SHOP</span>
-              </div>
-              <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest hidden sm:block -mt-1">
-                Électroménager &bull; Froid &bull; Grand Marché Bamako
-              </span>
-            </div>
+            <span class="hidden sm:block text-[10px] text-slate-400 font-medium mt-0.5">Bamako • Dibidani</span>
+          </div>
+        </a>
+
+        <!-- Badge Localisation Ultra-Compact Mobile + Actions Rapides Haut-Droite Mobile -->
+        <div
+          class="flex lg:hidden items-center gap-1.5 ml-auto"
+          x-data="{ canInstallHdr: Boolean(window.OnizukaNative && window.OnizukaNative.canInstall) }"
+          @pwa-install-available.window="canInstallHdr = true"
+          @pwa-installed.window="canInstallHdr = false"
+        >
+          <button
+            type="button"
+            x-show="canInstallHdr"
+            x-cloak
+            @click="window.onizukaInstallPWA && window.onizukaInstallPWA()"
+            class="h-8 px-2.5 rounded-full bg-amber-400 active:bg-amber-500 text-slate-950 text-[10px] font-black inline-flex items-center gap-1 shadow-xs active:scale-95 transition cursor-pointer"
+            aria-label="Installer l'application Onizuka Shop"
+          >
+            <svg class="w-3.5 h-3.5 stroke-[2.5] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+            </svg>
+            <span>App</span>
+          </button>
+
+          <a
+            href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text=Bonjour%20Onizouka%20Shop,%20j'ai%20une%20question%20sur%20un%20produit"
+            target="_blank"
+            rel="noopener"
+            class="h-8 px-2.5 rounded-full bg-emerald-500/15 border border-emerald-500/35 text-emerald-300 text-[11px] font-bold inline-flex items-center gap-1 active:scale-95 transition"
+            aria-label="WhatsApp Direct"
+          >
+            <svg class="w-3.5 h-3.5 fill-[#25D366] shrink-0" viewBox="0 0 24 24">
+              <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.588-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.45 1.054 1.325 1.833.687.612 1.267.801 1.447.888.181.087.289.073.397-.051.108-.124.462-.538.585-.722.123-.184.246-.153.411-.092.166.061 1.052.496 1.233.587.181.091.303.136.347.212.043.076.043.439-.101.844z"/>
+            </svg>
+            <span>Direct</span>
           </a>
 
-          <!-- GRANDE BARRE DE RECHERCHE CENTRALE POUR PC (STYLE DARTY / APPLE STORE) -->
-          <div class="hidden lg:flex flex-1 min-w-[200px] max-w-lg xl:max-w-2xl mx-1 xl:mx-3">
-            <form action="{% url 'shop:search' %}" method="GET" class="relative w-full flex items-center">
-              <div class="relative w-full flex items-center">
-                <input 
-                  type="text" 
-                  name="q"
-                  value="{{ request.GET.q|default:'' }}"
-                  placeholder="Rechercher frigo, clim, Smart TV, marque..." 
-                  class="w-full h-10.5 sm:h-11 pl-10 pr-12 xl:pr-32 rounded-full bg-slate-100 hover:bg-slate-100/90 focus:bg-white border border-slate-300/80 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 transition-all outline-none"
-                >
-                <div class="absolute left-3.5 text-slate-400 pointer-events-none">
-                  <svg class="w-4.5 h-4.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                  </svg>
-                </div>
-                <button 
-                  type="submit" 
-                  class="absolute right-1.5 h-8 px-2.5 xl:px-4 rounded-full bg-slate-950 hover:bg-slate-900 active:scale-95 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 border border-slate-800"
-                  title="Lancer la recherche"
-                >
-                  <span class="hidden xl:inline text-amber-400 font-extrabold text-xs">Rechercher</span>
-                  <svg class="w-3.5 h-3.5 stroke-[2.5] text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
-                  </svg>
-                </button>
-              </div>
-            </form>
-          </div>
+          <a
+            href="{% url 'shop:wishlist' %}"
+            class="relative w-8 h-8 rounded-full bg-white/10 text-white flex items-center justify-center active:scale-95 transition"
+            aria-label="Mes Favoris"
+          >
+            <svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+            </svg>
+            <span
+              class="wishlist-count-badge absolute -top-0.5 -right-0.5 min-w-[15px] h-[15px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center {% if not user.is_authenticated or wishlist_count == 0 %}hidden{% endif %}"
+            >{{ wishlist_count|default:"0" }}</span>
+          </a>
 
-          <!-- BLOC ACTIONS DROITE (CONTACT BOUTIQUE + COMPTE + PANIER DÉTAILLÉ) -->
-          <div class="flex items-center gap-1.5 sm:gap-2.5 lg:gap-2 xl:gap-3 shrink-0">
-            
-            <!-- Bouton Recherche Mobile Uniquement -->
-            <button 
+          {% if user.is_authenticated and user.is_staff %}
+          <a
+            href="{% url 'backoffice:dashboard' %}"
+            class="h-8 px-2.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black inline-flex items-center gap-1"
+          >Gestion</a>
+          {% endif %}
+        </div>
+
+        <!-- GRANDE BARRE DE RECHERCHE STYLE ALIBABA + LIVE AUTOCOMPLETE (DESKTOP) -->
+        <div class="hidden lg:flex flex-1 max-w-2xl mx-4 relative" x-data="{ liveOpen: false }" @click.away="liveOpen = false">
+          <form action="{% url 'shop:search' %}" method="GET" class="w-full">
+            <div class="flex items-center w-full h-11 bg-white rounded-full p-1 border-2 border-amber-400 focus-within:ring-4 focus-within:ring-amber-400/20 transition">
+              <div class="pl-3.5 pr-2 text-slate-400">
+                <svg width="18" height="18" class="w-[18px] h-[18px] stroke-[2.2] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                </svg>
+              </div>
+              <input
+                type="search"
+                name="q"
+                autocomplete="off"
+                value="{{ request.GET.q|default:'' }}"
+                placeholder="Chercher meuble, salon, déco, frigo, clim, TV, référence..."
+                hx-get="{% url 'shop:live_search' %}"
+                hx-trigger="keyup changed delay:220ms"
+                hx-target="#desktop-live-results"
+                @focus="liveOpen = true"
+                @input="liveOpen = $event.target.value.trim().length >= 2"
+                class="flex-1 bg-transparent text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none pr-2"
+              >
+              <button
+                type="submit"
+                class="h-[34px] px-5 rounded-full bg-amber-400 hover:bg-amber-500 active:scale-95 text-slate-950 font-extrabold text-xs inline-flex items-center gap-1.5 transition shrink-0 cursor-pointer"
+              >
+                <span>Rechercher</span>
+              </button>
+            </div>
+          </form>
+          <div id="desktop-live-results" x-show="liveOpen" x-cloak class="absolute left-0 right-0 top-full z-50"></div>
+        </div>
+
+        <!-- ACTIONS DESKTOP (COMPTE, FAVORIS, PANIER GOLD) -->
+        <div class="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
+          <!-- Compte -->
+          <div class="relative" @mouseenter="userMenu = true" @mouseleave="userMenu = false">
+            <button
               type="button"
-              @click="searchModal = true; $nextTick(() => { document.getElementById('apple-search-input')?.focus() })"
-              class="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-slate-700 hover:text-slate-900 hover:bg-slate-100 active:scale-95 transition"
-              aria-label="Rechercher"
+              @click="userMenu = !userMenu"
+              class="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white/10 transition text-left cursor-pointer"
             >
-              <svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-              </svg>
-            </button>
-
-            <!-- Contact Boutique Direct sur Desktop avec Popover Info -->
-            <div class="relative hidden xl:block" @mouseenter="boutiqueHover = true" @mouseleave="boutiqueHover = false">
-              <a 
-                href="{% url 'shop:contact' %}" 
-                class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-slate-100 transition group text-left border border-transparent hover:border-slate-200"
-              >
-                <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0 group-hover:bg-amber-500 group-hover:text-slate-950 transition">
-                  <svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
-                  </svg>
-                </div>
-                <div class="leading-tight">
-                  <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Boutique Bamako</span>
-                  <span class="block text-xs font-bold text-slate-900 truncate max-w-[125px]">Grand Marché (Dabanani)</span>
-                </div>
-              </a>
-
-              <!-- Popover Boutique Info -->
-              <div 
-                x-show="boutiqueHover"
-                x-transition:enter="transition ease-out duration-150"
-                x-transition:enter-start="opacity-0 translate-y-1"
-                x-transition:enter-end="opacity-100 translate-y-0"
-                x-transition:leave="transition ease-in duration-100"
-                x-transition:leave-start="opacity-100 translate-y-0"
-                x-transition:leave-end="opacity-0 translate-y-1"
-                class="absolute right-0 top-full mt-1.5 w-64 p-3.5 bg-white rounded-2xl shadow-2xl border border-slate-200 z-[100] text-left"
-                style="display: none;"
-              >
-                <p class="text-xs font-bold text-slate-900 font-heading">Boutique Principale Bamako</p>
-                <p class="text-[11px] text-slate-500 mt-0.5">Grand Marché de Bamako, Dabanani</p>
-                <div class="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                  <span class="text-emerald-600 font-bold">Ouvert 7j/7</span>
-                  <span class="text-slate-500">08h30 - 20h30</span>
-                </div>
-                <a href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}" target="_blank" rel="noopener" class="mt-2.5 block text-center py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] transition shadow-xs">
-                  Contacter sur WhatsApp
-                </a>
-              </div>
-            </div>
-
-            <!-- Compte Utilisateur Desktop avec Menu Déroulant Pro -->
-            <div class="relative hidden sm:block" @mouseenter="userMenu = true" @mouseleave="userMenu = false">
-              {% if user.is_authenticated %}
-              <button 
-                type="button"
-                @click="userMenu = !userMenu"
-                class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-bold text-slate-800 hover:text-amber-600 hover:bg-slate-100 transition"
-              >
-                <div class="w-8 h-8 rounded-full bg-[#0f172a] text-amber-400 flex items-center justify-center font-bold text-xs shadow-xs">
-                  {{ user.first_name|default:user.username|slice:":1"|upper }}
-                </div>
-                <div class="text-left hidden lg:block leading-tight">
-                  <span class="block text-[10px] text-slate-400 font-medium">Mon compte</span>
-                  <span class="block text-xs font-bold text-slate-900 truncate max-w-[90px] xl:max-w-[110px]">{{ user.first_name|default:user.username }}</span>
-                </div>
-                <svg class="w-3.5 h-3.5 text-slate-400 transition-transform hidden lg:block" :class="userMenu ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
-                </svg>
-              </button>
-              {% else %}
-              <button 
-                type="button"
-                @click="userMenu = !userMenu"
-                class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-bold text-slate-800 hover:text-amber-600 hover:bg-slate-100 transition"
-              >
-                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center">
-                  <svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                  </svg>
-                </div>
-                <div class="text-left hidden lg:block leading-tight">
-                  <span class="block text-[10px] text-slate-400 font-medium">Espace Client</span>
-                  <span class="block text-xs font-bold text-slate-900">Se connecter</span>
-                </div>
-                <svg class="w-3.5 h-3.5 text-slate-400 transition-transform hidden lg:block" :class="userMenu ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
-                </svg>
-              </button>
-              {% endif %}
-
-              <!-- Dropdown Menu Compte -->
-              <div 
-                x-show="userMenu"
-                x-transition:enter="transition ease-out duration-150"
-                x-transition:enter-start="opacity-0 translate-y-1"
-                x-transition:enter-end="opacity-100 translate-y-0"
-                x-transition:leave="transition ease-in duration-100"
-                x-transition:leave-start="opacity-100 translate-y-0"
-                x-transition:leave-end="opacity-0 translate-y-1"
-                @click.away="userMenu = false"
-                class="absolute right-0 top-full mt-1.5 w-56 p-2 bg-white rounded-2xl shadow-2xl border border-slate-200 z-[100] text-left"
-                style="display: none;"
-              >
+              <div class="w-8 h-8 rounded-full bg-white/10 text-amber-400 flex items-center justify-center font-bold text-xs border border-white/10">
                 {% if user.is_authenticated %}
-                <div class="px-3 py-2 border-b border-slate-100 mb-1">
-                  <div class="flex items-center justify-between">
-                    <p class="text-xs font-bold text-slate-900 truncate">{{ user.get_full_name|default:user.username }}</p>
-                    {% if user.is_staff %}
-                    <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-800 font-bold border border-amber-400/40">Direction</span>
-                    {% endif %}
-                  </div>
-                  <p class="text-[10px] text-slate-500 truncate">{{ user.email }}</p>
-                </div>
-
-                {% if user.is_staff %}
-                <!-- LIEN DIRECT VERS LE PORTAIL DE GESTION -->
-                <a href="{% url 'backoffice:dashboard' %}" class="flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl text-xs bg-[#0f172a] text-white hover:bg-black transition font-bold mb-2 shadow-xs border border-slate-800">
-                  <div class="flex items-center gap-2">
-                    <div class="w-4 h-4 rounded bg-amber-500 text-slate-950 font-bold text-[10px] flex items-center justify-center">O</div>
-                    <span class="text-amber-300 font-bold">Portail Gestion</span>
-                  </div>
-                  <span class="text-[10px] bg-white/20 px-1.5 py-0.5 rounded text-white">Accès Pro →</span>
-                </a>
-                {% endif %}
-
-                <a href="{% url 'accounts:dashboard' %}" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-700 hover:bg-amber-50 hover:text-amber-700 transition font-medium">
-                  <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
-                  Tableau de bord client
-                </a>
-                <a href="{% url 'accounts:order_list' %}" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-700 hover:bg-amber-50 hover:text-amber-700 transition font-medium">
-                  <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25c-.669 0-1.189-.578-1.119-1.243l1.263-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
-                  Mes commandes
-                </a>
-                <a href="{% url 'shop:wishlist' %}" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-700 hover:bg-rose-50 hover:text-rose-700 transition font-medium">
-                  <svg class="w-4 h-4 stroke-[1.8] text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
-                  Mes favoris
-                </a>
-                <a href="{% url 'accounts:profile_edit' %}" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-700 hover:bg-amber-50 hover:text-amber-700 transition font-medium">
-                  <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
-                  Modifier mon profil
-                </a>
-                <div class="my-1 border-t border-slate-100"></div>
-                <a href="{% url 'account_logout' %}" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-red-600 hover:bg-red-50 transition font-medium">
-                  <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
-                  Déconnexion
-                </a>
+                  {{ user.first_name|default:user.username|slice:":1"|upper }}
                 {% else %}
-                <div class="p-2 space-y-2">
-                  <a href="{% url 'account_login' %}" class="block text-center w-full py-2 rounded-xl bg-slate-950 hover:bg-black text-white font-bold text-xs transition shadow-xs">
-                    Se connecter
-                  </a>
-                  <a href="{% url 'account_signup' %}" class="block text-center w-full py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold text-xs transition">
-                    Créer un compte
-                  </a>
-                  <div class="pt-2 border-t border-slate-100">
-                    <a href="{% url 'orders:history' %}" class="block text-center text-[11px] text-slate-500 hover:text-amber-600 font-medium">
-                      Suivi direct de commande &rarr;
-                    </a>
-                  </div>
-                </div>
+                  <svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                  </svg>
                 {% endif %}
               </div>
-            </div>
-
-            <!-- Bouton Favoris Wishlist avec Compteur -->
-            <a 
-              href="{% url 'shop:wishlist' %}"
-              class="relative hidden sm:flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-600 transition group active:scale-95 border border-slate-200/80 hover:border-rose-200"
-              aria-label="Mes Favoris"
-              title="Mes Appareils Favoris"
-            >
-              <svg class="w-4.5 h-4.5 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-              <span 
-                id="wishlist-badge" 
-                class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs {% if not user.is_authenticated or wishlist_count == 0 %}hidden{% endif %}"
-              >
-                {{ wishlist_count|default:"0" }}
-              </span>
-            </a>
-
-            <!-- Panier d'Achat Dynamique avec Style Gold VIP Haute Visibilité -->
-            <a 
-              href="{% url 'orders:cart' %}"
-              class="flex items-center gap-2.5 px-3 sm:px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-400 to-yellow-400 hover:from-amber-500 hover:to-yellow-500 text-slate-950 shadow-md shadow-amber-400/25 hover:shadow-lg hover:shadow-amber-400/35 transition-all duration-200 group active:scale-95 border border-amber-300"
-              aria-label="Mon Panier"
-            >
-              <div class="relative flex items-center justify-center">
-                <svg class="w-5 h-5 stroke-[2.2] text-slate-950 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25c-.669 0-1.189-.578-1.119-1.243l1.263-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                </svg>
-                <span 
-                  id="cart-badge"
-                  class="cart-count-badge absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 bg-slate-950 text-amber-300 rounded-full text-[10px] font-black flex items-center justify-center shadow-xs border border-amber-400/40 {% if cart_count == 0 %}hidden{% endif %}"
-                >
-                  {{ cart_count|default:"0" }}
+              <div class="leading-tight">
+                <span class="block text-[10px] text-slate-400">{% if user.is_authenticated %}Bonjour{% else %}Espace Client{% endif %}</span>
+                <span class="block text-xs font-bold text-white truncate max-w-[100px]">
+                  {% if user.is_authenticated %}{{ user.first_name|default:user.username }}{% else %}Connexion{% endif %}
                 </span>
               </div>
-              <div class="hidden sm:block text-left leading-none">
-                <span class="block text-[10px] font-extrabold text-slate-900/80 uppercase tracking-wider">Panier</span>
-                <span class="block text-xs font-black text-slate-950 mt-0.5">Commander</span>
-              </div>
-            </a>
-
-          </div>
-
-        </div>
-
-        <!-- BARRE DE RECHERCHE RAPIDE MOBILE (STYLE AMAZON / APPLE MOBILE) -->
-        <div class="lg:hidden pb-2.5 pt-0.5">
-          <button 
-            type="button" 
-            @click="searchModal = true; $nextTick(() => { document.getElementById('apple-search-input')?.focus() })"
-            class="w-full h-9.5 px-3.5 rounded-full bg-slate-100 hover:bg-slate-200/70 border border-slate-200/90 flex items-center justify-between text-xs text-slate-400 active:scale-[0.98] transition select-none shadow-2xs"
-            aria-label="Rechercher un produit"
-          >
-            <span class="flex items-center gap-2 min-w-0 flex-1">
-              <svg class="w-4 h-4 text-slate-400 stroke-[2.2] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
-              </svg>
-              <span class="text-slate-500 font-medium truncate min-w-0">Rechercher frigo, climatiseur, TV...</span>
-            </span>
-            <span class="text-[10px] font-bold text-slate-900 bg-amber-400 px-2 py-0.5 rounded-full shadow-2xs shrink-0 ml-1.5">
-              Explorer
-            </span>
-          </button>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- 2. ===== LA SIGNATURE NAV BARRE JAUNE (MASQUÉE SUR MOBILE, VISIBLE LG+) ===== -->
-    <div class="hidden lg:block relative z-20 bg-gradient-to-r from-amber-400 via-amber-400 to-yellow-400 border-b border-amber-500/40 text-slate-950 select-none shadow-xs">
-      
-      <!-- VERSION DESKTOP (LG+) -->
-      <nav class="hidden lg:flex max-w-7xl mx-auto px-4 sm:px-6 py-2 items-center justify-between text-xs font-bold relative">
-        
-        <!-- Bloc Gauche : Bouton Boutique (Mega-Menu) -->
-        <div class="flex items-center gap-2">
-          
-          <!-- Bouton Capsule Mega-Menu Haute Couture (Obsidian & Gold) -->
-          <div class="relative" @mouseenter="megaMenu = true" @mouseleave="megaMenu = false">
-            <button 
-              type="button" 
-              @click="megaMenu = !megaMenu"
-              class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0f172a] hover:bg-black active:scale-95 text-white transition-all select-none shadow-sm font-bold text-xs border border-slate-800 cursor-pointer"
-            >
-              <svg class="w-3.5 h-3.5 text-amber-400 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                <rect x="3" y="14" width="7" height="7" rx="1.5" />
-              </svg>
-              <span>Boutique</span>
-              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" :class="megaMenu ? 'rotate-180 text-amber-400' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
-              </svg>
             </button>
 
-            <!-- PANNEAU MEGA-MENU HAUT DE GAMME (4 COLONNES) -->
-            <div 
-              x-show="megaMenu"
-              x-transition:enter="transition ease-out duration-200"
-              x-transition:enter-start="opacity-0 translate-y-2 scale-98"
-              x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-              x-transition:leave="transition ease-in duration-150"
-              x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-              x-transition:leave-end="opacity-0 translate-y-2 scale-98"
-              @click.away="megaMenu = false"
-              class="absolute left-0 top-full mt-2 w-[860px] bg-white/98 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-200/90 p-6 z-50 text-left grid grid-cols-4 gap-6"
-              style="display: none;"
+            <!-- Dropdown Compte -->
+            <div
+              x-show="userMenu"
+              x-cloak
+              @click.away="userMenu = false"
+              x-transition.opacity.duration.150ms
+              class="absolute right-0 top-full mt-1.5 w-56 p-2 bg-white text-slate-900 rounded-2xl shadow-2xl border border-slate-200 z-50"
             >
-              <!-- Colonne 1: Froid -->
-              <div class="space-y-3">
-                <div class="flex items-center gap-2 pb-2 border-b border-slate-100">
-                  <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                  <a href="{% url 'shop:category' 'refrigerateurs' %}" class="font-extrabold text-slate-900 hover:text-amber-600 text-xs">
-                    Froid & Conservation
-                  </a>
+              {% if user.is_authenticated %}
+                <div class="px-3 py-2 border-b border-slate-100 mb-1">
+                  <p class="text-xs font-bold text-slate-900 truncate">{{ user.get_full_name|default:user.username }}</p>
+                  <p class="text-[10px] text-slate-500 truncate">{{ user.email }}</p>
                 </div>
-                <ul class="space-y-1.5 text-[11px] font-medium text-slate-600">
-                  <li><a href="{% url 'shop:category' 'refrigerateurs' %}" class="hover:text-amber-600 block py-0.5">Réfrigérateurs Combinés No Frost</a></li>
-                  <li><a href="{% url 'shop:category' 'refrigerateurs' %}" class="hover:text-amber-600 block py-0.5">Américains French Door 4 Portes</a></li>
-                  <li><a href="{% url 'shop:category' 'refrigerateurs' %}" class="hover:text-amber-600 block py-0.5">Congélateurs Coffres Tropicalisés</a></li>
-                  <li><a href="{% url 'shop:category' 'refrigerateurs' %}" class="hover:text-amber-600 block py-0.5">Mini-Bars & Caves de Service</a></li>
-                  <li class="pt-1"><a href="{% url 'shop:category' 'refrigerateurs' %}" class="text-amber-600 font-bold block">Explorer tout le Froid &rarr;</a></li>
-                </ul>
-              </div>
-
-              <!-- Colonne 2: Climatisation -->
-              <div class="space-y-3">
-                <div class="flex items-center gap-2 pb-2 border-b border-slate-100">
-                  <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
-                  <a href="{% url 'shop:category' 'climatisation' %}" class="font-extrabold text-slate-900 hover:text-amber-600 text-xs">
-                    Climatisation Climat T3
-                  </a>
-                </div>
-                <ul class="space-y-1.5 text-[11px] font-medium text-slate-600">
-                  <li><a href="{% url 'shop:category' 'climatisation' %}" class="hover:text-amber-600 block py-0.5">Split Inverter 1.5 CV (Chambres)</a></li>
-                  <li><a href="{% url 'shop:category' 'climatisation' %}" class="hover:text-amber-600 block py-0.5">Split Inverter 2 CV & 2.5 CV (Salons)</a></li>
-                  <li><a href="{% url 'shop:category' 'climatisation' %}" class="hover:text-amber-600 block py-0.5">Armoires de Climatisation Pro</a></li>
-                  <li><a href="{% url 'shop:category' 'climatisation' %}" class="hover:text-amber-600 block py-0.5">Ventilateurs Turbo Silencieux</a></li>
-                  <li class="pt-1"><a href="{% url 'shop:category' 'climatisation' %}" class="text-amber-600 font-bold block">Voir tous les Climatiseurs &rarr;</a></li>
-                </ul>
-              </div>
-
-              <!-- Colonne 3: TV, Son & Cuisson -->
-              <div class="space-y-3">
-                <div class="flex items-center gap-2 pb-2 border-b border-slate-100">
-                  <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-                  <a href="{% url 'shop:category' 'televiseurs' %}" class="font-extrabold text-slate-900 hover:text-amber-600 text-xs">
-                    Image, Son & Cuisson
-                  </a>
-                </div>
-                <ul class="space-y-1.5 text-[11px] font-medium text-slate-600">
-                  <li><a href="{% url 'shop:category' 'televiseurs' %}" class="hover:text-amber-600 block py-0.5">Smart TV 4K OLED, QLED & UHD</a></li>
-                  <li><a href="{% url 'shop:category' 'televiseurs' %}" class="hover:text-amber-600 block py-0.5">Barres de Son & Home Cinéma</a></li>
-                  <li><a href="{% url 'shop:category' 'cuisinieres' %}" class="hover:text-amber-600 block py-0.5">Cuisinières 5 Feux Inox 90x60</a></li>
-                  <li><a href="{% url 'shop:category' 'cuisinieres' %}" class="hover:text-amber-600 block py-0.5">Fours & Micro-Ondes Miroir</a></li>
-                  <li class="pt-1"><a href="{% url 'shop:category' 'cuisinieres' %}" class="text-amber-600 font-bold block">Univers Cuisson Complet &rarr;</a></li>
-                </ul>
-              </div>
-
-              <!-- Colonne 4: Marques Officielles & Reassurance -->
-              <div class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/60 space-y-3">
-                <p class="text-[10px] font-bold text-amber-700 uppercase tracking-wider">Partenaires Certifiés</p>
-                <div class="grid grid-cols-2 gap-2 text-xs font-bold text-slate-800">
-                  <span class="px-2 py-1 rounded bg-white border border-slate-200 text-center">Samsung</span>
-                  <span class="px-2 py-1 rounded bg-white border border-slate-200 text-center">LG</span>
-                  <span class="px-2 py-1 rounded bg-white border border-slate-200 text-center">Midea</span>
-                  <span class="px-2 py-1 rounded bg-white border border-slate-200 text-center">Hisense</span>
-                  <span class="px-2 py-1 rounded bg-white border border-slate-200 text-center">Beko</span>
-                  <span class="px-2 py-1 rounded bg-white border border-slate-200 text-center">Philips</span>
-                </div>
-                <div class="pt-2 border-t border-amber-200/60 text-[10px] text-slate-600 space-y-1">
-                  <p class="flex items-center gap-1 font-semibold text-slate-900">
-                    <svg class="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                    Garantie 24 Mois Constructeur
-                  </p>
-                  <p class="flex items-center gap-1 font-semibold text-slate-900">
-                    <svg class="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                    Livraison & Installation Bamako
-                  </p>
-                </div>
-                <a href="{% url 'shop:catalog' %}" class="block text-center py-1.5 rounded-lg bg-slate-950 hover:bg-slate-900 text-white font-bold text-[11px] transition">
-                  Tout le Catalogue (100+)
+                {% if user.is_staff %}
+                <a href="{% url 'backoffice:dashboard' %}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-950 text-amber-400 font-bold mb-1.5 hover:bg-slate-900 transition">
+                  <span>Portail Gestion</span>
+                  <span class="text-[10px] text-white">Ouvrir →</span>
                 </a>
-              </div>
-
+                {% endif %}
+                <a href="{% url 'accounts:dashboard' %}" class="block px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-100">Mon espace</a>
+                <a href="{% url 'accounts:order_list' %}" class="block px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-100">Mes commandes</a>
+                <a href="{% url 'shop:wishlist' %}" class="block px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-100">Mes favoris</a>
+                <a href="{% url 'accounts:profile_edit' %}" class="block px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-100">Mon profil</a>
+                <div class="my-1 border-t border-slate-100"></div>
+                <a href="{% url 'account_logout' %}" class="block px-3 py-2 rounded-lg text-xs font-semibold text-rose-600 hover:bg-rose-50">Déconnexion</a>
+              {% else %}
+                <div class="p-1.5 space-y-1.5">
+                  <a href="{% url 'account_login' %}" class="block w-full py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 text-center font-extrabold text-xs transition">Se connecter</a>
+                  <a href="{% url 'account_signup' %}" class="block w-full py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-800 text-center font-bold text-xs transition">Créer un compte</a>
+                </div>
+              {% endif %}
             </div>
           </div>
-        </div>
 
-        <!-- Bloc Centre : Rayons Phares (Typographie Apple & Micro-Pills) -->
-        <div class="flex items-center gap-1">
-          <!-- Bouton Accueil Officiel Desktop -->
-          <a 
-            href="{% url 'shop:home' %}" 
-            class="px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 {% if request.resolver_match.url_name == 'home' %}bg-[#0f172a] text-white shadow-xs{% else %}text-slate-950 hover:bg-black/10 active:scale-95{% endif %}"
+          <!-- Favoris Desktop -->
+          <a
+            href="{% url 'shop:wishlist' %}"
+            class="relative w-10 h-10 rounded-xl bg-white/10 hover:bg-white/15 text-white flex items-center justify-center transition"
+            aria-label="Mes Favoris"
+            title="Mes Favoris"
           >
-            <svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+            <svg class="w-5 h-5 stroke-[1.9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
             </svg>
-            <span>Accueil</span>
+            <span
+              id="wishlist-badge"
+              class="wishlist-count-badge absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-black flex items-center justify-center {% if not user.is_authenticated or wishlist_count == 0 %}hidden{% endif %}"
+            >{{ wishlist_count|default:"0" }}</span>
           </a>
-          <a 
-            href="{% url 'shop:category' 'refrigerateurs' %}" 
-            class="px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all {% if request.resolver_match.kwargs.slug == 'refrigerateurs' %}bg-[#0f172a] text-white shadow-xs{% else %}text-slate-950 hover:bg-black/10 active:scale-95{% endif %}"
+
+          <!-- Panier Desktop -->
+          <a
+            href="{% url 'orders:cart' %}"
+            class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs transition shadow-sm active:scale-95"
+            aria-label="Mon Panier"
           >
-            Réfrigérateurs
-          </a>
-          <a 
-            href="{% url 'shop:category' 'climatisation' %}" 
-            class="px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all {% if request.resolver_match.kwargs.slug == 'climatisation' %}bg-[#0f172a] text-white shadow-xs{% else %}text-slate-950 hover:bg-black/10 active:scale-95{% endif %}"
-          >
-            Climatiseurs
-          </a>
-          <a 
-            href="{% url 'shop:category' 'televiseurs' %}" 
-            class="px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all {% if request.resolver_match.kwargs.slug == 'televiseurs' %}bg-[#0f172a] text-white shadow-xs{% else %}text-slate-950 hover:bg-black/10 active:scale-95{% endif %}"
-          >
-            Smart TV
-          </a>
-          <a 
-            href="{% url 'shop:category' 'cuisinieres' %}" 
-            class="px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all {% if request.resolver_match.kwargs.slug == 'cuisinieres' %}bg-[#0f172a] text-white shadow-xs{% else %}text-slate-950 hover:bg-black/10 active:scale-95{% endif %}"
-          >
-            Cuisinières
-          </a>
-          <a 
-            href="{% url 'shop:category' 'petit-electromenager' %}" 
-            class="px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all {% if request.resolver_match.kwargs.slug == 'petit-electromenager' %}bg-[#0f172a] text-white shadow-xs{% else %}text-slate-950 hover:bg-black/10 active:scale-95{% endif %}"
-          >
-            Petit Électro
+            <div class="relative">
+              <svg class="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/>
+              </svg>
+              <span
+                id="cart-badge"
+                class="cart-count-badge absolute -top-2 -right-2 min-w-[17px] h-[17px] px-1 rounded-full bg-slate-950 text-amber-300 text-[10px] font-black flex items-center justify-center {% if cart_count == 0 %}hidden{% endif %}"
+              >{{ cart_count|default:"0" }}</span>
+            </div>
+            <span>Panier</span>
           </a>
         </div>
-
-        <!-- Bloc Droite : Ventes Flash Animées & Boutique Dabanani -->
-        <div class="flex items-center gap-2 shrink-0">
-          <!-- Badge Ventes Flash Dynamique & Élégant (Noir & Or) -->
-          <a 
-            href="{% url 'shop:catalog' %}?en_promo=true" 
-            class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0f172a] hover:bg-black text-amber-300 font-extrabold text-xs shadow-xs hover:shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all border border-slate-800"
-            title="Consulter les offres flash disponibles à Bamako"
-          >
-            <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
-            </span>
-            <span class="tracking-tight">Ventes Flash</span>
-          </a>
-
-          <!-- Boutique Grand Marché -->
-          <a 
-            href="{% url 'shop:contact' %}" 
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-slate-950 hover:bg-black/10 transition-all font-bold text-xs whitespace-nowrap"
-            title="Notre boutique au Grand Marché de Bamako (Dabanani)"
-          >
-            <svg class="w-3.5 h-3.5 text-slate-950 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.651V9.35m0 0a3.001 3.001 0 003.75-.614A2.993 2.993 0 009 9.35c.773 0 1.492-.294 2.036-.78M15 9.35c.544.486 1.263.78 2.036.78a2.993 2.993 0 002.214-.964 3.001 3.001 0 00.75.614M3 6.75h18l-1.5-3H4.5L3 6.75z" />
-            </svg>
-            <span>Boutique Dabanani</span>
-          </a>
-        </div>
-
-      </nav>
-
-      <!-- VERSION MOBILE ULTRA-RESPONSIVE (APPLE CAROUSEL HORIZONTAL FLUIDE) -->
-      <div class="lg:hidden px-3 py-2 overflow-x-auto no-scrollbar flex items-center gap-2 select-none">
-        
-        <!-- Bouton Accueil Mobile -->
-        <a 
-          href="{% url 'shop:home' %}" 
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all {% if request.resolver_match.url_name == 'home' %}bg-[#0f172a] text-white shadow-xs{% else %}text-slate-950 hover:bg-black/10 active:scale-95{% endif %}"
-        >
-          <svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-          </svg>
-          <span>Accueil</span>
-        </a>
-
-        <!-- Bouton Boutique Mobile Minimaliste -->
-        <a 
-          href="{% url 'shop:catalog' %}" 
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0f172a] text-white text-xs font-bold shrink-0 shadow-xs border border-slate-800"
-        >
-          <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="currentColor">
-            <rect x="3" y="3" width="7" height="7" rx="1.5" />
-            <rect x="14" y="3" width="7" height="7" rx="1.5" />
-            <rect x="14" y="14" width="7" height="7" rx="1.5" />
-            <rect x="3" y="14" width="7" height="7" rx="1.5" />
-          </svg>
-          <span>Boutique</span>
-        </a>
-
-        <!-- Capsule Ventes Flash Mobile -->
-        <a 
-          href="{% url 'shop:catalog' %}?en_promo=true" 
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0f172a] text-amber-300 text-xs font-extrabold shrink-0 shadow-xs border border-slate-800"
-        >
-          <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-          <span>Flash</span>
-        </a>
-
-        <!-- Catégories Mobiles Horizontales -->
-        <a 
-          href="{% url 'shop:category' 'refrigerateurs' %}" 
-          class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-all {% if request.resolver_match.kwargs.slug == 'refrigerateurs' %}bg-[#0f172a] text-white shadow-xs{% else %}text-slate-950 hover:bg-black/10 active:scale-95{% endif %}"
-        >
-          Réfrigérateurs
-        </a>
-        <a 
-          href="{% url 'shop:category' 'climatisation' %}" 
-          class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-all {% if request.resolver_match.kwargs.slug == 'climatisation' %}bg-[#0f172a] text-white shadow-xs{% else %}text-slate-950 hover:bg-black/10 active:scale-95{% endif %}"
-        >
-          Climatiseurs
-        </a>
-        <a 
-          href="{% url 'shop:category' 'televiseurs' %}" 
-          class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-all {% if request.resolver_match.kwargs.slug == 'televiseurs' %}bg-[#0f172a] text-white shadow-xs{% else %}text-slate-950 hover:bg-black/10 active:scale-95{% endif %}"
-        >
-          Smart TV
-        </a>
-        <a 
-          href="{% url 'shop:category' 'cuisinieres' %}" 
-          class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-all {% if request.resolver_match.kwargs.slug == 'cuisinieres' %}bg-[#0f172a] text-white shadow-xs{% else %}text-slate-950 hover:bg-black/10 active:scale-95{% endif %}"
-        >
-          Cuisinières
-        </a>
-        <a 
-          href="{% url 'shop:category' 'petit-electromenager' %}" 
-          class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-all {% if request.resolver_match.kwargs.slug == 'petit-electromenager' %}bg-[#0f172a] text-white shadow-xs{% else %}text-slate-950 hover:bg-black/10 active:scale-95{% endif %}"
-        >
-          Petit Électro
-        </a>
-        <a 
-          href="{% url 'shop:contact' %}" 
-          class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 text-slate-950 hover:bg-black/10"
-        >
-          Boutique Dabanani
-        </a>
 
       </div>
 
+      <!-- 2. BARRE DE RECHERCHE MOBILE ALIBABA + LIVE AUTOCOMPLETE -->
+      <div class="lg:hidden pb-2 relative" x-data="{ mLiveOpen: false }" @click.away="mLiveOpen = false">
+        <form action="{% url 'shop:search' %}" method="GET" class="w-full">
+          <div class="flex items-center w-full h-[38px] bg-white rounded-full p-0.5 border-2 border-amber-400 shadow-sm">
+            <button
+              type="button"
+              @click="catDrawer = true"
+              class="h-8 pl-2.5 pr-1.5 text-slate-600 flex items-center justify-center shrink-0"
+              aria-label="Toutes les catégories"
+            >
+              <svg class="w-4 h-4 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h12"/>
+              </svg>
+            </button>
+            <input
+              type="search"
+              name="q"
+              autocomplete="off"
+              value="{{ request.GET.q|default:'' }}"
+              placeholder="Meuble, déco, frigo, clim, TV..."
+              hx-get="{% url 'shop:live_search' %}"
+              hx-trigger="keyup changed delay:240ms"
+              hx-target="#mobile-live-results"
+              @focus="mLiveOpen = true"
+              @input="mLiveOpen = $event.target.value.trim().length >= 2"
+              class="flex-1 min-w-0 bg-transparent text-[13px] font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none px-1.5"
+            >
+            <button
+              type="submit"
+              class="h-[30px] px-3.5 rounded-full bg-amber-400 active:bg-amber-500 text-slate-950 font-extrabold text-[11px] inline-flex items-center gap-1 shrink-0"
+            >
+              <svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+              </svg>
+              <span>Chercher</span>
+            </button>
+          </div>
+        </form>
+        <div id="mobile-live-results" x-show="mLiveOpen" x-cloak class="absolute left-0 right-0 top-full z-50"></div>
+      </div>
     </div>
 
+    <!-- 3. ONGLETS DE RAYONS DYNAMIQUES GLISSANTS (STYLE ALIBABA MOBILE & DESKTOP) -->
+    <div class="bg-[#15171e] border-t border-white/[0.07]">
+      <div class="max-w-[1400px] mx-auto px-2.5 sm:px-4 xl:px-6 flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1.5 text-xs select-none">
+
+        <button
+          type="button"
+          @click="catDrawer = true"
+          class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-extrabold text-[11px] sm:text-xs shrink-0 cursor-pointer active:scale-95 transition"
+        >
+          <svg class="w-3.5 h-3.5 stroke-[2.4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+            <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+            <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+            <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+          </svg>
+          <span>Rayons</span>
+        </button>
+
+        <a
+          href="{% url 'shop:home' %}"
+          class="px-2.5 py-1 rounded-lg font-bold text-[11px] sm:text-xs whitespace-nowrap shrink-0 transition {% if request.resolver_match.url_name == 'home' %}bg-white/15 text-amber-300{% else %}text-slate-300 hover:text-white hover:bg-white/10{% endif %}"
+        >Pour vous</a>
+
+        <a
+          href="{% url 'shop:catalog' %}?en_promo=true"
+          class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold text-[11px] sm:text-xs whitespace-nowrap shrink-0 transition {% if request.GET.en_promo %}bg-rose-500 text-white{% else %}text-amber-300 bg-amber-400/10 hover:bg-amber-400/20{% endif %}"
+        >
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+          <span>Offres Flash</span>
+        </a>
+
+        {% for cat in menu_categories %}
+        <a
+          href="{{ cat.get_absolute_url }}"
+          class="px-2.5 py-1 rounded-lg font-semibold text-[11px] sm:text-xs whitespace-nowrap shrink-0 transition {% if request.resolver_match.kwargs.slug == cat.slug %}bg-white/15 text-amber-300 font-bold{% else %}text-slate-300 hover:text-white hover:bg-white/10{% endif %}"
+        >{{ cat.short_name }}</a>
+        {% endfor %}
+
+        <a
+          href="{% url 'shop:catalog' %}"
+          class="px-2.5 py-1 rounded-lg font-semibold text-[11px] sm:text-xs whitespace-nowrap shrink-0 transition {% if request.resolver_match.url_name == 'catalog' and not request.GET.en_promo %}bg-white/15 text-amber-300 font-bold{% else %}text-slate-300 hover:text-white hover:bg-white/10{% endif %}"
+        >Tout le stock</a>
+      </div>
+    </div>
   </header>
 
-  <!-- ===== APPLE SPOTLIGHT SEARCH MODAL ===== -->
-  <div 
-    x-show="searchModal" 
-    x-transition:enter="transition ease-out duration-200"
-    x-transition:enter-start="opacity-0 -translate-y-2"
-    x-transition:enter-end="opacity-100 translate-y-0"
-    x-transition:leave="transition ease-in duration-150"
-    x-transition:leave-start="opacity-100 translate-y-0"
-    x-transition:leave-end="opacity-0 -translate-y-2"
-    class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-md flex flex-col items-center pt-6 sm:pt-20 px-3 sm:px-4"
-    @keydown.escape.window="searchModal = false"
-    style="display: none;"
+  <!-- ===================================================================== -->
+  <!-- TIROIR UNIVERSEL DES CATÉGORIES (STYLE ALIBABA APP SHEET)             -->
+  <!-- ===================================================================== -->
+  <div
+    x-show="catDrawer"
     x-cloak
+    class="fixed inset-0 z-[90] overflow-hidden"
+    role="dialog"
+    aria-modal="true"
+    @keydown.escape.window="catDrawer = false"
   >
-    <div 
-      @click.outside="searchModal = false"
-      class="w-full max-w-xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-black/[0.08] overflow-hidden"
-    >
-      <!-- Formulaire de recherche Spotlight -->
-      <form action="{% url 'shop:search' %}" method="GET" class="relative flex items-center px-4 py-3.5 border-b border-neutral-100">
-        <svg class="w-5 h-5 text-neutral-400 stroke-[2] shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-        </svg>
-        <input 
-          type="search" 
-          id="apple-search-input"
-          name="q" 
-          x-model="searchInput"
-          placeholder="Rechercher frigo, climatiseur, Smart TV, marque..." 
-          class="w-full text-sm sm:text-base font-medium text-neutral-900 placeholder:text-neutral-400 bg-transparent border-0 focus:outline-none focus:ring-0 p-0"
-          autocomplete="off"
-        >
-        <!-- Bouton Vider (X) -->
-        <button 
-          type="button" 
-          x-show="searchInput.length > 0" 
-          @click="searchInput = ''; document.getElementById('apple-search-input').focus()" 
-          class="w-5 h-5 rounded-full bg-neutral-200 text-neutral-600 flex items-center justify-center text-xs font-bold mr-2 hover:bg-neutral-300"
-        >
-          ×
-        </button>
-        <!-- Bouton Fermer Apple -->
-        <button 
-          type="button" 
-          @click="searchModal = false" 
-          class="px-2.5 py-1 text-xs font-semibold text-neutral-500 hover:text-neutral-900 bg-neutral-100 rounded-lg hover:bg-neutral-200 transition"
-        >
-          Fermer
-        </button>
-      </form>
+    <div
+      x-show="catDrawer"
+      x-transition.opacity
+      class="absolute inset-0 bg-black/60 backdrop-blur-xs"
+      @click="catDrawer = false"
+    ></div>
 
-      <!-- Suggestions & Recherches Populaires Bamako -->
-      <div class="p-4 sm:p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-        <div>
-          <p class="text-[11px] font-bold text-neutral-400 uppercase tracking-wider mb-2.5">Tendances de recherche à Bamako</p>
-          <div class="flex flex-wrap gap-2">
-            <a href="{% url 'shop:search' %}?q=Samsung+No+Frost" class="px-3 py-1.5 rounded-full bg-neutral-100 hover:bg-amber-50 hover:text-amber-600 text-xs font-medium text-neutral-700 transition">
-              Réfrigérateur Samsung No Frost
-            </a>
-            <a href="{% url 'shop:search' %}?q=Climatiseur+Inverter" class="px-3 py-1.5 rounded-full bg-neutral-100 hover:bg-amber-50 hover:text-amber-600 text-xs font-medium text-neutral-700 transition">
-              Climatiseur Inverter 1.5 CV
-            </a>
-            <a href="{% url 'shop:search' %}?q=LG+Smart+TV+4K" class="px-3 py-1.5 rounded-full bg-neutral-100 hover:bg-amber-50 hover:text-amber-600 text-xs font-medium text-neutral-700 transition">
-              Smart TV LG 55" UHD
-            </a>
-            <a href="{% url 'shop:search' %}?q=Congelateur+Hisense" class="px-3 py-1.5 rounded-full bg-neutral-100 hover:bg-amber-50 hover:text-amber-600 text-xs font-medium text-neutral-700 transition">
-              Congélateur Hisense 250L
-            </a>
-            <a href="{% url 'shop:search' %}?q=Cuisiniere+Beko" class="px-3 py-1.5 rounded-full bg-neutral-100 hover:bg-amber-50 hover:text-amber-600 text-xs font-medium text-neutral-700 transition">
-              Cuisinière Beko 4 feux
-            </a>
+    <div
+      x-show="catDrawer"
+      x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="-translate-x-full"
+      x-transition:enter-end="translate-x-0"
+      x-transition:leave="transition ease-in duration-150"
+      x-transition:leave-start="translate-x-0"
+      x-transition:leave-end="-translate-x-full"
+      class="absolute inset-y-0 left-0 w-[84%] max-w-xs bg-white shadow-2xl flex flex-col justify-between z-10"
+    >
+      <div class="bg-[#0d0e12] text-white px-4 py-4 flex items-center justify-between border-b border-amber-400/30 pt-safe-top">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-amber-400 text-slate-950 font-black text-xs flex items-center justify-center">O</div>
+          <div>
+            <p class="font-display text-sm font-black leading-none">Rayons Onizouka</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">Grand Marché de Bamako</p>
           </div>
         </div>
+        <button type="button" @click="catDrawer = false" class="w-8 h-8 rounded-full bg-white/10 text-slate-300 hover:text-white flex items-center justify-center" aria-label="Fermer">
+          <svg class="w-4 h-4 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
 
-        <div class="pt-3 border-t border-neutral-100">
-          <p class="text-[11px] font-bold text-neutral-400 uppercase tracking-wider mb-2.5">Grandes marques certifiées</p>
-          <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 text-center">
-            <a href="{% url 'shop:search' %}?q=Samsung" class="p-2 rounded-xl bg-neutral-50 hover:bg-amber-50 text-xs font-bold text-neutral-800 hover:text-amber-600 border border-neutral-100 transition">SAMSUNG</a>
-            <a href="{% url 'shop:search' %}?q=LG" class="p-2 rounded-xl bg-neutral-50 hover:bg-amber-50 text-xs font-bold text-neutral-800 hover:text-amber-600 border border-neutral-100 transition">LG</a>
-            <a href="{% url 'shop:search' %}?q=Midea" class="p-2 rounded-xl bg-neutral-50 hover:bg-amber-50 text-xs font-bold text-neutral-800 hover:text-amber-600 border border-neutral-100 transition">MIDEA</a>
-            <a href="{% url 'shop:search' %}?q=Hisense" class="p-2 rounded-xl bg-neutral-50 hover:bg-amber-50 text-xs font-bold text-neutral-800 hover:text-amber-600 border border-neutral-100 transition">HISENSE</a>
-            <a href="{% url 'shop:search' %}?q=Beko" class="p-2 rounded-xl bg-neutral-50 hover:bg-amber-50 text-xs font-bold text-neutral-800 hover:text-amber-600 border border-neutral-100 transition">BEKO</a>
-            <a href="{% url 'shop:search' %}?q=TCL" class="p-2 rounded-xl bg-neutral-50 hover:bg-amber-50 text-xs font-bold text-neutral-800 hover:text-amber-600 border border-neutral-100 transition">TCL</a>
+      <div class="flex-1 overflow-y-auto p-3 space-y-1.5">
+        <a href="{% url 'shop:catalog' %}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-amber-50 text-slate-950 font-bold text-xs border border-amber-200">
+          <span>Toute la Boutique</span>
+          <span class="text-amber-600">→</span>
+        </a>
+        <a href="{% url 'shop:catalog' %}?en_promo=true" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-rose-50 text-rose-700 font-bold text-xs border border-rose-200/70">
+          <span>Offres Flash &amp; Remises</span>
+          <span>%</span>
+        </a>
+
+        <p class="px-2 pt-3 pb-1 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Catégories</p>
+        {% for cat in menu_categories %}
+        <a href="{{ cat.get_absolute_url }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-slate-100 text-slate-800 font-semibold text-xs transition">
+          <span>{{ cat.name }}</span>
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+        {% endfor %}
+
+        <div class="pt-3 mt-2 border-t border-slate-100 space-y-1" x-data="{ pwaAvail: false, iosGuide: false }" @pwa-install-available.window="pwaAvail = true" @pwa-installed.window="pwaAvail = false" @pwa-show-ios-guide.window="iosGuide = true">
+          <p class="px-2 pb-1 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Service Client &amp; App</p>
+          <button
+            type="button"
+            x-show="pwaAvail"
+            x-cloak
+            @click="window.onizukaInstallPWA && window.onizukaInstallPWA()"
+            class="w-full text-left px-3.5 py-2.5 rounded-xl bg-amber-400/20 border border-amber-400 text-xs font-extrabold text-slate-950 flex items-center justify-between cursor-pointer"
+          >
+            <span>📲 Installer l'App Onizuka</span>
+            <span class="px-1.5 py-0.5 rounded bg-amber-400 text-[10px] font-black">1-Clic</span>
+          </button>
+          <div x-show="iosGuide" x-cloak class="p-2.5 rounded-xl bg-slate-900 text-white text-[11px] space-y-1">
+            <p class="font-bold text-amber-400">Installer sur iPhone / iPad :</p>
+            <p>Touchez l'icône <strong>Partager</strong> de Safari puis <strong>« Sur l'écran d'accueil »</strong>.</p>
           </div>
+          <a href="{% url 'orders:track' %}" class="block px-3.5 py-2 rounded-xl hover:bg-slate-100 text-xs font-bold text-slate-800">Suivre une commande (N° ONZ)</a>
+          <a href="{% url 'shop:catalog' %}?avec_video=true" class="block px-3.5 py-2 rounded-xl hover:bg-slate-100 text-xs font-semibold text-amber-700">▶ Produits en Vidéo</a>
+          <a href="{% url 'shop:shipping_warranty' %}" class="block px-3.5 py-2 rounded-xl hover:bg-slate-100 text-xs font-medium text-slate-700">Livraison 24h &amp; Garantie</a>
+          <a href="{% url 'shop:contact' %}" class="block px-3.5 py-2 rounded-xl hover:bg-slate-100 text-xs font-medium text-slate-700">Adresse Boutique Dibidani</a>
         </div>
       </div>
 
+      <div class="p-3 border-t border-slate-100 bg-slate-50 pb-safe-bottom">
+        <a
+          href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text=Bonjour%20Onizouka%20Shop,%20je%20souhaite%20passer%20une%20commande"
+          target="_blank"
+          rel="noopener"
+          class="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs"
+        >
+          <span>Commander sur WhatsApp</span>
+        </a>
+      </div>
     </div>
   </div>
 
-  <!-- ===== NOTIFICATIONS FLASH ===== -->
+  <!-- ===================================================================== -->
+  <!-- APP-SHELL DYNAMIQUE (NAVIGATION & FILTRES INSTANTANÉS SANS RELOAD)    -->
+  <!-- ===================================================================== -->
+  <div id="app-shell">
+  <!-- ===== MESSAGES SYSTÈME ===== -->
   {% if messages %}
-  <div class="max-w-7xl mx-auto px-4 pt-3 space-y-2" id="messages-container">
+  <div class="max-w-[1400px] mx-auto px-2.5 sm:px-4 pt-2.5 space-y-1.5" id="messages-container">
     {% for message in messages %}
-    <div 
-      class="flex items-center justify-between gap-3 px-4 py-3 rounded-xl text-xs sm:text-sm font-medium border bg-white shadow-sm"
+    <div
+      class="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold border border-slate-200 bg-white shadow-sm"
       x-data="{ show: true }"
       x-show="show"
-      x-init="setTimeout(() => show = false, 5000)"
+      x-init="setTimeout(() => show = false, 4500)"
     >
       <span>{{ message }}</span>
-      <button @click="show = false" class="text-neutral-400 hover:text-neutral-700">
+      <button type="button" @click="show = false" class="text-slate-400 hover:text-slate-700" aria-label="Fermer">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
@@ -881,420 +589,541 @@
   {% endif %}
 
   <!-- ===== CONTENU PRINCIPAL ===== -->
-  <main class="min-h-[75vh] pb-20 lg:pb-0">
+  <main id="app-main" class="min-h-[72vh] app-view-enter">
     {% block content %}{% endblock %}
   </main>
 
-  <!-- ===== GRAND FOOTER HAUT DE GAMME ONIZOUKA SHOP ===== -->
-  <footer class="bg-neutral-950 text-neutral-400 text-xs mt-16 sm:mt-24 border-t border-neutral-800">
-    
-    <!-- 1. PRÉ-FOOTER : CLUB VIP & ARRIVAGES BAMAKO -->
-    <div class="border-b border-neutral-800/80 bg-neutral-900/50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-          
-          <div class="lg:col-span-7 space-y-1.5 text-center lg:text-left">
-            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
-              <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-              <span>Offres Privilèges Bamako</span>
-            </span>
-            <h3 class="font-display text-xl sm:text-2xl font-black text-white tracking-tight">
-              Soyez le premier informé des nouveaux arrivages & promos
-            </h3>
-            <p class="text-xs sm:text-sm text-neutral-400">
-              Recevez nos alertes arrivages (Samsung, LG, Midea) et nos remises exclusives chaque semaine.
-            </p>
+  <!-- ===================================================================== -->
+  <!-- FOOTER DESKTOP UNIQUEMENT (ZÉRO FOOTER SUR MOBILE POUR RENDU APP)     -->
+  <!-- ===================================================================== -->
+  <footer class="hidden lg:block bg-[#0d0e12] text-slate-400 text-xs border-t border-slate-800 mt-12">
+      <!-- Bandeau Réassurance Horizontal -->
+      <div class="border-b border-white/10 bg-[#13151c]">
+        <div class="max-w-[1400px] mx-auto px-6 py-5 grid grid-cols-4 gap-6">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-400/15 text-amber-400 flex items-center justify-center font-black">1</div>
+            <div>
+              <p class="text-white font-bold text-xs">Produits 100% d'Origine</p>
+              <p class="text-[11px] text-slate-400">Scellés constructeur avec facture</p>
+            </div>
           </div>
-
-          <div class="lg:col-span-5">
-            <form onsubmit="event.preventDefault(); alert('Merci ! Vous recevrez nos meilleures offres d\'électroménager à Bamako.');" class="flex flex-col sm:flex-row gap-2 max-w-md mx-auto lg:mx-0">
-              <input 
-                type="text" 
-                placeholder="Votre numéro WhatsApp ou Email..." 
-                required
-                class="flex-1 px-4 py-3 rounded-xl bg-neutral-800 border border-neutral-700 text-white placeholder:text-neutral-500 text-xs sm:text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
-              >
-              <button 
-                type="submit" 
-                class="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white font-bold text-xs sm:text-sm transition shadow-md shrink-0 flex items-center justify-center gap-1.5"
-              >
-                <span>S'inscrire</span>
-                <svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-              </button>
-            </form>
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-400/15 text-amber-400 flex items-center justify-center font-black">2</div>
+            <div>
+              <p class="text-white font-bold text-xs">Livraison Express Bamako</p>
+              <p class="text-[11px] text-slate-400">Sous 24h ou retrait Dibidani 15 min</p>
+            </div>
           </div>
-
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-400/15 text-amber-400 flex items-center justify-center font-black">3</div>
+            <div>
+              <p class="text-white font-bold text-xs">Commande Simple WhatsApp</p>
+              <p class="text-[11px] text-slate-400">Validation directe avec la boutique</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-400/15 text-amber-400 flex items-center justify-center font-black">4</div>
+            <div>
+              <p class="text-white font-bold text-xs">Paiement Flexible au Mali</p>
+              <p class="text-[11px] text-slate-400">Cash à la livraison, Orange Money, Wave</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 2. CORPS PRINCIPAL DU FOOTER (4 COLONNES RICHES) -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10 pb-12 border-b border-neutral-800">
-        
-        <!-- Colonne 1 : Identité & Boutique (2 colonnes de large sur PC) -->
-        <div class="lg:col-span-2 space-y-4">
-          <a href="{% url 'shop:home' %}" class="flex items-center gap-2 group select-none">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-500 text-white flex items-center justify-center shadow-md">
-              <svg class="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/></svg>
-            </div>
-            <div class="flex items-baseline">
-              <span class="font-display text-xl font-black text-white">ONIZOUKA</span>
-              <span class="text-amber-500 font-display text-xl font-black ml-0.5">SHOP</span>
-            </div>
-          </a>
-
-          <p class="text-xs text-neutral-400 leading-relaxed max-w-sm">
-            La référence absolue de l'électroménager d'origine et du froid au Mali. Produits certifiés, garanties constructeur officielles et service après-vente réactif à Bamako.
+      <!-- Colonnes Desktop -->
+      <div class="max-w-[1400px] mx-auto px-6 py-10 grid grid-cols-12 gap-8">
+        <div class="col-span-4 space-y-3">
+          <div class="flex items-baseline">
+            <span class="font-display text-lg font-black text-white">ONIZOUKA</span>
+            <span class="font-display text-lg font-black text-amber-400 ml-0.5">SHOP</span>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed max-w-sm">
+            Boutique spécialisée en réfrigération, climatisation, image &amp; électroménager au Grand Marché de Bamako (Dibidani).
           </p>
+          <p class="text-xs text-white font-bold">
+            Tél / WhatsApp : {{ shop_settings.phone_whatsapp|default:'+223 92 67 37 99' }}
+          </p>
+        </div>
 
-          <div class="space-y-2.5 pt-1 text-xs">
-            <div class="flex items-center gap-2.5 text-neutral-300">
-              <svg class="w-4 h-4 text-amber-500 shrink-0 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
-              <span>Grand Marché de Bamako, Dabanani</span>
-            </div>
-            <div class="flex items-center gap-2.5 text-neutral-300">
-              <svg class="w-4 h-4 text-amber-500 shrink-0 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-              <span>Ouvert 7j/7 de 08h30 à 20h30 sans interruption</span>
-            </div>
-            <div class="flex items-center gap-2.5">
-              <svg class="w-4 h-4 text-emerald-400 shrink-0 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a.75.75 0 01-.874-.794l.228-2.28A7.95 7.95 0 013 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
-              <a href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}" target="_blank" rel="noopener" class="text-white hover:text-amber-400 font-bold transition">
-                WhatsApp Direct : {{ shop_settings.phone_whatsapp|default:'+223 92 67 37 99' }}
-              </a>
-            </div>
+        <div class="col-span-3 space-y-2.5">
+          <h4 class="text-white font-bold text-xs uppercase tracking-wider">Rayons</h4>
+          <ul class="space-y-1.5">
+            {% for cat in menu_categories|slice:":6" %}
+            <li><a href="{{ cat.get_absolute_url }}" class="hover:text-amber-400 transition">{{ cat.name }}</a></li>
+            {% endfor %}
+            <li><a href="{% url 'shop:catalog' %}?en_promo=true" class="text-amber-400 font-semibold hover:underline">Offres Flash</a></li>
+          </ul>
+        </div>
+
+        <div class="col-span-2 space-y-2.5">
+          <h4 class="text-white font-bold text-xs uppercase tracking-wider">Informations</h4>
+          <ul class="space-y-1.5">
+            <li><a href="{% url 'shop:shipping_warranty' %}" class="hover:text-amber-400 transition">Livraison &amp; Garantie</a></li>
+            <li><a href="{% url 'orders:track' %}" class="hover:text-amber-400 transition">Suivi de commande</a></li>
+            <li><a href="{% url 'shop:contact' %}" class="hover:text-amber-400 transition">Magasin Dibidani</a></li>
+            <li><a href="{% url 'shop:terms' %}" class="hover:text-amber-400 transition">CGV</a></li>
+            <li><a href="{% url 'shop:privacy' %}" class="hover:text-amber-400 transition">Confidentialité</a></li>
+            <li><a href="{% url 'shop:legal' %}" class="hover:text-amber-400 transition">Mentions légales</a></li>
+          </ul>
+        </div>
+
+        <div class="col-span-3 space-y-3">
+          <h4 class="text-white font-bold text-xs uppercase tracking-wider">Commande Directe</h4>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="px-2.5 py-1 rounded-lg bg-orange-500 text-white font-black text-[11px]">Orange Money</span>
+            <span class="px-2.5 py-1 rounded-lg bg-[#1DC3F4] text-white font-black text-[11px]">Wave</span>
+            <span class="px-2.5 py-1 rounded-lg bg-white/10 text-white font-semibold text-[11px]">Espèces Livraison</span>
           </div>
-        </div>
-
-        <!-- Colonne 2 : Univers & Boutique -->
-        <div class="space-y-3">
-          <h4 class="text-white font-bold text-xs tracking-wider uppercase">Notre Boutique</h4>
-          <ul class="space-y-2">
-            <li><a href="{% url 'shop:category' 'refrigerateurs' %}" class="hover:text-amber-400 transition">Réfrigérateurs No Frost</a></li>
-            <li><a href="{% url 'shop:category' 'climatisation' %}" class="hover:text-amber-400 transition">Climatiseurs Inverter</a></li>
-            <li><a href="{% url 'shop:category' 'televiseurs' %}" class="hover:text-amber-400 transition">Smart TV 4K UHD</a></li>
-            <li><a href="{% url 'shop:category' 'cuisinieres' %}" class="hover:text-amber-400 transition">Cuisinières & Fours Gaz</a></li>
-            <li><a href="{% url 'shop:category' 'petit-electromenager' %}" class="hover:text-amber-400 transition">Petit Électroménager</a></li>
-            <li><a href="{% url 'shop:catalog' %}?en_promo=true" class="text-amber-400 hover:text-amber-300 font-bold transition">Ventes Flash & Promos</a></li>
-          </ul>
-        </div>
-
-        <!-- Colonne 3 : Services & Engagements -->
-        <div class="space-y-3">
-          <h4 class="text-white font-bold text-xs tracking-wider uppercase">Engagements & Légal</h4>
-          <ul class="space-y-2 text-xs">
-            <li><a href="{% url 'shop:shipping_warranty' %}" class="text-neutral-300 hover:text-amber-400 transition">Garantie 12-24 Mois & SAV</a></li>
-            <li><a href="{% url 'shop:shipping_warranty' %}" class="text-neutral-300 hover:text-amber-400 transition">Livraison 24h & Retrait 15 min</a></li>
-            <li><a href="{% url 'shop:terms' %}" class="text-neutral-300 hover:text-amber-400 transition">Conditions Générales (CGV)</a></li>
-            <li><a href="{% url 'shop:privacy' %}" class="text-neutral-300 hover:text-amber-400 transition">Confidentialité & Données</a></li>
-            <li><a href="{% url 'shop:legal' %}" class="text-neutral-300 hover:text-amber-400 transition">Mentions Légales</a></li>
-            <li><a href="{% url 'shop:contact' %}" class="hover:text-amber-400 transition font-bold text-amber-400">Boutique Grand Marché</a></li>
-          </ul>
-        </div>
-
-        <!-- Colonne 4 : Paiement Sécurisé & Contact -->
-        <div class="space-y-3">
-          <h4 class="text-white font-bold text-xs tracking-wider uppercase">Paiements & Contact</h4>
-          <ul class="space-y-2.5">
-            <li class="flex items-center gap-2.5 text-neutral-300 text-xs">
-              <span class="h-7 px-2 rounded-md bg-white flex items-center justify-center shrink-0 shadow-2xs">
-                <svg class="h-4 w-auto" viewBox="0 0 431 115" xmlns="http://www.w3.org/2000/svg"><path d="M90.154 11.052H24.335c-3.542 0-6.94 1.413-9.445 3.929a13.44 13.44 0 0 0-3.913 9.484c0 3.558 1.408 6.969 3.913 9.485a13.332 13.332 0 0 0 9.445 3.929h33.596L3.886 92.097a13.442 13.442 0 0 0-3.914 9.486c0 3.558 1.408 6.97 3.914 9.486a13.33 13.33 0 0 0 9.447 3.929c3.543 0 6.941-1.413 9.447-3.929l53.994-54.225v33.683c0 3.558 1.408 6.97 3.913 9.485a13.328 13.328 0 0 0 9.445 3.929c3.543 0 6.941-1.413 9.446-3.929a13.44 13.44 0 0 0 3.912-9.485V24.465c0-3.553-1.404-6.962-3.904-9.477a13.337 13.337 0 0 0-9.432-3.936Z" fill="#000000"/><path d="M130.236 103.948h65.79c3.542 0 6.94-1.413 9.445-3.929a13.44 13.44 0 0 0 3.913-9.484c0-3.558-1.408-6.969-3.913-9.485a13.328 13.328 0 0 0-9.445-3.929h-33.545l53.994-54.218a13.438 13.438 0 0 0 3.833-9.459 13.441 13.441 0 0 0-3.91-9.428 13.331 13.331 0 0 0-9.387-3.93 13.327 13.327 0 0 0-9.422 3.845l-53.995 54.225V24.465c0-3.557-1.407-6.969-3.913-9.484a13.326 13.326 0 0 0-9.445-3.929 13.329 13.329 0 0 0-9.446 3.929 13.44 13.44 0 0 0-3.912 9.484v66.062a13.48 13.48 0 0 0 1.014 5.136 13.412 13.412 0 0 0 2.896 4.354 13.343 13.343 0 0 0 9.448 3.931Z" fill="#ff7900"/><path d="M266.482 11.096c12.212 0 19.391 9.152 19.391 20.916 0 11.426-7.179 20.578-19.391 20.578-12.211 0-19.39-9.152-19.39-20.578 0-11.764 7.186-20.916 19.39-20.916Zm0 34.168c7.793 0 10.722-6.652 10.722-13.252 0-6.938-2.922-13.59-10.722-13.59-7.8 0-10.714 6.652-10.714 13.59 0 6.6 2.929 13.266 10.714 13.266v-.014ZM289.554 22.969h7.457v5.324h.117a10.121 10.121 0 0 1 3.657-4.399 10.048 10.048 0 0 1 5.45-1.702 5.744 5.744 0 0 1 1.716.278v7.334a14.043 14.043 0 0 0-2.819-.278c-5.74 0-7.734 4.158-7.734 9.211v12.922h-7.844v-28.69ZM309.324 31.784c.446-7.377 7.019-9.592 13.424-9.592 5.69 0 12.54 1.276 12.54 8.155v14.931c0 2.611.278 5.215.994 6.381h-7.954a11.865 11.865 0 0 1-.555-2.772c-2.483 2.603-6.128 3.549-9.611 3.549-5.412 0-9.721-2.721-9.721-8.595 0-6.49 4.864-8.067 9.721-8.713 4.856-.645 9.268-.564 9.268-3.784 0-3.388-2.323-3.887-5.113-3.887-2.98 0-4.915 1.225-5.192 4.327h-7.801Zm18.12 5.823c-1.329 1.166-4.09 1.225-6.522 1.665-2.432.44-4.637 1.335-4.637 4.217 0 2.882 2.264 3.667 4.805 3.667 6.135 0 6.354-4.877 6.354-6.601v-2.948ZM339.882 22.969h7.457v3.975h.168a10.239 10.239 0 0 1 3.765-3.528 10.186 10.186 0 0 1 4.999-1.239c8.341 0 10.437 4.716 10.437 11.815v17.637h-7.873V35.451c0-4.716-1.381-7.048-5.025-7.048-4.251 0-6.076 2.384-6.076 8.207v15.034h-7.844l-.008-28.675ZM398.274 49.811c0 4.715-1.658 12.702-14.804 12.702-5.631 0-12.205-2.663-12.592-9.204h7.786c.73 2.933 3.097 3.938 5.843 3.938 4.382 0 6.354-2.999 6.295-7.099v-3.77h-.109c-1.709 2.993-5.113 4.437-8.56 4.437-8.567 0-12.211-6.549-12.211-14.425 0-7.429 4.258-14.198 12.262-14.198 3.761 0 6.632 1.276 8.509 4.605h.109v-3.828h7.472v26.842Zm-7.457-12.864c0-4.664-1.6-8.8-6.683-8.8-4.382 0-6.354 3.887-6.354 8.155 0 4.107 1.548 8.595 6.354 8.595 4.448-.022 6.654-3.85 6.654-7.95h.029ZM409.353 39.221c.219 4.994 2.651 7.267 7.019 7.267 3.148 0 5.689-1.943 6.186-3.718h6.902c-2.191 6.769-6.902 9.651-13.366 9.651-9.005 0-14.607-6.211-14.607-15.085 0-8.602 5.909-15.144 14.607-15.144 9.721 0 14.417 8.206 13.877 17.029h-20.618Zm12.759-4.995c-.73-3.989-2.432-6.101-6.237-6.101-4.974 0-6.412 3.887-6.522 6.101h12.759ZM247.092 64.346h12.204l9.224 27.23h.11l8.764-27.23h12.211v39.602h-8.121V75.875h-.11l-9.699 28.073h-6.683l-9.662-27.787h-.11v27.787h-8.128V64.346ZM307.784 74.489c9.005 0 14.804 5.991 14.804 15.144 0 9.152-5.799 15.085-14.804 15.085-9.006 0-14.753-5.991-14.753-15.085 0-9.094 5.806-15.144 14.753-15.144Zm0 24.296c5.353 0 6.96-4.605 6.96-9.152 0-4.547-1.607-9.211-6.96-9.211-5.354 0-6.91 4.605-6.91 9.211 0 4.605 1.607 9.182 6.91 9.182v-.03ZM325.969 75.266h7.457v3.99h.168a10.228 10.228 0 0 1 3.749-3.52 10.189 10.189 0 0 1 4.979-1.247c8.34 0 10.436 4.715 10.436 11.814v17.645h-7.844V87.741c0-4.709-1.38-7.041-5.024-7.041-4.251 0-6.077 2.384-6.077 8.207v15.041h-7.844V75.266ZM363.604 91.517c.219 4.995 2.651 7.268 7.011 7.268 3.156 0 5.69-1.943 6.194-3.718h6.902c-2.191 6.769-6.902 9.651-13.366 9.651-9.005 0-14.607-6.211-14.607-15.085 0-8.603 5.909-15.144 14.607-15.144 9.721 0 14.417 8.206 13.877 17.028h-20.618Zm12.759-4.994c-.73-3.989-2.432-6.101-6.244-6.101-4.967 0-6.405 3.886-6.515 6.101h12.759Z" fill="#000000"/><path d="M400.917 107.549c-1.709 4.598-4.382 6.483-9.83 6.483-1.6 0-3.206-.11-4.806-.271v-6.491c1.523.175 3.054.268 4.587.279 2.702-.279 3.586-3.109 2.702-5.383l-10.049-26.9h8.391l6.464 19.632h.109l6.245-19.632h8.15l-11.963 32.283Z" fill="#000000"/></svg>
-              </span>
-              <span class="font-medium">Orange Money Mali</span>
-            </li>
-            <li class="flex items-center gap-2.5 text-neutral-300 text-xs">
-              <span class="h-7 px-2 rounded-md bg-[#1DC3F4] flex items-center justify-center shrink-0 shadow-2xs">
-                <span class="text-white font-black text-xs tracking-tight">wave</span>
-              </span>
-              <span class="font-medium">Wave Mobile Money</span>
-            </li>
-            <li class="flex items-center gap-2.5 text-neutral-300 text-xs">
-              <span class="w-7 h-7 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-              </span>
-              <span class="font-medium">Paiement Cash à la livraison</span>
-            </li>
-            <li class="pt-2">
-              <a href="{% url 'shop:contact' %}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition">
-                <span>Page Contact Complète</span>
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-              </a>
-            </li>
-          </ul>
-        </div>
-
-      </div>
-
-      <!-- 3. BANDEAU DES LOGOS DE PAIEMENT & CONFIANCE -->
-      <div class="py-8 border-b border-neutral-800/80 flex flex-wrap items-center justify-between gap-6">
-        <div>
-          <span class="text-[11px] font-bold text-neutral-400 uppercase tracking-wider block mb-2">Moyens de Paiement 100% Sécurisés</span>
-          <div class="flex items-center flex-wrap gap-2.5">
-            <!-- Orange Money Official Badge -->
-            <div class="h-9 px-3 rounded-xl bg-white flex items-center justify-center shadow-xs">
-              <svg class="h-5 w-auto" viewBox="0 0 431 115" xmlns="http://www.w3.org/2000/svg"><path d="M90.154 11.052H24.335c-3.542 0-6.94 1.413-9.445 3.929a13.44 13.44 0 0 0-3.913 9.484c0 3.558 1.408 6.969 3.913 9.485a13.332 13.332 0 0 0 9.445 3.929h33.596L3.886 92.097a13.442 13.442 0 0 0-3.914 9.486c0 3.558 1.408 6.97 3.914 9.486a13.33 13.33 0 0 0 9.447 3.929c3.543 0 6.941-1.413 9.447-3.929l53.994-54.225v33.683c0 3.558 1.408 6.97 3.913 9.485a13.328 13.328 0 0 0 9.445 3.929c3.543 0 6.941-1.413 9.446-3.929a13.44 13.44 0 0 0 3.912-9.485V24.465c0-3.553-1.404-6.962-3.904-9.477a13.337 13.337 0 0 0-9.432-3.936Z" fill="#000000"/><path d="M130.236 103.948h65.79c3.542 0 6.94-1.413 9.445-3.929a13.44 13.44 0 0 0 3.913-9.484c0-3.558-1.408-6.969-3.913-9.485a13.328 13.328 0 0 0-9.445-3.929h-33.545l53.994-54.218a13.438 13.438 0 0 0 3.833-9.459 13.441 13.441 0 0 0-3.91-9.428 13.331 13.331 0 0 0-9.387-3.93 13.327 13.327 0 0 0-9.422 3.845l-53.995 54.225V24.465c0-3.557-1.407-6.969-3.913-9.484a13.326 13.326 0 0 0-9.445-3.929 13.329 13.329 0 0 0-9.446 3.929 13.44 13.44 0 0 0-3.912 9.484v66.062a13.48 13.48 0 0 0 1.014 5.136 13.412 13.412 0 0 0 2.896 4.354 13.343 13.343 0 0 0 9.448 3.931Z" fill="#ff7900"/><path d="M266.482 11.096c12.212 0 19.391 9.152 19.391 20.916 0 11.426-7.179 20.578-19.391 20.578-12.211 0-19.39-9.152-19.39-20.578 0-11.764 7.186-20.916 19.39-20.916Zm0 34.168c7.793 0 10.722-6.652 10.722-13.252 0-6.938-2.922-13.59-10.722-13.59-7.8 0-10.714 6.652-10.714 13.59 0 6.6 2.929 13.266 10.714 13.266v-.014ZM289.554 22.969h7.457v5.324h.117a10.121 10.121 0 0 1 3.657-4.399 10.048 10.048 0 0 1 5.45-1.702 5.744 5.744 0 0 1 1.716.278v7.334a14.043 14.043 0 0 0-2.819-.278c-5.74 0-7.734 4.158-7.734 9.211v12.922h-7.844v-28.69ZM309.324 31.784c.446-7.377 7.019-9.592 13.424-9.592 5.69 0 12.54 1.276 12.54 8.155v14.931c0 2.611.278 5.215.994 6.381h-7.954a11.865 11.865 0 0 1-.555-2.772c-2.483 2.603-6.128 3.549-9.611 3.549-5.412 0-9.721-2.721-9.721-8.595 0-6.49 4.864-8.067 9.721-8.713 4.856-.645 9.268-.564 9.268-3.784 0-3.388-2.323-3.887-5.113-3.887-2.98 0-4.915 1.225-5.192 4.327h-7.801Zm18.12 5.823c-1.329 1.166-4.09 1.225-6.522 1.665-2.432.44-4.637 1.335-4.637 4.217 0 2.882 2.264 3.667 4.805 3.667 6.135 0 6.354-4.877 6.354-6.601v-2.948ZM339.882 22.969h7.457v3.975h.168a10.239 10.239 0 0 1 3.765-3.528 10.186 10.186 0 0 1 4.999-1.239c8.341 0 10.437 4.716 10.437 11.815v17.637h-7.873V35.451c0-4.716-1.381-7.048-5.025-7.048-4.251 0-6.076 2.384-6.076 8.207v15.034h-7.844l-.008-28.675ZM398.274 49.811c0 4.715-1.658 12.702-14.804 12.702-5.631 0-12.205-2.663-12.592-9.204h7.786c.73 2.933 3.097 3.938 5.843 3.938 4.382 0 6.354-2.999 6.295-7.099v-3.77h-.109c-1.709 2.993-5.113 4.437-8.56 4.437-8.567 0-12.211-6.549-12.211-14.425 0-7.429 4.258-14.198 12.262-14.198 3.761 0 6.632 1.276 8.509 4.605h.109v-3.828h7.472v26.842Zm-7.457-12.864c0-4.664-1.6-8.8-6.683-8.8-4.382 0-6.354 3.887-6.354 8.155 0 4.107 1.548 8.595 6.354 8.595 4.448-.022 6.654-3.85 6.654-7.95h.029ZM409.353 39.221c.219 4.994 2.651 7.267 7.019 7.267 3.148 0 5.689-1.943 6.186-3.718h6.902c-2.191 6.769-6.902 9.651-13.366 9.651-9.005 0-14.607-6.211-14.607-15.085 0-8.602 5.909-15.144 14.607-15.144 9.721 0 14.417 8.206 13.877 17.029h-20.618Zm12.759-4.995c-.73-3.989-2.432-6.101-6.237-6.101-4.974 0-6.412 3.887-6.522 6.101h12.759ZM247.092 64.346h12.204l9.224 27.23h.11l8.764-27.23h12.211v39.602h-8.121V75.875h-.11l-9.699 28.073h-6.683l-9.662-27.787h-.11v27.787h-8.128V64.346ZM307.784 74.489c9.005 0 14.804 5.991 14.804 15.144 0 9.152-5.799 15.085-14.804 15.085-9.006 0-14.753-5.991-14.753-15.085 0-9.094 5.806-15.144 14.753-15.144Zm0 24.296c5.353 0 6.96-4.605 6.96-9.152 0-4.547-1.607-9.211-6.96-9.211-5.354 0-6.91 4.605-6.91 9.211 0 4.605 1.607 9.182 6.91 9.182v-.03ZM325.969 75.266h7.457v3.99h.168a10.228 10.228 0 0 1 3.749-3.52 10.189 10.189 0 0 1 4.979-1.247c8.34 0 10.436 4.715 10.436 11.814v17.645h-7.844V87.741c0-4.709-1.38-7.041-5.024-7.041-4.251 0-6.077 2.384-6.077 8.207v15.041h-7.844V75.266ZM363.604 91.517c.219 4.995 2.651 7.268 7.011 7.268 3.156 0 5.69-1.943 6.194-3.718h6.902c-2.191 6.769-6.902 9.651-13.366 9.651-9.005 0-14.607-6.211-14.607-15.085 0-8.603 5.909-15.144 14.607-15.144 9.721 0 14.417 8.206 13.877 17.028h-20.618Zm12.759-4.994c-.73-3.989-2.432-6.101-6.244-6.101-4.967 0-6.405 3.886-6.515 6.101h12.759Z" fill="#000000"/><path d="M400.917 107.549c-1.709 4.598-4.382 6.483-9.83 6.483-1.6 0-3.206-.11-4.806-.271v-6.491c1.523.175 3.054.268 4.587.279 2.702-.279 3.586-3.109 2.702-5.383l-10.049-26.9h8.391l6.464 19.632h.109l6.245-19.632h8.15l-11.963 32.283Z" fill="#000000"/></svg>
-            </div>
-            <!-- Wave Official Badge -->
-            <div class="h-9 px-3 rounded-xl bg-[#1DC3F4] flex items-center justify-center shadow-xs">
-              <span class="text-white font-black text-sm tracking-tight">wave</span>
-            </div>
-            <!-- Cash on Delivery Badge -->
-            <div class="h-9 px-3 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-              <span class="font-bold text-white text-xs">Espèces à la Livraison</span>
-            </div>
-            <!-- Garantie Badge -->
-            <div class="h-9 px-3 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center gap-2">
-              <svg class="w-3.5 h-3.5 text-amber-400 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
-              <span class="font-bold text-white text-xs">Garantie Officielle 24 Mois</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="text-left sm:text-right">
-          <span class="text-[11px] font-bold text-neutral-400 uppercase tracking-wider block mb-1">Service Clientèle Bamako</span>
-          <p class="font-display text-lg font-black text-white">{{ shop_settings.phone_contact|default:'+223 92 67 37 99' }}</p>
-          <p class="text-[11px] text-neutral-500">Du Lundi au Dimanche • 08h30 - 20h30</p>
+          <a
+            href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text=Bonjour%20Onizouka%20Shop,%20je%20souhaite%20un%20renseignement"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition"
+          >
+            <span>Discuter sur WhatsApp</span>
+          </a>
         </div>
       </div>
 
-      <!-- 4. LIGNE COPYRIGHT FINALE AVEC LIENS LÉGAUX -->
-      <div class="pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-neutral-400 text-[11px]">
-        <p>&copy; {% now "Y" %} ONIZOUKA SHOP SARL (Bamako, Mali). Tous droits réservés.</p>
-        <div class="flex flex-wrap items-center justify-center gap-3">
-          <a href="{% url 'shop:terms' %}" class="hover:text-amber-400 transition">CGV</a>
-          <span>&bull;</span>
-          <a href="{% url 'shop:privacy' %}" class="hover:text-amber-400 transition">Confidentialité</a>
-          <span>&bull;</span>
-          <a href="{% url 'shop:legal' %}" class="hover:text-amber-400 transition">Mentions Légales</a>
-          <span>&bull;</span>
-          <a href="{% url 'shop:shipping_warranty' %}" class="hover:text-amber-400 transition">Livraison & Garantie</a>
-        </div>
+      <div class="border-t border-white/10 py-4 text-center text-[11px] text-slate-500">
+        &copy; {% now "Y" %} {{ shop_settings.company_name|default:"ONIZOUKA SHOP SARL" }} • Grand Marché de Bamako, Mali.
       </div>
-
-    </div>
   </footer>
 
-  <!-- ===== BARRE DE NAVIGATION INFÉRIEURE MOBILE ULTRA-PREMIUM (AUTHENTIQUE DOCK IOS APPLE) ===== -->
+  <!-- ===================================================================== -->
+  <!-- BOTTOM TAB BAR NATIVE MOBILE (REMPLACÉE SUR FICHE PRODUIT PAR STICKY) -->
+  <!-- ===================================================================== -->
   {% block bottom_nav %}
-  <nav 
-    x-show="!searchModal" 
-    class="lg:hidden ios-nav-dock px-3 flex justify-around items-center select-none"
-  >
-    
-    <!-- 1. Accueil (Home) -->
-    <a href="{% url 'shop:home' %}" class="ios-touch-item flex-1 {% if request.resolver_match.url_name == 'home' %}text-amber-500 font-bold{% else %}text-neutral-400 font-medium hover:text-neutral-700{% endif %}">
-      <div class="relative flex flex-col items-center">
-        <svg class="w-5 h-5 mb-0.5" viewBox="0 0 24 24" fill="{% if request.resolver_match.url_name == 'home' %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-width="{% if request.resolver_match.url_name == 'home' %}2{% else %}1.75{% endif %}">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-        </svg>
-        {% if request.resolver_match.url_name == 'home' %}
-        <span class="w-1 h-1 rounded-full bg-amber-500 absolute -bottom-1"></span>
-        {% endif %}
-      </div>
-      <span class="text-[10px] tracking-tight leading-none mt-0.5">Accueil</span>
+  <nav class="lg:hidden app-bottom-bar px-1 grid grid-cols-5 items-center select-none" aria-label="Navigation principale mobile">
+
+    <!-- 1. Accueil -->
+    <a href="{% url 'shop:home' %}" class="app-tab-item {% if request.resolver_match.url_name == 'home' %}text-amber-600 font-extrabold{% else %}text-slate-500 font-medium{% endif %}">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="{% if request.resolver_match.url_name == 'home' %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/>
+      </svg>
+      <span class="text-[10px] leading-none mt-1">Accueil</span>
     </a>
 
-    <!-- 2. Boutique (Catalogue / Produits) -->
-    <a href="{% url 'shop:catalog' %}" class="ios-touch-item flex-1 {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}text-amber-500 font-bold{% else %}text-neutral-400 font-medium hover:text-neutral-700{% endif %}">
-      <div class="relative flex flex-col items-center">
-        <svg class="w-5 h-5 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}2{% else %}1.75{% endif %}">
-          <rect x="3.5" y="3.5" width="7" height="7" rx="2" {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}fill="currentColor"{% endif %}/>
-          <rect x="13.5" y="3.5" width="7" height="7" rx="2" {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}fill="currentColor"{% endif %}/>
-          <rect x="3.5" y="13.5" width="7" height="7" rx="2" {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}fill="currentColor"{% endif %}/>
-          <rect x="13.5" y="13.5" width="7" height="7" rx="2" {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}fill="currentColor"{% endif %}/>
-        </svg>
-        {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}
-        <span class="w-1 h-1 rounded-full bg-amber-500 absolute -bottom-1"></span>
-        {% endif %}
-      </div>
-      <span class="text-[10px] tracking-tight leading-none mt-0.5">Boutique</span>
+    <!-- 2. Rayons / Boutique -->
+    <a href="{% url 'shop:catalog' %}" class="app-tab-item {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}text-amber-600 font-extrabold{% else %}text-slate-500 font-medium{% endif %}">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3.5" y="3.5" width="7" height="7" rx="1.8" {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}fill="currentColor"{% endif %}/>
+        <rect x="13.5" y="3.5" width="7" height="7" rx="1.8" {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}fill="currentColor"{% endif %}/>
+        <rect x="3.5" y="13.5" width="7" height="7" rx="1.8" {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}fill="currentColor"{% endif %}/>
+        <rect x="13.5" y="13.5" width="7" height="7" rx="1.8" {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'category' %}fill="currentColor"{% endif %}/>
+      </svg>
+      <span class="text-[10px] leading-none mt-1">Boutique</span>
     </a>
 
-    <!-- 3. Recherche (Apple Spotlight Modal Trigger) -->
-    <button 
-      type="button"
-      @click="searchModal = true; $nextTick(() => { document.getElementById('apple-search-input')?.focus() })" 
-      class="ios-touch-item flex-1 {% if request.resolver_match.url_name == 'search' %}text-amber-500 font-bold{% else %}text-neutral-400 font-medium hover:text-neutral-700{% endif %}"
+    <!-- 3. WhatsApp Direct Central -->
+    <a
+      href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text=Bonjour%20Onizouka%20Shop,%20je%20souhaite%20commander"
+      target="_blank"
+      rel="noopener"
+      class="app-tab-item text-emerald-600 font-extrabold"
     >
-      <div class="relative flex flex-col items-center">
-        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{% if request.resolver_match.url_name == 'search' %}2.2{% else %}1.75{% endif %}">
-          <circle cx="11" cy="11" r="7" stroke-linecap="round" stroke-linejoin="round" />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5-5" />
+      <div class="w-8 h-8 -mt-1.5 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-md shadow-emerald-600/25">
+        <svg width="18" height="18" class="w-[18px] h-[18px] fill-current shrink-0" viewBox="0 0 24 24">
+          <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.588-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.45 1.054 1.325 1.833.687.612 1.267.801 1.447.888.181.087.289.073.397-.051.108-.124.462-.538.585-.722.123-.184.246-.153.411-.092.166.061 1.052.496 1.233.587.181.091.303.136.347.212.043.076.043.439-.101.844z"/>
         </svg>
-        {% if request.resolver_match.url_name == 'search' %}
-        <span class="w-1 h-1 rounded-full bg-amber-500 absolute -bottom-1"></span>
-        {% endif %}
       </div>
-      <span class="text-[10px] tracking-tight leading-none mt-0.5">Recherche</span>
-    </button>
-
-    <!-- 4. Panier (Shopping Bag Apple Style avec Badge Dynamique) -->
-    <a href="{% url 'orders:cart' %}" class="ios-touch-item flex-1 {% if request.resolver_match.url_name == 'cart' or request.resolver_match.url_name == 'checkout' %}text-amber-500 font-bold{% else %}text-neutral-400 font-medium hover:text-neutral-700{% endif %}">
-      <div class="relative flex flex-col items-center">
-        <svg class="w-5 h-5 mb-0.5" fill="{% if request.resolver_match.url_name == 'cart' or request.resolver_match.url_name == 'checkout' %}currentColor{% else %}none{% endif %}" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{% if request.resolver_match.url_name == 'cart' or request.resolver_match.url_name == 'checkout' %}2{% else %}1.75{% endif %}">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25c-.669 0-1.189-.578-1.119-1.243l1.263-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-        </svg>
-        <span 
-          id="dock-cart-badge"
-          class="cart-count-badge absolute -top-1 -right-2 min-w-[15px] h-[15px] px-1 bg-amber-500 text-white rounded-full text-[9px] font-black flex items-center justify-center shadow-xs {% if cart_count == 0 %}hidden{% endif %}"
-        >
-          {{ cart_count|default:"0" }}
-        </span>
-        {% if request.resolver_match.url_name == 'cart' or request.resolver_match.url_name == 'checkout' %}
-        <span class="w-1 h-1 rounded-full bg-amber-500 absolute -bottom-1"></span>
-        {% endif %}
-      </div>
-      <span class="text-[10px] tracking-tight leading-none mt-0.5">Panier</span>
+      <span class="text-[10px] leading-none mt-0.5">WhatsApp</span>
     </a>
 
-    <!-- 5. Compte Unique (Redirige vers l'espace approprié selon le statut) -->
-    <a href="{% if user.is_authenticated %}{% url 'accounts:login_redirect' %}{% else %}{% url 'account_login' %}{% endif %}" class="ios-touch-item flex-1 {% if 'accounts' in request.path or 'account' in request.path or 'gestion' in request.path %}text-amber-500 font-bold{% else %}text-neutral-400 font-medium hover:text-neutral-700{% endif %}">
-      <div class="relative flex flex-col items-center">
-        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="{% if 'accounts' in request.path or 'account' in request.path or 'gestion' in request.path %}2{% else %}1.75{% endif %}">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+    <!-- 4. Panier -->
+    <a href="{% url 'orders:cart' %}" class="app-tab-item {% if request.resolver_match.url_name == 'cart' or request.resolver_match.url_name == 'checkout' %}text-amber-600 font-extrabold{% else %}text-slate-500 font-medium{% endif %}">
+      <div class="relative">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/>
         </svg>
-        {% if 'accounts' in request.path or 'account' in request.path or 'gestion' in request.path %}
-        <span class="w-1 h-1 rounded-full bg-amber-500 absolute -bottom-1"></span>
-        {% endif %}
+        <span
+          id="dock-cart-badge"
+          class="cart-count-badge absolute -top-1.5 -right-2 min-w-[16px] h-[16px] px-1 bg-amber-500 text-slate-950 rounded-full text-[9px] font-black flex items-center justify-center {% if cart_count == 0 %}hidden{% endif %}"
+        >{{ cart_count|default:"0" }}</span>
       </div>
-      <span class="text-[10px] tracking-tight leading-none mt-0.5">Compte</span>
+      <span class="text-[10px] leading-none mt-1">Panier</span>
+    </a>
+
+    <!-- 5. Compte -->
+    <a href="{% if user.is_authenticated %}{% url 'accounts:login_redirect' %}{% else %}{% url 'account_login' %}{% endif %}" class="app-tab-item {% if 'accounts' in request.path or 'compte' in request.path or 'gestion' in request.path %}text-amber-600 font-extrabold{% else %}text-slate-500 font-medium{% endif %}">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+      </svg>
+      <span class="text-[10px] leading-none mt-1">Compte</span>
     </a>
 
   </nav>
   {% endblock %}
+  {% block extra_js %}{% endblock %}
+  </div><!-- /#app-shell -->
 
-  <!-- Toast HTMX Apple Style -->
-  <div id="toast-container" class="fixed top-14 left-4 right-4 sm:left-auto sm:right-6 sm:w-88 z-[100] pointer-events-none space-y-2"></div>
+  <!-- Toast Notification App -->
+  <div id="toast-container" class="fixed top-16 left-3 right-3 sm:left-auto sm:right-6 sm:w-88 z-[100] pointer-events-none space-y-2"></div>
+
+  <!-- Bannière Intelligente 1-Clic d'Installation App Mobile (Android & iPhone) -->
+  <div
+    x-data="{
+      showInstallBar: false,
+      init() {
+        const dismissedAt = parseInt(localStorage.getItem('onz_pwa_banner_dismissed') || '0', 10);
+        const recentlyDismissed = dismissedAt && (Date.now() - dismissedAt < 86400000);
+        if (recentlyDismissed) return;
+        if (window.OnizukaNative && window.OnizukaNative.canInstall && !window.OnizukaNative.isStandalone) {
+          this.showInstallBar = true;
+        }
+      },
+      dismissBar() {
+        this.showInstallBar = false;
+        try { localStorage.setItem('onz_pwa_banner_dismissed', String(Date.now())); } catch (e) {}
+      },
+      installNow() {
+        if (window.onizukaInstallPWA) {
+          window.onizukaInstallPWA().then((res) => {
+            if (res === 'accepted') this.showInstallBar = false;
+          });
+        }
+      }
+    }"
+    @pwa-install-available.window="
+      const d = parseInt(localStorage.getItem('onz_pwa_banner_dismissed') || '0', 10);
+      if (!d || (Date.now() - d >= 86400000)) { showInstallBar = true; }
+    "
+    @pwa-installed.window="showInstallBar = false"
+    x-show="showInstallBar"
+    x-cloak
+    x-transition:enter="transition ease-out duration-250"
+    x-transition:enter-start="translate-y-6 opacity-0"
+    x-transition:enter-end="translate-y-0 opacity-100"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="translate-y-0 opacity-100"
+    x-transition:leave-end="translate-y-6 opacity-0"
+    class="fixed bottom-[64px] lg:bottom-5 left-2.5 right-2.5 sm:left-auto sm:right-5 sm:w-96 z-[85]"
+  >
+    <div class="bg-[#0d0e12]/95 backdrop-blur-xl text-white border border-amber-400/45 rounded-2xl p-3 shadow-2xl flex items-center justify-between gap-2.5">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <img src="{% static 'images/pwa/icon-192.png' %}" alt="Onizuka Shop" class="w-10 h-10 rounded-xl border border-amber-400/40 shrink-0">
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5">
+            <p class="font-display font-black text-xs sm:text-sm text-white truncate">App ONIZUKA SHOP</p>
+            <span class="px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300 text-[9px] font-extrabold shrink-0">Gratuit</span>
+          </div>
+          <p class="text-[11px] text-slate-300 truncate">Accès rapide, plein écran &amp; mode hors-ligne</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button
+          type="button"
+          @click="installNow()"
+          class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 active:scale-95 text-slate-950 font-extrabold text-xs shadow-sm transition cursor-pointer"
+        >
+          Installer
+        </button>
+        <button
+          type="button"
+          @click="dismissBar()"
+          class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 flex items-center justify-center text-xs cursor-pointer"
+          aria-label="Fermer"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modale Guide d'Installation iOS (iPhone / iPad Safari -> Écran d'Accueil) -->
+  <div
+    x-data="{ openIosModal: false }"
+    @pwa-show-ios-guide.window="openIosModal = true"
+    x-show="openIosModal"
+    x-cloak
+    class="fixed inset-0 z-[110] flex items-end sm:items-center justify-center p-3"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div x-show="openIosModal" x-transition.opacity class="fixed inset-0 bg-black/65 backdrop-blur-xs" @click="openIosModal = false"></div>
+    <div
+      x-show="openIosModal"
+      x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="translate-y-8 opacity-0"
+      x-transition:enter-end="translate-y-0 opacity-100"
+      class="relative w-full max-w-sm bg-[#0d0e12] text-white border border-amber-400/40 rounded-3xl p-5 shadow-2xl space-y-3.5 z-10"
+    >
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <img src="{% static 'images/pwa/apple-touch-icon.png' %}" alt="Onizuka Shop" class="w-10 h-10 rounded-xl border border-amber-400/40">
+          <div>
+            <p class="font-display font-black text-sm text-white">Installer ONIZUKA SHOP</p>
+            <p class="text-[11px] text-amber-400 font-semibold">Application iPhone &amp; iPad</p>
+          </div>
+        </div>
+        <button type="button" @click="openIosModal = false" class="w-8 h-8 rounded-full bg-white/10 text-slate-300 flex items-center justify-center">✕</button>
+      </div>
+      <div class="space-y-2 text-xs text-slate-200 bg-white/5 p-3.5 rounded-2xl border border-white/10">
+        <p class="flex items-center gap-2">
+          <span class="w-5 h-5 rounded-full bg-amber-400 text-slate-950 font-black text-[11px] flex items-center justify-center shrink-0">1</span>
+          <span>Touchez le bouton <strong>Partager</strong> <span class="inline-block px-1.5 py-0.5 rounded bg-white/15 font-mono text-[11px]">↑</span> en bas de Safari.</span>
+        </p>
+        <p class="flex items-center gap-2">
+          <span class="w-5 h-5 rounded-full bg-amber-400 text-slate-950 font-black text-[11px] flex items-center justify-center shrink-0">2</span>
+          <span>Choisissez <strong>« Sur l'écran d'accueil »</strong> (+).</span>
+        </p>
+        <p class="flex items-center gap-2">
+          <span class="w-5 h-5 rounded-full bg-amber-400 text-slate-950 font-black text-[11px] flex items-center justify-center shrink-0">3</span>
+          <span>Validez sur <strong>« Ajouter »</strong> en haut à droite.</span>
+        </p>
+      </div>
+      <button type="button" @click="openIosModal = false" class="w-full py-2.5 rounded-xl bg-amber-400 text-slate-950 font-extrabold text-xs">
+        J'ai compris
+      </button>
+    </div>
+  </div>
 
   <script>
+    /* ===================================================================== */
+    /* MOTEUR APP-SHELL ULTRA-RAPIDE : PREFETCH TACTILE + ZÉRO RECHARGEMENT  */
+    /* ===================================================================== */
+    (function() {
+      const bar = document.getElementById('app-progress-bar');
+      let barTimer = null;
+
+      function startBar() {
+        if (!bar) return;
+        clearTimeout(barTimer);
+        bar.style.transition = 'none';
+        bar.style.width = '12%';
+        bar.style.opacity = '1';
+        requestAnimationFrame(() => {
+          bar.style.transition = 'width 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease';
+          bar.style.width = '78%';
+        });
+      }
+
+      function finishBar() {
+        if (!bar) return;
+        bar.style.width = '100%';
+        barTimer = setTimeout(() => {
+          bar.style.opacity = '0';
+          setTimeout(() => { bar.style.width = '0%'; }, 180);
+        }, 110);
+      }
+
+      /* Anti-sursaut HTMX : mémorise scrollY et scrollLeft des barres horizontales */
+      const savedScrollLeft = new Map();
+      let savedScrollY = null;
+      const NO_JUMP_IDS = new Set(['catalog-workspace', 'search-results-zone', 'home-feed-wrapper', 'bo-live-results']);
+
+      function syncHdr() {
+        const hdr = document.querySelector('#app-shell > header');
+        if (hdr && hdr.offsetHeight > 40) {
+          document.documentElement.style.setProperty('--hdr', hdr.offsetHeight + 'px');
+        }
+      }
+      syncHdr();
+      window.addEventListener('resize', syncHdr, { passive: true });
+      window.addEventListener('app-navigated', syncHdr);
+      if (window.ResizeObserver) {
+        const hdr = document.querySelector('#app-shell > header');
+        if (hdr) new ResizeObserver(syncHdr).observe(hdr);
+      }
+
+      document.addEventListener('htmx:beforeRequest', function(e) {
+        startBar();
+        const target = e.detail && e.detail.target;
+        if (target && NO_JUMP_IDS.has(target.id)) {
+          savedScrollY = window.scrollY;
+          target.querySelectorAll('[data-keep-scroll]').forEach(el => {
+            savedScrollLeft.set(el.getAttribute('data-keep-scroll'), el.scrollLeft);
+          });
+        } else {
+          savedScrollY = null;
+        }
+      });
+
+      document.addEventListener('htmx:afterSettle', function(e) {
+        finishBar();
+        const target = e.detail && e.detail.target;
+        if (savedScrollLeft.size) {
+          document.querySelectorAll('[data-keep-scroll]').forEach(el => {
+            const k = el.getAttribute('data-keep-scroll');
+            if (savedScrollLeft.has(k)) el.scrollLeft = savedScrollLeft.get(k);
+          });
+          savedScrollLeft.clear();
+        }
+        if (savedScrollY !== null && target && NO_JUMP_IDS.has(target.id)) {
+          const y = savedScrollY;
+          savedScrollY = null;
+          if (Math.abs(window.scrollY - y) > 4) {
+            window.scrollTo({ top: y, behavior: 'instant' });
+          }
+        }
+        syncHdr();
+      });
+
+      document.addEventListener('htmx:responseError', function() {
+        savedScrollY = null;
+        savedScrollLeft.clear();
+        finishBar();
+      });
+
+      // Cache mémoire instantané au toucher / survol (TTL 20 secondes)
+      const prefetchCache = new Map();
+      const EXCLUDE_PREFIXES = ['/gestion/', '/admin/', '/accounts/', '/paiement/'];
+
+      function isEligibleLink(a) {
+        if (!a || !a.href) return false;
+        if (a.target && a.target !== '_self') return false;
+        if (a.hasAttribute('download') || a.hasAttribute('data-no-spa')) return false;
+        if (a.hasAttribute('hx-get') || a.hasAttribute('hx-post')) return false;
+        let url;
+        try { url = new URL(a.href, window.location.origin); } catch (e) { return false; }
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') return false;
+        if (url.origin !== window.location.origin) return false;
+        if (url.pathname.endsWith('/facture/') || url.pathname.endsWith('.xml') || url.pathname.endsWith('.csv') || url.pathname === '/offline.html' || url.pathname === '/manifest.json' || url.pathname === '/sw.js') return false;
+        if (EXCLUDE_PREFIXES.some(p => url.pathname.startsWith(p))) return false;
+        if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return false;
+        return true;
+      }
+
+      function prefetchUrl(href) {
+        const now = Date.now();
+        const hit = prefetchCache.get(href);
+        if (hit && (now - hit.ts < 20000)) return hit.promise;
+        const p = fetch(href, { headers: { 'X-App-Shell': '1' }, credentials: 'same-origin' })
+          .then(r => (r.ok && (r.headers.get('content-type') || '').includes('text/html')) ? r.text() : null)
+          .catch(() => null);
+        prefetchCache.set(href, { ts: now, promise: p });
+        if (prefetchCache.size > 35) {
+          const firstKey = prefetchCache.keys().next().value;
+          prefetchCache.delete(firstKey);
+        }
+        return p;
+      }
+
+      // Préchargement dès que le pouce effleure l'écran (touchstart) ou que la souris survole
+      ['mouseover', 'touchstart'].forEach(evtName => {
+        document.addEventListener(evtName, function(e) {
+          const a = e.target.closest && e.target.closest('a[href]');
+          if (isEligibleLink(a)) prefetchUrl(a.href);
+        }, { passive: true });
+      });
+
+      async function navigateInstant(href, pushHistory) {
+        startBar();
+        if (navigator.vibrate) { try { navigator.vibrate(5); } catch (e) {} }
+        const html = await prefetchUrl(href);
+        if (!html) {
+          window.location.href = href;
+          return;
+        }
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const newShell = doc.getElementById('app-shell');
+        const curShell = document.getElementById('app-shell');
+        if (!newShell || !curShell) {
+          window.location.href = href;
+          return;
+        }
+        if (doc.title) document.title = doc.title;
+        curShell.replaceWith(newShell);
+        // Ré-activer HTMX & scripts inline éventuels dans le nouveau #app-shell
+        if (window.htmx) window.htmx.process(newShell);
+        newShell.querySelectorAll('script').forEach(oldScript => {
+          const s = document.createElement('script');
+          Array.from(oldScript.attributes).forEach(attr => s.setAttribute(attr.name, attr.value));
+          s.textContent = oldScript.textContent;
+          oldScript.replaceWith(s);
+        });
+        if (pushHistory) {
+          window.history.pushState({ appShell: true }, '', href);
+        }
+        const targetHash = new URL(href, window.location.origin).hash;
+        if (targetHash) {
+          const el = document.querySelector(targetHash);
+          if (el) el.scrollIntoView({ behavior: 'instant' });
+        } else if (pushHistory) {
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+        window.dispatchEvent(new CustomEvent('app-navigated'));
+        finishBar();
+      }
+
+      document.addEventListener('click', function(e) {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const a = e.target.closest && e.target.closest('a[href]');
+        if (!isEligibleLink(a)) return;
+        e.preventDefault();
+        // Invalider le cache panier si on ouvre /panier/ pour toujours avoir l'état frais
+        const u = new URL(a.href, window.location.origin);
+        if (u.pathname.startsWith('/panier') || u.pathname.startsWith('/favoris') || u.pathname.startsWith('/compte')) {
+          prefetchCache.delete(a.href);
+        }
+        navigateInstant(a.href, true);
+      });
+
+      window.addEventListener('popstate', function() {
+        prefetchCache.delete(window.location.href);
+        navigateInstant(window.location.href, false);
+      });
+
+      // Vider le cache prefetch dès que le panier ou les favoris changent
+      document.addEventListener('cartUpdated', () => prefetchCache.clear());
+      document.addEventListener('wishlistUpdated', () => prefetchCache.clear());
+    })();
+
     document.addEventListener('cartUpdated', function(evt) {
       const badges = document.querySelectorAll('.cart-count-badge');
       const count = evt.detail.count;
       badges.forEach(badge => {
         badge.textContent = count;
-        if (count > 0) {
-          badge.classList.remove('hidden');
-        } else {
-          badge.classList.add('hidden');
-        }
+        badge.classList.toggle('hidden', !(count > 0));
       });
 
       const container = document.getElementById('toast-container');
+      if (!container) return;
       const toast = document.createElement('div');
-      toast.className = 'pointer-events-auto flex items-center justify-between gap-3 px-4 py-3 bg-neutral-900/95 backdrop-blur-xl text-white text-xs font-semibold rounded-2xl shadow-2xl border border-white/10 transition-all duration-300 transform -translate-y-2';
-      toast.innerHTML = '<div class="flex items-center gap-2.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span><span>' + (evt.detail.message || 'Article ajouté au panier') + '</span></div><a href="/panier/" class="px-2.5 py-1 rounded-lg bg-amber-500 text-white font-bold text-[11px] hover:bg-amber-600 transition">Voir</a>';
+      toast.className = 'pointer-events-auto flex items-center justify-between gap-3 px-3.5 py-2.5 bg-[#0d0e12]/95 backdrop-blur-md text-white text-xs font-semibold rounded-xl shadow-xl border border-amber-400/30 transition-all duration-200';
+      toast.innerHTML = '<div class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><span class="truncate">' + (evt.detail.message || 'Ajouté au panier') + '</span></div><a href="/panier/" class="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-extrabold text-[11px] shrink-0">Panier</a>';
       container.appendChild(toast);
-      
-      // Animation d'apparition
-      requestAnimationFrame(() => {
-        toast.classList.remove('-translate-y-2');
-      });
-
       setTimeout(() => {
         toast.style.opacity = '0';
-        toast.style.transform = 'translateY(-8px)';
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
+        setTimeout(() => toast.remove(), 220);
+      }, 2600);
     });
 
     document.addEventListener('wishlistUpdated', function(evt) {
-      const badge = document.getElementById('wishlist-badge');
+      const badges = document.querySelectorAll('.wishlist-count-badge');
       const count = evt.detail.count;
-      if (badge) {
+      badges.forEach(badge => {
         badge.textContent = count;
-        if (count > 0) {
-          badge.classList.remove('hidden');
-        } else {
-          badge.classList.add('hidden');
-        }
-      }
+        badge.classList.toggle('hidden', !(count > 0));
+      });
 
       const container = document.getElementById('toast-container');
-      if (container) {
-        const toast = document.createElement('div');
-        toast.className = 'pointer-events-auto flex items-center justify-between gap-3 px-4 py-3 bg-neutral-900/95 backdrop-blur-xl text-white text-xs font-semibold rounded-2xl shadow-2xl border border-white/10 transition-all duration-300 transform -translate-y-2';
-        toast.innerHTML = '<div class="flex items-center gap-2.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span><span>' + (evt.detail.message || 'Favoris mis à jour') + '</span></div><a href="/favoris/" class="px-2.5 py-1 rounded-lg bg-rose-500 text-white font-bold text-[11px] hover:bg-rose-600 transition">Favoris</a>';
-        container.appendChild(toast);
-        
-        requestAnimationFrame(() => {
-          toast.classList.remove('-translate-y-2');
-        });
-
-        setTimeout(() => {
-          toast.style.opacity = '0';
-          toast.style.transform = 'translateY(-8px)';
-          setTimeout(() => toast.remove(), 300);
-        }, 3000);
-      }
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto flex items-center justify-between gap-3 px-3.5 py-2.5 bg-[#0d0e12]/95 backdrop-blur-md text-white text-xs font-semibold rounded-xl shadow-xl border border-rose-500/30 transition-all duration-200';
+      toast.innerHTML = '<div class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><span class="truncate">' + (evt.detail.message || 'Favoris mis à jour') + '</span></div><a href="/favoris/" class="px-2.5 py-1 rounded-lg bg-rose-500 text-white font-bold text-[11px] shrink-0">Voir</a>';
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 220);
+      }, 2500);
     });
   </script>
 
-  <!-- BOUTON FLOTTANT WHATSAPP PERMANENT HAUT DE GAMME (MASQUÉ SUR LES FORMULAIRES DE COMMANDE ET COMPTE) -->
-  {% if request.resolver_match.url_name not in 'checkout,place_order,cart,login,signup,verify_email,password_reset,password_reset_confirm' %}
-  <div class="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-40 group" x-data="{ expanded: false }">
-    <!-- Popover d'assistance rapide au survol/clic -->
-    <div 
-      x-show="expanded" 
-      x-cloak
-      @click.outside="expanded = false"
-      x-transition:enter="transition ease-out duration-200"
-      x-transition:enter-start="opacity-0 translate-y-2 scale-95"
-      x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-      x-transition:leave="transition ease-in duration-150"
-      x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-      x-transition:leave-end="opacity-0 translate-y-2 scale-95"
-      class="absolute bottom-16 right-0 w-72 bg-white rounded-3xl p-4 shadow-2xl border border-slate-100 text-slate-800 space-y-3"
-    >
-      <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-        <div class="flex items-center gap-2">
-          <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
-          <span class="font-heading font-bold text-xs text-slate-900">Boutique Centrale Bamako</span>
-        </div>
-        <button type="button" @click="expanded = false" class="text-slate-400 hover:text-slate-700 p-1 rounded-md" aria-label="Fermer">
-          <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
-      <p class="text-xs text-slate-600 leading-relaxed">
-        Une question sur un produit, un devis pour votre maison ou un suivi de livraison ?
-      </p>
-      <a 
-        href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text={{ 'Bonjour Onizouka Shop, je souhaite échanger avec un conseiller sur un appareil.'|urlencode }}" 
-        target="_blank" 
-        rel="noopener"
-        class="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-sm"
-      >
-        <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24">
-          <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.588-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.45 1.054 1.325 1.833.687.612 1.267.801 1.447.888.181.087.289.073.397-.051.108-.124.462-.538.585-.722.123-.184.246-.153.411-.092.166.061 1.052.496 1.233.587.181.091.303.136.347.212.043.076.043.439-.101.844z"/>
-        </svg>
-        <span>Ouvrir WhatsApp en direct</span>
-      </a>
-      <div class="text-[10px] text-center text-slate-400">
-        Grand Marché de Bamako &bull; Réponse en moins de 5 min
-      </div>
-    </div>
-
-    <!-- Bouton Déclencheur Principal -->
-    <button 
-      type="button" 
-      @click="expanded = !expanded"
-      class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white shadow-[0_4px_20px_rgba(37,211,102,0.4)] flex items-center justify-center transition-all duration-300 relative group cursor-pointer border-2 border-white"
-      title="Discuter avec Onizouka Shop sur WhatsApp"
-      aria-label="Assistance WhatsApp 7j/7"
-    >
-      <span class="absolute -top-1 -right-1 flex h-4 w-4">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-4 w-4 bg-amber-500 border-2 border-white text-[9px] font-black text-slate-950 items-center justify-center">1</span>
-      </span>
-
-      <svg class="w-7 h-7 fill-white group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
-        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.588-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.45 1.054 1.325 1.833.687.612 1.267.801 1.447.888.181.087.289.073.397-.051.108-.124.462-.538.585-.722.123-.184.246-.153.411-.092.166.061 1.052.496 1.233.587.181.091.303.136.347.212.043.076.043.439-.101.844z"/>
-      </svg>
-    </button>
-  </div>
-  {% endif %}
-
-  {% block extra_scripts %}{% endblock %}
-  {% block extra_js %}{% endblock %}
+  <!-- Bouton WhatsApp Flottant UNIQUEMENT sur Desktop (sur Mobile, intégré au Dock & Sticky Bar sans masquer les produits) -->
+  <a
+    href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text=Bonjour%20Onizouka%20Shop,%20je%20souhaite%20commander%20un%20appareil"
+    target="_blank"
+    rel="noopener"
+    class="hidden lg:flex fixed bottom-6 right-6 z-40 items-center gap-2.5 pl-3.5 pr-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs shadow-xl transition hover:scale-105"
+    aria-label="Commander sur WhatsApp"
+  >
+    <svg class="w-5 h-5 fill-white" viewBox="0 0 24 24">
+      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.588-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.45 1.054 1.325 1.833.687.612 1.267.801 1.447.888.181.087.289.073.397-.051.108-.124.462-.538.585-.722.123-.184.246-.153.411-.092.166.061 1.052.496 1.233.587.181.091.303.136.347.212.043.076.043.439-.101.844z"/>
+    </svg>
+    <span>WhatsApp Direct</span>
+  </a>
 </body>
 </html>

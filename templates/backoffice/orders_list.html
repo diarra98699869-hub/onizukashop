@@ -1,247 +1,252 @@
 {% extends "backoffice/base.html" %}
 {% load humanize %}
 
-{% block title %}Gestion des Commandes - Direction Onizouka ERP{% endblock %}
+{% block title %}Commandes • Gestion Onizouka{% endblock %}
 
 {% block content %}
-<div class="space-y-3.5">
+<div class="space-y-3">
 
-    <!-- HEADER DE PAGE COMPACT -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
+  <!-- EN-TÊTE + BOUTON CAISSE EXPRESS -->
+  <div class="bg-white rounded-2xl border border-slate-200/80 p-3 sm:p-4 shadow-sm flex flex-wrap items-center justify-between gap-2.5">
+    <div>
+      <h1 class="text-base sm:text-xl font-black text-slate-950 font-heading">Commandes &amp; Ventes</h1>
+      <p class="text-xs text-slate-500">{{ orders.paginator.count }} commande{{ orders.paginator.count|pluralize }} enregistrée{{ orders.paginator.count|pluralize }}</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <a
+        href="{% url 'backoffice:order_create_pos' %}"
+        class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold inline-flex items-center gap-1.5 shadow-sm transition"
+      >
+        <span>+ Vente Boutique / WhatsApp</span>
+      </a>
+      <a
+        href="{% url 'backoffice:export_orders_csv' %}"
+        class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold inline-flex items-center gap-1.5 transition"
+      >
+        <span>CSV</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- RECHERCHE INSTANTANÉE TEMPS RÉEL (HORS ZONE SWAP POUR GARDER LE CLAVIER ACTIF) -->
+  <form
+    method="GET"
+    action="{% url 'backoffice:orders' %}"
+    hx-get="{% url 'backoffice:orders' %}"
+    hx-trigger="keyup changed delay:200ms from:find input[name='q'], change from:find select, submit"
+    hx-target="#bo-live-results"
+    hx-select="#bo-live-results"
+    hx-swap="outerHTML show:none"
+    hx-push-url="true"
+    class="bg-white rounded-2xl border border-slate-200/80 p-2.5 sm:p-3 flex flex-col sm:flex-row gap-2 shadow-sm"
+  >
+    <input type="hidden" name="status" id="bo-orders-status-input" value="{{ status_filter }}">
+    <input
+      type="search"
+      name="q"
+      value="{{ search_query }}"
+      placeholder="Filtrage instantané : N° commande, client, téléphone, quartier..."
+      class="flex-1 px-3.5 py-2 rounded-xl border border-slate-200 text-base sm:text-xs text-slate-900 focus:outline-none focus:border-amber-500"
+    >
+    <div class="flex items-center gap-2">
+      <select name="payment" class="flex-1 sm:w-44 px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800">
+        <option value="">Tous paiements</option>
+        {% for code, label in payment_choices %}
+        <option value="{{ code }}" {% if payment_filter == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs cursor-pointer">
+        Filtrer
+      </button>
+    </div>
+  </form>
+
+  <div id="bo-live-results" class="space-y-3">
+
+  <!-- ONGLETS STATUTS TACTILES (LIVE HTMX SANS RELOAD + SCROLL CONSERVÉ) -->
+  <div data-keep-scroll="bo-order-tabs" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs">
+    <a href="?status=all{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}{% if payment_filter %}&amp;payment={{ payment_filter }}{% endif %}" hx-get="?status=all{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}{% if payment_filter %}&amp;payment={{ payment_filter }}{% endif %}" hx-target="#bo-live-results" hx-select="#bo-live-results" hx-swap="outerHTML show:none" hx-push-url="true" onclick="document.getElementById('bo-orders-status-input').value='all'" class="px-3.5 py-2 rounded-xl font-extrabold whitespace-nowrap shrink-0 transition active:scale-95 {% if status_filter == 'all' %}bg-slate-950 text-amber-400{% else %}bg-white border border-slate-200/80 text-slate-600{% endif %}">
+      Toutes ({{ status_counts.all }})
+    </a>
+    <a href="?status=pending{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}{% if payment_filter %}&amp;payment={{ payment_filter }}{% endif %}" hx-get="?status=pending{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}{% if payment_filter %}&amp;payment={{ payment_filter }}{% endif %}" hx-target="#bo-live-results" hx-select="#bo-live-results" hx-swap="outerHTML show:none" hx-push-url="true" onclick="document.getElementById('bo-orders-status-input').value='pending'" class="px-3.5 py-2 rounded-xl font-extrabold whitespace-nowrap shrink-0 transition active:scale-95 {% if status_filter == 'pending' %}bg-amber-400 text-slate-950{% else %}bg-white border border-slate-200/80 text-slate-600{% endif %}">
+      En attente ({{ status_counts.pending }})
+    </a>
+    <a href="?status=confirmed{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}{% if payment_filter %}&amp;payment={{ payment_filter }}{% endif %}" hx-get="?status=confirmed{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}{% if payment_filter %}&amp;payment={{ payment_filter }}{% endif %}" hx-target="#bo-live-results" hx-select="#bo-live-results" hx-swap="outerHTML show:none" hx-push-url="true" onclick="document.getElementById('bo-orders-status-input').value='confirmed'" class="px-3.5 py-2 rounded-xl font-extrabold whitespace-nowrap shrink-0 transition active:scale-95 {% if status_filter == 'confirmed' %}bg-amber-400 text-slate-950{% else %}bg-white border border-slate-200/80 text-slate-600{% endif %}">
+      Confirmées ({{ status_counts.confirmed }})
+    </a>
+    <a href="?status=shipped{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}{% if payment_filter %}&amp;payment={{ payment_filter }}{% endif %}" hx-get="?status=shipped{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}{% if payment_filter %}&amp;payment={{ payment_filter }}{% endif %}" hx-target="#bo-live-results" hx-select="#bo-live-results" hx-swap="outerHTML show:none" hx-push-url="true" onclick="document.getElementById('bo-orders-status-input').value='shipped'" class="px-3.5 py-2 rounded-xl font-extrabold whitespace-nowrap shrink-0 transition active:scale-95 {% if status_filter == 'shipped' %}bg-amber-400 text-slate-950{% else %}bg-white border border-slate-200/80 text-slate-600{% endif %}">
+      Expédiées ({{ status_counts.shipped }})
+    </a>
+    <a href="?status=delivered{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}{% if payment_filter %}&amp;payment={{ payment_filter }}{% endif %}" hx-get="?status=delivered{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}{% if payment_filter %}&amp;payment={{ payment_filter }}{% endif %}" hx-target="#bo-live-results" hx-select="#bo-live-results" hx-swap="outerHTML show:none" hx-push-url="true" onclick="document.getElementById('bo-orders-status-input').value='delivered'" class="px-3.5 py-2 rounded-xl font-extrabold whitespace-nowrap shrink-0 transition active:scale-95 {% if status_filter == 'delivered' %}bg-emerald-600 text-white{% else %}bg-white border border-slate-200/80 text-slate-600{% endif %}">
+      Livrées ({{ status_counts.delivered }})
+    </a>
+    <a href="?status=cancelled{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}{% if payment_filter %}&amp;payment={{ payment_filter }}{% endif %}" hx-get="?status=cancelled{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}{% if payment_filter %}&amp;payment={{ payment_filter }}{% endif %}" hx-target="#bo-live-results" hx-select="#bo-live-results" hx-swap="outerHTML show:none" hx-push-url="true" onclick="document.getElementById('bo-orders-status-input').value='cancelled'" class="px-3.5 py-2 rounded-xl font-extrabold whitespace-nowrap shrink-0 transition active:scale-95 {% if status_filter == 'cancelled' %}bg-rose-600 text-white{% else %}bg-white border border-slate-200/80 text-slate-600{% endif %}">
+      Annulées ({{ status_counts.cancelled }})
+    </a>
+  </div>
+
+  <!-- CARTES MOBILE DES COMMANDES (AVEC ACTIONS 1-CLIC DIRECTES !) -->
+  <div class="md:hidden space-y-2">
+    {% for order in orders %}
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-3.5 shadow-sm space-y-2.5">
+      <div class="flex items-center justify-between gap-2">
         <div>
-            <h1 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight font-heading">
-                Gestion des Commandes Clients
-            </h1>
-            <p class="text-xs text-slate-500 mt-0.5">
-                Suivi opérationnel des expéditions à Bamako et validation des règlements Wave, Orange Money et Cash
+          <a href="{% url 'backoffice:order_detail' order.id %}" class="font-mono text-xs font-black text-slate-950">#{{ order.order_number }}</a>
+          <span class="text-[10px] text-slate-400 ml-1.5">{{ order.created_at|date:"d/m/Y H:i" }}</span>
+        </div>
+        {% include "backoffice/partials/order_status_badge.html" with order=order %}
+      </div>
+
+      <div class="flex items-start justify-between gap-2">
+        <div class="min-w-0">
+          <p class="text-xs font-bold text-slate-900 truncate">{{ order.delivery_name }}</p>
+          <p class="text-[11px] text-slate-500">{{ order.delivery_district|default:"Bamako" }} • {{ order.delivery_phone }}</p>
+          {% with items=order.items.all %}
+            {% if items %}
+            <p class="text-[11px] text-slate-600 mt-0.5 truncate">
+              {{ items.0.quantity }}x {{ items.0.product_name }}{% if items|length > 1 %} (+{{ items|length|add:"-1" }}){% endif %}
             </p>
+            {% endif %}
+          {% endwith %}
         </div>
-        <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 rounded text-xs font-mono font-medium bg-slate-100 border border-slate-200 text-slate-700">
-                {{ orders.paginator.count }} commande{{ orders.paginator.count|pluralize }} au registre
-            </span>
-            <a 
-                href="{% url 'backoffice:export_orders_csv' %}" 
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-xs"
-                title="Exporter toutes les commandes au format CSV / Excel"
-            >
-                <svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
-                <span>Exporter CSV</span>
-            </a>
+
+        <div class="text-right shrink-0">
+          <p class="font-heading font-black text-sm text-slate-950">{{ order.total|floatformat:0|intcomma }} F</p>
+          <span class="text-[10px] font-bold {% if order.payment_status %}text-emerald-600{% else %}text-amber-600{% endif %}">
+            {% if order.payment_status %}✓ Encaissé{% else %}{{ order.get_payment_method_display }}{% endif %}
+          </span>
         </div>
+      </div>
+
+      <!-- Actions 1-Clic Directes sur Mobile -->
+      <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1.5 flex-wrap">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          {% if order.status == 'pending' %}
+          <form method="POST" action="{% url 'backoffice:order_quick_action' order.id %}" class="inline">
+            {% csrf_token %}
+            <input type="hidden" name="quick_action" value="confirm">
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button type="submit" class="px-2.5 py-1.5 rounded-xl bg-indigo-600 text-white text-[11px] font-extrabold">✓ Confirmer</button>
+          </form>
+          {% elif order.status in 'confirmed,processing,shipped' %}
+          <form method="POST" action="{% url 'backoffice:order_quick_action' order.id %}" class="inline">
+            {% csrf_token %}
+            <input type="hidden" name="quick_action" value="deliver">
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button type="submit" class="px-2.5 py-1.5 rounded-xl bg-emerald-600 text-white text-[11px] font-extrabold">✓ Livré</button>
+          </form>
+          {% endif %}
+
+          {% if not order.payment_status and order.status != 'cancelled' %}
+          <form method="POST" action="{% url 'backoffice:order_quick_action' order.id %}" class="inline">
+            {% csrf_token %}
+            <input type="hidden" name="quick_action" value="mark_paid">
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button type="submit" class="px-2.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-bold">Encaisser</button>
+          </form>
+          {% endif %}
+
+          {% if order.delivery_phone %}
+          <a href="https://wa.me/{{ order.whatsapp_client_phone }}?text={{ 'Bonjour '|urlencode }}{{ order.delivery_name|urlencode }}{{ ', ici Onizouka Shop concernant votre commande #'|urlencode }}{{ order.order_number|urlencode }}" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 text-[11px] font-bold">WA</a>
+          {% endif %}
+          <a href="{% url 'backoffice:order_invoice' order.id %}" target="_blank" class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-[11px] font-semibold">Reçu</a>
+        </div>
+
+        <a href="{% url 'backoffice:order_detail' order.id %}" class="px-3 py-1.5 rounded-xl bg-amber-400 text-slate-950 text-[11px] font-extrabold">
+          Ouvrir →
+        </a>
+      </div>
     </div>
-
-    <!-- ONGLETS PAR STATUT EFFET GLACE SANS SCROLLBAR -->
-    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-        <a href="?status=all{% if search_query %}&q={{ search_query }}{% endif %}{% if payment_filter %}&payment={{ payment_filter }}{% endif %}"
-           class="px-3.5 py-2 rounded-xl font-bold whitespace-nowrap transition active:scale-95 {% if status_filter == 'all' %}bg-amber-500 text-slate-950 shadow-xs{% else %}bg-white/85 backdrop-blur-md border border-slate-200/80 text-slate-600 hover:bg-white{% endif %}">
-            Toutes ({{ status_counts.all }})
-        </a>
-        <a href="?status=pending{% if search_query %}&q={{ search_query }}{% endif %}{% if payment_filter %}&payment={{ payment_filter }}{% endif %}"
-           class="px-3.5 py-2 rounded-xl font-bold whitespace-nowrap transition active:scale-95 {% if status_filter == 'pending' %}bg-amber-500 text-slate-950 shadow-xs{% else %}bg-white/85 backdrop-blur-md border border-slate-200/80 text-slate-600 hover:bg-white{% endif %}">
-            En attente ({{ status_counts.pending }})
-        </a>
-        <a href="?status=confirmed{% if search_query %}&q={{ search_query }}{% endif %}{% if payment_filter %}&payment={{ payment_filter }}{% endif %}"
-           class="px-3.5 py-2 rounded-xl font-bold whitespace-nowrap transition active:scale-95 {% if status_filter == 'confirmed' %}bg-amber-500 text-slate-950 shadow-xs{% else %}bg-white/85 backdrop-blur-md border border-slate-200/80 text-slate-600 hover:bg-white{% endif %}">
-            Confirmées ({{ status_counts.confirmed }})
-        </a>
-        <a href="?status=processing{% if search_query %}&q={{ search_query }}{% endif %}{% if payment_filter %}&payment={{ payment_filter }}{% endif %}"
-           class="px-3.5 py-2 rounded-xl font-bold whitespace-nowrap transition active:scale-95 {% if status_filter == 'processing' %}bg-amber-500 text-slate-950 shadow-xs{% else %}bg-white/85 backdrop-blur-md border border-slate-200/80 text-slate-600 hover:bg-white{% endif %}">
-            En préparation ({{ status_counts.processing }})
-        </a>
-        <a href="?status=shipped{% if search_query %}&q={{ search_query }}{% endif %}{% if payment_filter %}&payment={{ payment_filter }}{% endif %}"
-           class="px-3.5 py-2 rounded-xl font-bold whitespace-nowrap transition active:scale-95 {% if status_filter == 'shipped' %}bg-amber-500 text-slate-950 shadow-xs{% else %}bg-white/85 backdrop-blur-md border border-slate-200/80 text-slate-600 hover:bg-white{% endif %}">
-            Expédiées ({{ status_counts.shipped }})
-        </a>
-        <a href="?status=delivered{% if search_query %}&q={{ search_query }}{% endif %}{% if payment_filter %}&payment={{ payment_filter }}{% endif %}"
-           class="px-3.5 py-2 rounded-xl font-bold whitespace-nowrap transition active:scale-95 {% if status_filter == 'delivered' %}bg-emerald-600 text-white shadow-xs{% else %}bg-white/85 backdrop-blur-md border border-slate-200/80 text-slate-600 hover:bg-white{% endif %}">
-            Livrées ({{ status_counts.delivered }})
-        </a>
-        <a href="?status=cancelled{% if search_query %}&q={{ search_query }}{% endif %}{% if payment_filter %}&payment={{ payment_filter }}{% endif %}"
-           class="px-3.5 py-2 rounded-xl font-bold whitespace-nowrap transition active:scale-95 {% if status_filter == 'cancelled' %}bg-rose-600 text-white shadow-xs{% else %}bg-white/85 backdrop-blur-md border border-slate-200/80 text-slate-600 hover:bg-white{% endif %}">
-            Annulées ({{ status_counts.cancelled }})
-        </a>
+    {% empty %}
+    <div class="bg-white rounded-2xl border border-slate-200 p-8 text-center text-xs text-slate-400">
+      Aucune commande trouvée.
     </div>
+    {% endfor %}
+  </div>
 
-    <!-- RECHERCHE & FILTRE PAIEMENT EFFET GLACE -->
-    <div class="bg-white/90 backdrop-blur-xl p-3 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs">
-        <form method="GET" class="flex flex-col sm:flex-row gap-2 text-xs">
-            <input type="hidden" name="status" value="{{ status_filter }}">
-            <div class="relative flex-1">
-                <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <input type="text" name="q" value="{{ search_query }}" 
-                       placeholder="Rechercher par N° (#ONZ...), nom, téléphone ou quartier (Badalabougou, ACI 2000...)"
-                       class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 outline-none text-xs bg-white transition shadow-2xs">
-            </div>
-
-            <div class="w-full sm:w-52">
-                <select name="payment" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-amber-400 outline-none text-xs bg-white shadow-2xs">
-                    <option value="">Tous les règlements</option>
-                    {% for code, label in payment_choices %}
-                    <option value="{{ code }}" {% if payment_filter == code %}selected{% endif %}>{{ label }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="flex items-center gap-1.5">
-                <button type="submit" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold rounded-xl transition active:scale-95 shadow-xs cursor-pointer">
-                    Filtrer
-                </button>
-                {% if search_query or payment_filter or status_filter != 'all' %}
-                <a href="{% url 'backoffice:orders' %}" class="px-3 py-2 bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold rounded-xl border border-slate-200 transition flex items-center justify-center" title="Effacer les filtres">
-                    <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                </a>
+  <!-- TABLEAU DESKTOP -->
+  <div class="hidden md:block bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead>
+          <tr class="border-b border-slate-100 bg-slate-50 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+            <th class="py-3 px-3.5">Commande</th>
+            <th class="py-3 px-3.5">Client &amp; Quartier</th>
+            <th class="py-3 px-3.5">Articles</th>
+            <th class="py-3 px-3.5">Montant</th>
+            <th class="py-3 px-3.5">Paiement</th>
+            <th class="py-3 px-3.5">Statut</th>
+            <th class="py-3 px-3.5 text-right">Actions 1-clic</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for order in orders %}
+          <tr class="hover:bg-slate-50/70 transition">
+            <td class="py-2.5 px-3.5 whitespace-nowrap">
+              <a href="{% url 'backoffice:order_detail' order.id %}" class="font-mono font-bold text-slate-900 hover:text-amber-600">#{{ order.order_number }}</a>
+              <div class="text-[10px] text-slate-400">{{ order.created_at|date:"d/m/Y H:i" }}</div>
+            </td>
+            <td class="py-2.5 px-3.5">
+              <div class="font-semibold text-slate-900">{{ order.delivery_name }}</div>
+              <div class="text-[11px] text-slate-500">{{ order.delivery_district|default:"Bamako" }} • {{ order.delivery_phone }}</div>
+            </td>
+            <td class="py-2.5 px-3.5 max-w-[200px] truncate text-slate-600">
+              {% with items=order.items.all %}
+                {% if items %}
+                  {{ items.0.quantity }}x {{ items.0.product_name|truncatechars:24 }}{% if items|length > 1 %} (+{{ items|length|add:"-1" }}){% endif %}
                 {% endif %}
-            </div>
-        </form>
+              {% endwith %}
+            </td>
+            <td class="py-2.5 px-3.5 font-bold text-slate-950 whitespace-nowrap tabular-nums">{{ order.total|floatformat:0|intcomma }} FCFA</td>
+            <td class="py-2.5 px-3.5 whitespace-nowrap">
+              <span class="font-semibold text-slate-700">{{ order.get_payment_method_display }}</span>
+              <span class="block text-[10px] font-bold {% if order.payment_status %}text-emerald-600{% else %}text-amber-600{% endif %}">
+                {% if order.payment_status %}✓ Encaissé{% else %}À encaisser{% endif %}
+              </span>
+            </td>
+            <td class="py-2.5 px-3.5 whitespace-nowrap">{% include "backoffice/partials/order_status_badge.html" with order=order %}</td>
+            <td class="py-2.5 px-3.5 text-right whitespace-nowrap space-x-1">
+              {% if order.status == 'pending' %}
+              <form method="POST" action="{% url 'backoffice:order_quick_action' order.id %}" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="quick_action" value="confirm">
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit" class="px-2 py-1 rounded-lg bg-indigo-600 text-white font-bold text-[11px] cursor-pointer">Confirmer</button>
+              </form>
+              {% elif order.status in 'confirmed,processing,shipped' %}
+              <form method="POST" action="{% url 'backoffice:order_quick_action' order.id %}" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="quick_action" value="deliver">
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit" class="px-2 py-1 rounded-lg bg-emerald-600 text-white font-bold text-[11px] cursor-pointer">Livré ✓</button>
+              </form>
+              {% endif %}
+              <a href="{% url 'backoffice:order_invoice' order.id %}" target="_blank" class="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 font-semibold text-[11px] inline-block">Reçu</a>
+              <a href="{% url 'backoffice:order_detail' order.id %}" class="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-[11px] inline-block">Gérer</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7" class="py-10 text-center text-slate-400">Aucune commande trouvée.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
 
-    <!-- TABLEAU DES COMMANDES EFFET GLACE & RESPONSIVE -->
-    <div class="bg-white/90 backdrop-blur-xl rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-        
-        <!-- TABLE DESKTOP -->
-        <div class="hidden md:block overflow-x-auto">
-            <table class="w-full text-left border-collapse text-xs">
-                <thead>
-                    <tr class="border-b border-slate-200 bg-slate-50/80 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
-                        <th class="py-2.5 px-3">Réf. Commande</th>
-                        <th class="py-2.5 px-3">Date</th>
-                        <th class="py-2.5 px-3">Client & Téléphone</th>
-                        <th class="py-2.5 px-3">Destination Bamako</th>
-                        <th class="py-2.5 px-3">Articles</th>
-                        <th class="py-2.5 px-3">Total Net</th>
-                        <th class="py-2.5 px-3">Paiement</th>
-                        <th class="py-2.5 px-3">Statut</th>
-                        <th class="py-2.5 px-3 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    {% for order in orders %}
-                    <tr class="hover:bg-slate-50/70 transition">
-                        <td class="py-2.5 px-3 font-mono font-medium text-slate-900 whitespace-nowrap">
-                            <a href="{% url 'backoffice:order_detail' order.id %}" class="hover:text-amber-600 transition">
-                                #{{ order.order_number }}
-                            </a>
-                        </td>
-                        <td class="py-2.5 px-3 text-[11px] text-slate-500 whitespace-nowrap font-mono">
-                            {{ order.created_at|date:"d/m/Y H:i" }}
-                        </td>
-                        <td class="py-2.5 px-3">
-                            <div class="font-medium text-slate-800">{{ order.delivery_name }}</div>
-                            <div class="text-[11px] text-slate-500 font-mono">{{ order.delivery_phone }}</div>
-                        </td>
-                        <td class="py-2.5 px-3 text-[11px] text-slate-600">
-                            {{ order.delivery_district|default:"Bamako" }}
-                        </td>
-                        <td class="py-2.5 px-3 text-[11px] text-slate-600 max-w-[180px] truncate" title="{% for item in order.items.all %}{{ item.quantity }}x {{ item.product_name }}{% if not forloop.last %}, {% endif %}{% endfor %}">
-                            {% with items=order.items.all %}
-                                {% if items %}
-                                    <span class="font-medium text-slate-800">{{ items.0.quantity }}x {{ items.0.product_name|truncatechars:22 }}</span>
-                                    {% if items|length > 1 %}
-                                    <span class="text-slate-400 font-mono">(+{{ items|length|add:"-1" }})</span>
-                                    {% endif %}
-                                {% else %}
-                                    <span class="text-slate-400">-</span>
-                                {% endif %}
-                            {% endwith %}
-                        </td>
-                        <td class="py-2.5 px-3 font-semibold text-slate-900 whitespace-nowrap tabular-nums">
-                            {{ order.total|floatformat:0|intcomma }} <span class="text-[10px] font-normal text-slate-400">FCFA</span>
-                        </td>
-                        <td class="py-2.5 px-3 whitespace-nowrap">
-                            {% if order.payment_method == 'orange_money' %}
-                                <span class="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[10px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Orange Money
-                                </span>
-                            {% elif order.payment_method == 'wave' %}
-                                <span class="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[10px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Wave
-                                </span>
-                            {% elif order.payment_method == 'cash_on_delivery' %}
-                                <span class="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[10px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>À la livraison
-                                </span>
-                            {% else %}
-                                <span class="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[10px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>{{ order.get_payment_method_display }}
-                                </span>
-                            {% endif %}
-                            {% if order.payment_status %}
-                            <span class="text-[10px] text-emerald-700 font-semibold ml-1">✓ Payé</span>
-                            {% else %}
-                            <span class="text-[10px] text-amber-700 font-medium ml-1">En attente</span>
-                            {% endif %}
-                        </td>
-                        <td class="py-2.5 px-3 whitespace-nowrap" id="order-badge-{{ order.id }}">
-                            {% include "backoffice/partials/order_status_badge.html" with order=order %}
-                        </td>
-                        <td class="py-2.5 px-3 text-right whitespace-nowrap space-x-1">
-                            <a href="{% url 'backoffice:order_detail' order.id %}" class="px-2 py-1 rounded text-[11px] font-medium text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 transition inline-block shadow-2xs">
-                                Gérer
-                            </a>
-                            <a href="{% url 'backoffice:order_invoice' order.id %}" target="_blank" title="Imprimer le bon de livraison" class="px-1.5 py-1 rounded text-[11px] text-slate-400 hover:text-slate-700 border border-transparent hover:border-slate-200 transition inline-block">
-                                ⎙
-                            </a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="9" class="py-10 text-center text-xs text-slate-400">
-                            Aucune commande trouvée dans ce filtre.
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- LISTE MOBILE EFFET GLACE -->
-        <div class="md:hidden divide-y divide-slate-100 text-xs">
-            {% for order in orders %}
-            <div class="p-3.5 space-y-2 hover:bg-amber-50/20 transition">
-                <div class="flex items-center justify-between">
-                    <span class="font-mono font-bold text-slate-900">#{{ order.order_number }}</span>
-                    {% include "backoffice/partials/order_status_badge.html" with order=order %}
-                </div>
-                <div class="flex items-center justify-between text-slate-600">
-                    <span class="font-medium">{{ order.delivery_name }} ({{ order.delivery_district|default:"Bamako" }})</span>
-                    <span class="font-bold text-slate-900 tabular-nums">{{ order.total|floatformat:0|intcomma }} FCFA</span>
-                </div>
-                <div class="flex items-center justify-between pt-1">
-                    <span class="text-[10px] text-slate-400 font-mono">{{ order.created_at|date:"d/m/Y H:i" }}</span>
-                    <div class="flex items-center gap-1.5">
-                        <a href="{% url 'backoffice:order_invoice' order.id %}" target="_blank" class="px-2 py-1 rounded-lg text-[11px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200">
-                            Reçu
-                        </a>
-                        <a href="{% url 'backoffice:order_detail' order.id %}" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-500/15 text-amber-900 border border-amber-300 transition active:scale-95">
-                            Gérer →
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- PAGINATION -->
-        {% if orders.has_other_pages %}
-        <div class="px-4 py-3 border-t border-slate-200/80 bg-slate-50/60 flex items-center justify-between text-xs text-slate-500">
-            <div>
-                Page {{ orders.number }} sur {{ orders.paginator.num_pages }}
-            </div>
-            <div class="flex items-center gap-1.5">
-                {% if orders.has_previous %}
-                <a href="?page={{ orders.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if payment_filter %}&payment={{ payment_filter }}{% endif %}" class="px-3 py-1 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 font-medium">Précédent</a>
-                {% endif %}
-                {% if orders.has_next %}
-                <a href="?page={{ orders.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if payment_filter %}&payment={{ payment_filter }}{% endif %}" class="px-3 py-1 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 font-medium">Suivant</a>
-                {% endif %}
-            </div>
-        </div>
-        {% endif %}
-
+  {% if orders.has_other_pages %}
+  <div class="flex items-center justify-between text-xs pt-1">
+    <span class="text-slate-500">Page {{ orders.number }} / {{ orders.paginator.num_pages }}</span>
+    <div class="flex gap-1.5">
+      {% if orders.has_previous %}
+      <a href="?page={{ orders.previous_page_number }}&amp;status={{ status_filter }}&amp;q={{ search_query|urlencode }}&amp;payment={{ payment_filter }}" hx-get="?page={{ orders.previous_page_number }}&amp;status={{ status_filter }}&amp;q={{ search_query|urlencode }}&amp;payment={{ payment_filter }}" hx-target="#bo-live-results" hx-select="#bo-live-results" hx-swap="outerHTML show:none" hx-push-url="true" class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 font-bold">← Précédent</a>
+      {% endif %}
+      {% if orders.has_next %}
+      <a href="?page={{ orders.next_page_number }}&amp;status={{ status_filter }}&amp;q={{ search_query|urlencode }}&amp;payment={{ payment_filter }}" hx-get="?page={{ orders.next_page_number }}&amp;status={{ status_filter }}&amp;q={{ search_query|urlencode }}&amp;payment={{ payment_filter }}" hx-target="#bo-live-results" hx-select="#bo-live-results" hx-swap="outerHTML show:none" hx-push-url="true" class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 font-bold">Suivant →</a>
+      {% endif %}
     </div>
+  </div>
+  {% endif %}
+  </div><!-- /#bo-live-results -->
 
 </div>
 {% endblock %}

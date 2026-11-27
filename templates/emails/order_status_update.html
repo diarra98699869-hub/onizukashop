@@ -92,7 +92,7 @@
 
                             <!-- Support -->
                             <div style="font-size: 12px; color: #64748b; line-height: 1.5; border-top: 1px solid #e2e8f0; padding-top: 16px;">
-                                Une question sur votre livraison ? Contactez notre flotte au <strong>{{ settings.contact_phone|default:"+223 92 67 37 99" }}</strong> ou par email à <strong>{{ settings.contact_email|default:"contact@onizoukashop.com" }}</strong>.
+                                Une question sur votre livraison ? Contactez notre flotte au <strong>{{ settings.phone_contact|default:"+223 92 67 37 99" }}</strong> ou par email à <strong>{{ settings.email_contact|default:"contact@onizukashop.com" }}</strong>.
                             </div>
                         </td>
                     </tr>
@@ -100,7 +100,7 @@
                     <!-- Pied de page -->
                     <tr>
                         <td style="background-color: #f1f5f9; padding: 20px 32px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 11px; color: #64748b;">
-                            {{ settings.site_name|default:"Onizouka Shop" }} &bull; Grand Marché de Bamako, République du Mali
+                            {{ settings.email_footer_signature|default:"ONIZUKA SHOP • Grand Marché de Bamako, Dibidani • République du Mali" }}
                         </td>
                     </tr>
                 </table>

@@ -1,0 +1,198 @@
+{% extends "backoffice/base.html" %}
+{% load humanize %}
+
+{% block title %}Nouvelle Vente Caisse / WhatsApp • Gestion Onizouka{% endblock %}
+
+{% block content %}
+<script id="pos-catalog-data" type="application/json">{{ catalog_json|safe }}</script>
+<div
+  class="max-w-5xl mx-auto space-y-4 pb-10"
+  x-data="{
+    search: '',
+    catalog: JSON.parse(document.getElementById('pos-catalog-data')?.textContent || '[]'),
+    cart: [],
+    get filteredCatalog() {
+      const q = this.search.trim().toLowerCase();
+      if (!q) return this.catalog.slice(0, 12);
+      return this.catalog.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        p.sku.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q)
+      ).slice(0, 15);
+    },
+    addItem(p) {
+      const ex = this.cart.find(i => i.product_id === p.id);
+      if (ex) {
+        ex.quantity++;
+      } else {
+        this.cart.push({
+          product_id: p.id,
+          name: p.name,
+          sku: p.sku,
+          quantity: 1,
+          unit_price: p.price,
+          stock: p.stock
+        });
+      }
+    },
+    removeItem(idx) {
+      this.cart.splice(idx, 1);
+    },
+    get grandTotal() {
+      return this.cart.reduce((acc, i) => acc + (parseInt(i.quantity || 1) * parseInt(i.unit_price || 0)), 0);
+    },
+    fmt(n) {
+      return (n || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' FCFA';
+    }
+  }"
+>
+
+  <!-- En-tête -->
+  <div class="flex items-center justify-between gap-2">
+    <div>
+      <a href="{% url 'backoffice:orders' %}" class="text-xs font-bold text-slate-500 hover:text-slate-900">← Retour aux commandes</a>
+      <h1 class="text-lg sm:text-2xl font-black text-slate-950 font-heading mt-0.5">
+        Nouvelle Vente Comptoir / WhatsApp
+      </h1>
+      <p class="text-xs text-slate-500">Déduit automatiquement le stock et génère la facture officielle + garantie PDF</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+
+    <!-- COLONNE GAUCHE : SÉLECTION RAPIDE DES ARTICLES (7 colonnes) -->
+    <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200/80 p-3.5 sm:p-5 shadow-sm space-y-3">
+      <div class="flex items-center justify-between">
+        <h2 class="font-heading font-black text-sm text-slate-950">1. Toucher un article pour l'ajouter</h2>
+        <span class="text-[11px] text-slate-400" x-text="catalog.length + ' réf.'"></span>
+      </div>
+
+      <input
+        type="search"
+        x-model="search"
+        placeholder="Chercher meuble, déco, frigo, clim, SKU..."
+        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-xs focus:outline-none focus:border-amber-500"
+      >
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-96 overflow-y-auto pr-0.5">
+        <template x-for="p in filteredCatalog" :key="p.id">
+          <button
+            type="button"
+            @click="addItem(p)"
+            class="text-left p-2.5 rounded-xl border border-slate-200/80 hover:border-amber-400 hover:bg-amber-50/40 flex items-center gap-2.5 transition cursor-pointer active:scale-[0.98]"
+          >
+            <div class="w-11 h-11 rounded-lg bg-slate-50 border border-slate-100 p-1 flex items-center justify-center shrink-0 overflow-hidden">
+              <template x-if="p.thumb">
+                <img :src="p.thumb" class="max-w-full max-h-full object-contain">
+              </template>
+              <template x-if="!p.thumb">
+                <span class="text-[9px] text-slate-400 font-bold">ART</span>
+              </template>
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-xs font-bold text-slate-900 truncate" x-text="p.name"></p>
+              <div class="flex items-center justify-between text-[11px] mt-0.5">
+                <span class="font-extrabold text-amber-600" x-text="fmt(p.price)"></span>
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-600" x-text="'Stock: ' + p.stock"></span>
+              </div>
+            </div>
+          </button>
+        </template>
+      </div>
+    </div>
+
+    <!-- COLONNE DROITE : TICKET DE CAISSE & CLIENT (5 colonnes) -->
+    <form method="POST" class="lg:col-span-5 bg-white rounded-2xl border border-slate-200/80 p-3.5 sm:p-5 shadow-sm space-y-4">
+      {% csrf_token %}
+      <input type="hidden" name="lines_json" :value="JSON.stringify(cart)">
+
+      <h2 class="font-heading font-black text-sm text-slate-950 pb-2 border-b border-slate-100">
+        2. Ticket de vente (<span x-text="cart.length"></span>)
+      </h2>
+
+      <!-- Lignes sélectionnées (avec prix négociable si remise accordée en boutique !) -->
+      <div class="space-y-2 max-h-60 overflow-y-auto">
+        <template x-if="cart.length === 0">
+          <p class="py-6 text-center text-xs text-slate-400">Touchez un ou plusieurs articles à gauche.</p>
+        </template>
+
+        <template x-for="(line, idx) in cart" :key="line.product_id">
+          <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 space-y-2 text-xs">
+            <div class="flex items-start justify-between gap-2">
+              <span class="font-bold text-slate-900 leading-tight" x-text="line.name"></span>
+              <button type="button" @click="removeItem(idx)" class="text-rose-600 font-black px-1">✕</button>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] text-slate-500">Quantité</label>
+                <input type="number" min="1" x-model="line.quantity" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-bold font-mono text-xs">
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-500">Prix unitaire (FCFA)</label>
+                <input type="number" min="0" x-model="line.unit_price" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-bold font-mono text-xs">
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Total -->
+      <div class="p-3 rounded-xl bg-[#0d0e12] text-white flex items-baseline justify-between">
+        <span class="text-xs font-bold uppercase text-slate-300">Total Net</span>
+        <span class="font-heading font-black text-xl text-amber-400" x-text="fmt(grandTotal)">0 FCFA</span>
+      </div>
+
+      <!-- Infos Client Rapides -->
+      <div class="space-y-2.5 text-xs">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Nom client</label>
+            <input type="text" name="delivery_name" value="Client Boutique" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-base sm:text-xs">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Téléphone WhatsApp</label>
+            <input type="tel" name="delivery_phone" placeholder="+223..." required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-base sm:text-xs font-mono">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Lieu / Quartier</label>
+            <input type="text" name="delivery_district" value="Boutique Dibidani" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-base sm:text-xs">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Mode de règlement</label>
+            <select name="payment_method" class="w-full px-2.5 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold">
+              {% for code, lbl in payment_choices %}
+              <option value="{{ code }}">{{ lbl }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <label class="flex items-center gap-2 p-2.5 rounded-xl border border-emerald-200 bg-emerald-50/70 cursor-pointer">
+            <input type="checkbox" name="paid_now" checked class="w-4 h-4 rounded text-emerald-600">
+            <span class="font-bold text-emerald-950">Encaissé ✓</span>
+          </label>
+          <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+            <input type="checkbox" name="delivered_now" checked class="w-4 h-4 rounded text-amber-500">
+            <span class="font-bold text-slate-800">Remis / Livré ✓</span>
+          </label>
+        </div>
+
+        <input type="text" name="notes" placeholder="Note optionnelle (numéro série, garantie...)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-base sm:text-xs">
+      </div>
+
+      <button
+        type="submit"
+        :disabled="cart.length === 0"
+        class="w-full py-3.5 px-4 rounded-xl bg-amber-400 hover:bg-amber-500 disabled:opacity-40 text-slate-950 font-extrabold text-sm shadow-sm cursor-pointer transition"
+      >
+        Valider la vente &amp; Générer le reçu PDF →
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

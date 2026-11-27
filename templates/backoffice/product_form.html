@@ -1,288 +1,574 @@
 {% extends "backoffice/base.html" %}
 {% load humanize %}
 
-{% block title %}{{ title }} - Direction Onizouka{% endblock %}
+{% block title %}{{ title }} • Gestion Onizouka{% endblock %}
 
 {% block content %}
-<div class="space-y-4 max-w-5xl mx-auto pb-8">
+<div
+  class="max-w-4xl mx-auto space-y-3.5 pb-8"
+  x-data="{
+    previewUrl: '{% if product and product.primary_image %}{{ product.primary_image.image.url }}{% endif %}',
+    videoPreviewUrl: '{% if product and product.video_file %}{{ product.video_file.url }}{% endif %}',
+    videoFileName: '',
+    videoSizeMB: 0,
+    videoDuration: 0,
+    videoNeedsOptimization: false,
+    videoCompressing: false,
+    videoOptimizedMsg: '',
+    videoErrorMsg: '',
+    removeVideo: false,
+    extraCount: 0,
+    showNewCat: false,
+    showNewBrand: false,
+    advancedOpen: {% if product %}true{% else %}false{% endif %},
+    onFileChange(e) {
+      const f = e.target.files[0];
+      if (f) this.previewUrl = URL.createObjectURL(f);
+    },
+    onVideoChange(e) {
+      const f = e.target.files[0];
+      if (!f) return;
+      this.videoErrorMsg = '';
+      this.videoOptimizedMsg = '';
+      this.videoFileName = f.name;
+      this.videoSizeMB = Math.round((f.size / (1024 * 1024)) * 100) / 100;
+      this.removeVideo = false;
+      const objUrl = URL.createObjectURL(f);
+      this.videoPreviewUrl = objUrl;
 
-    <!-- BREADCRUMB & HEADER COMPACT EFFET GLACE APPLE -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200/80">
-        <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
-                <a href="{% url 'backoffice:dashboard' %}" class="hover:text-amber-600 transition">Tableau de bord</a>
-                <span>/</span>
-                <a href="{% url 'backoffice:products' %}" class="hover:text-amber-600 transition">Catalogue</a>
-                <span>/</span>
-                <span class="text-slate-700 font-medium truncate max-w-[200px] sm:max-w-xs">{% if product %}{{ product.name }}{% else %}Nouveau{% endif %}</span>
+      const probe = document.createElement('video');
+      probe.preload = 'metadata';
+      probe.onloadedmetadata = () => {
+        const dur = isFinite(probe.duration) ? Math.round(probe.duration * 10) / 10 : 0;
+        this.videoDuration = dur;
+        this.videoNeedsOptimization = (dur > 15.2) || (this.videoSizeMB > 8.0);
+      };
+      probe.onerror = () => {
+        this.videoDuration = 0;
+        this.videoNeedsOptimization = (this.videoSizeMB > 8.0);
+      };
+      probe.src = objUrl;
+    },
+    clearVideo() {
+      this.removeVideo = true;
+      this.videoPreviewUrl = '';
+      this.videoFileName = '';
+      this.videoSizeMB = 0;
+      this.videoDuration = 0;
+      this.videoNeedsOptimization = false;
+      this.videoOptimizedMsg = '';
+      this.videoErrorMsg = '';
+      const inp = document.getElementById('product-video-input');
+      if (inp) inp.value = '';
+    },
+    async compressVideoNow() {
+      const inp = document.getElementById('product-video-input');
+      if (!inp || !inp.files || !inp.files[0] || this.videoCompressing) return;
+      const origFile = inp.files[0];
+      this.videoCompressing = true;
+      this.videoErrorMsg = '';
+      this.videoOptimizedMsg = '';
+
+      try {
+        const fd = new FormData();
+        fd.append('video_file', origFile);
+        const csrf = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+        const res = await fetch('{% url 'backoffice:product_video_compress_api' %}', {
+          method: 'POST',
+          headers: { 'X-CSRFToken': csrf, 'X-Requested-With': 'XMLHttpRequest' },
+          body: fd
+        });
+        const data = await res.json();
+        if (data.status === 'ok' && data.base64) {
+          const byteChars = atob(data.base64);
+          const byteNums = new Uint8Array(byteChars.length);
+          for (let i = 0; i < byteChars.length; i++) byteNums[i] = byteChars.charCodeAt(i);
+          const blob = new Blob([byteNums], { type: data.content_type || 'video/mp4' });
+          const newFile = new File([blob], data.filename || 'video_15s.mp4', { type: 'video/mp4' });
+          const dt = new DataTransfer();
+          dt.items.add(newFile);
+          inp.files = dt.files;
+
+          this.videoPreviewUrl = URL.createObjectURL(newFile);
+          this.videoFileName = newFile.name;
+          this.videoSizeMB = data.size_mb;
+          this.videoDuration = Math.round((data.duration || 15) * 10) / 10;
+          this.videoNeedsOptimization = false;
+          this.videoOptimizedMsg = data.summary || 'Vidéo compressée et coupée à 15s (≤ 8 Mo) !';
+        } else {
+          this.videoErrorMsg = data.message || 'Impossible de compresser la vidéo.';
+        }
+      } catch (err) {
+        this.videoErrorMsg = 'Erreur lors de la compression : ' + err.message;
+      } finally {
+        this.videoCompressing = false;
+      }
+    }
+  }"
+>
+
+  <!-- EN-TÊTE -->
+  <div class="flex items-center justify-between gap-2">
+    <div class="min-w-0">
+      <a href="{% url 'backoffice:products' %}" class="text-xs font-bold text-slate-500 hover:text-slate-900">← Retour aux produits</a>
+      <h1 class="text-lg sm:text-2xl font-black text-slate-950 font-heading truncate mt-0.5">
+        {% if product %}Modifier l'article{% else %}Ajouter un article (Électro, Meuble, Déco...){% endif %}
+      </h1>
+    </div>
+    {% if product %}
+    <a href="{% url 'shop:product' product.slug %}" target="_blank" class="px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 shrink-0">
+      Voir en ligne ↗
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- FORMULAIRE PRODUIT EXPRESS MOBILE & PRO DESKTOP -->
+  <form id="product-editor-form" method="POST" enctype="multipart/form-data" class="space-y-3.5">
+    {% csrf_token %}
+    <input type="hidden" name="remove_video" :value="removeVideo ? '1' : '0'">
+
+    {% if form.errors %}
+    <div class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs space-y-1">
+      <p class="font-extrabold">Veuillez vérifier les champs suivants :</p>
+      {% for field, errors in form.errors.items %}
+      <p>• <strong>{{ field }}</strong> : {{ errors|join:", " }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- ================================================================= -->
+    <!-- 1. PHOTOS + VIDÉO DU PRODUIT (CAMÉRA OU GALERIE TÉLÉPHONE)        -->
+    <!-- ================================================================= -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-sm space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="font-heading font-black text-sm sm:text-base text-slate-950">1. Photos &amp; Vidéo de présentation</h2>
+        <span class="text-[11px] font-semibold text-amber-600">Compression WebP auto</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- A. Photo principale + angles -->
+        <div class="space-y-2.5">
+          <label class="w-full h-44 rounded-2xl border-2 border-dashed border-amber-300 bg-amber-50/30 hover:bg-amber-50/60 flex flex-col items-center justify-center p-2 cursor-pointer overflow-hidden relative transition">
+            <template x-if="previewUrl">
+              <img :src="previewUrl" alt="Aperçu" class="max-w-full max-h-full object-contain rounded-xl">
+            </template>
+            <template x-if="!previewUrl">
+              <div class="text-center space-y-1 p-3">
+                <div class="w-10 h-10 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center mx-auto font-black text-sm">+</div>
+                <p class="text-xs font-extrabold text-slate-900">Photo principale (Caméra / Galerie)</p>
+                <p class="text-[10px] text-slate-500">Meuble, décoration, frigo, clim, TV...</p>
+              </div>
+            </template>
+            <input type="file" name="primary_image" accept="image/*" class="sr-only" @change="onFileChange($event)">
+          </label>
+
+          <div class="flex items-center justify-between gap-2 flex-wrap text-xs">
+            <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold cursor-pointer transition">
+              <span>+ Autres photos</span>
+              <input type="file" name="extra_images" accept="image/*" multiple class="sr-only" @change="extraCount = $event.target.files.length">
+            </label>
+            <span x-show="extraCount > 0" x-cloak class="text-emerald-700 font-bold" x-text="extraCount + ' photo(s) choisie(s)'"></span>
+          </div>
+
+          {% if product and product.images.count > 1 %}
+          <div class="flex items-center gap-2 flex-wrap pt-1">
+            {% for img in product.images.all %}
+            <div class="relative w-14 h-14 rounded-xl border {% if img.is_primary %}border-amber-500 ring-2 ring-amber-400/30{% else %}border-slate-200{% endif %} bg-slate-50 p-1 group">
+              <img src="{{ img.thumbnail.url|default:img.image.url }}" alt="" class="w-full h-full object-contain">
+              {% if img.is_primary %}
+              <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 text-[8px] font-black">1ère</span>
+              {% else %}
+              <button
+                type="submit"
+                formaction="{% url 'backoffice:product_set_primary_image' product.id img.id %}"
+                formnovalidate
+                class="absolute -bottom-1 left-0.5 px-1 py-0.2 rounded bg-slate-900 text-amber-400 text-[8px] font-black shadow-xs cursor-pointer"
+                title="Définir comme photo principale"
+              >★ 1ère</button>
+              <button
+                type="submit"
+                formaction="{% url 'backoffice:product_delete_image' product.id img.id %}"
+                formnovalidate
+                class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center shadow-sm cursor-pointer"
+                title="Supprimer cette photo"
+              >×</button>
+              {% endif %}
             </div>
-            <h1 class="text-base sm:text-xl font-extrabold text-slate-900 tracking-tight font-heading leading-tight truncate">
-                {{ title }}
-            </h1>
+            {% endfor %}
+          </div>
+          {% endif %}
         </div>
-        <div class="flex-shrink-0">
-            <a href="{% url 'backoffice:products' %}" 
-               class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white/85 hover:bg-white text-slate-700 border border-slate-200/80 text-xs font-bold rounded-xl transition shadow-xs active:scale-95">
-                <svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                </svg>
-                <span>Retour au catalogue</span>
-            </a>
+
+        <!-- B. Vidéo du produit (MP4/MOV filmé au téléphone ou lien YouTube — Max 15s & 8 Mo) -->
+        <div class="space-y-2.5">
+          <!-- Input fichier unique persistant hors x-if pour garantir l'envoi multipart -->
+          <input
+            id="product-video-input"
+            type="file"
+            name="video_file"
+            accept="video/mp4,video/webm,video/quicktime,video/*"
+            class="sr-only"
+            @change="onVideoChange($event)"
+          >
+
+          <div class="w-full h-44 rounded-2xl border-2 border-dashed border-slate-300 bg-slate-950 text-white flex flex-col items-center justify-center p-2 overflow-hidden relative">
+            <template x-if="videoPreviewUrl && !removeVideo">
+              <video :src="videoPreviewUrl" controls playsinline preload="metadata" class="w-full h-full object-contain rounded-xl"></video>
+            </template>
+            <template x-if="!videoPreviewUrl || removeVideo">
+              <label for="product-video-input" class="w-full h-full flex flex-col items-center justify-center text-center cursor-pointer p-3 space-y-1">
+                <div class="w-10 h-10 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center mx-auto font-black text-xs">▶</div>
+                <p class="text-xs font-extrabold text-white">Ajouter une vidéo (Max 15s • 8 Mo)</p>
+                <p class="text-[10px] text-slate-400">Coupe à 15s &amp; compression HD automatique si dépassement</p>
+              </label>
+            </template>
+          </div>
+
+          <div class="flex items-center justify-between gap-2 text-xs flex-wrap">
+            <label for="product-video-input" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400 font-bold cursor-pointer transition">
+              <span>▶ Choisir / Remplacer vidéo MP4</span>
+            </label>
+            <button
+              type="button"
+              x-show="videoPreviewUrl && !removeVideo"
+              x-cloak
+              @click="clearVideo()"
+              class="text-rose-600 font-bold hover:underline cursor-pointer"
+            >Retirer la vidéo</button>
+          </div>
+
+          <!-- Diagnostic temps réel Durée (≤ 15s) & Poids (≤ 8 Mo) + Bouton Compression Directe -->
+          <div x-show="videoSizeMB > 0 && !removeVideo" x-cloak class="p-2.5 rounded-xl border text-xs space-y-2" :class="videoNeedsOptimization ? 'bg-amber-50 border-amber-300 text-amber-950' : 'bg-emerald-50 border-emerald-200 text-emerald-950'">
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <div class="flex items-center gap-2 font-bold">
+                <span x-text="videoNeedsOptimization ? '⚡ Optimisation requise' : '✓ Vidéo conforme (≤ 15s / 8 Mo)'"></span>
+              </div>
+              <div class="flex items-center gap-2 font-mono text-[11px]">
+                <span class="px-2 py-0.5 rounded bg-white/80 border" :class="videoDuration > 15.2 ? 'border-rose-300 text-rose-700 font-black' : 'border-slate-200 text-slate-700'" x-show="videoDuration > 0" x-text="videoDuration + 's / 15s'"></span>
+                <span class="px-2 py-0.5 rounded bg-white/80 border" :class="videoSizeMB > 8.0 ? 'border-rose-300 text-rose-700 font-black' : 'border-slate-200 text-slate-700'" x-text="videoSizeMB + ' Mo / 8 Mo'"></span>
+              </div>
+            </div>
+
+            <div x-show="videoNeedsOptimization" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 border-t border-amber-200/80">
+              <p class="text-[11px] text-amber-900">
+                Dépasse 15s ou 8 Mo : compressez en 1 clic ci-contre (ou automatique à la publication).
+              </p>
+              <button
+                type="button"
+                @click="compressVideoNow()"
+                :disabled="videoCompressing"
+                class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-500 disabled:opacity-50 text-slate-950 font-extrabold text-[11px] shrink-0 cursor-pointer transition active:scale-95"
+              >
+                <span x-show="!videoCompressing">⚡ Compresser &amp; Couper à 15s</span>
+                <span x-show="videoCompressing" x-cloak>Compression HD en cours...</span>
+              </button>
+            </div>
+
+            <p x-show="videoOptimizedMsg" x-text="videoOptimizedMsg" class="text-[11px] font-extrabold text-emerald-700"></p>
+            <p x-show="videoErrorMsg" x-text="videoErrorMsg" class="text-[11px] font-bold text-rose-600"></p>
+          </div>
+
+          <div>
+            {{ form.video_url }}
+          </div>
         </div>
+      </div>
     </div>
 
-    <!-- FORMULAIRE PRINCIPAL -->
-    <form method="POST" enctype="multipart/form-data" class="space-y-4">
-        {% csrf_token %}
+    <!-- ================================================================= -->
+    <!-- 2. INFORMATIONS ESSENTIELLES, RAYON & PRIX FCFA                   -->
+    <!-- ================================================================= -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-sm space-y-3.5">
+      <h2 class="font-heading font-black text-sm sm:text-base text-slate-950">2. Nom, Rayon &amp; Prix</h2>
 
-        {% if form.errors %}
-        <div class="p-3.5 rounded-2xl bg-rose-50/90 border border-rose-200 text-rose-800 text-xs space-y-1 shadow-xs">
-            <div class="font-bold flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
-                Veuillez corriger les champs suivants :
-            </div>
-            {% for field, errors in form.errors.items %}
-                <div class="pl-3"><strong>{{ field }}</strong>: {{ errors|join:", " }}</div>
-            {% endfor %}
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Nom de l'article *</label>
+        {{ form.name }}
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Prix de vente (FCFA) *</label>
+          {{ form.price }}
         </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Prix promo (optionnel)</label>
+          {{ form.sale_price }}
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Quantité en stock *</label>
+          {{ form.stock }}
+        </div>
+      </div>
+
+      <!-- Catégorie & Marque (avec création directe en 1 clic : Meubles, Décoration, etc.) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-slate-700">Catégorie / Rayon *</label>
+            <button type="button" @click="showNewCat = !showNewCat" class="text-[11px] font-extrabold text-amber-600 cursor-pointer">
+              <span x-text="showNewCat ? 'Choisir existant' : '+ Créer un rayon (ex: Meubles, Déco)'"></span>
+            </button>
+          </div>
+          <div x-show="!showNewCat">{{ form.category }}</div>
+          <div x-show="showNewCat" x-cloak>{{ form.new_category_name }}</div>
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-slate-700">Marque / Collection</label>
+            <button type="button" @click="showNewBrand = !showNewBrand" class="text-[11px] font-extrabold text-amber-600 cursor-pointer">
+              <span x-text="showNewBrand ? 'Choisir existante' : '+ Nouvelle marque'"></span>
+            </button>
+          </div>
+          <div x-show="!showNewBrand">{{ form.brand }}</div>
+          <div x-show="showNewBrand" x-cloak>{{ form.new_brand_name }}</div>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Résumé court (matière, dimensions, points forts)</label>
+        {{ form.short_description }}
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- 3. BADGES & MISE EN AVANT                                         -->
+    <!-- ================================================================= -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-sm space-y-2.5">
+      <h2 class="font-heading font-black text-sm sm:text-base text-slate-950">3. Affichage &amp; Badges</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+        <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/70 cursor-pointer">
+          {{ form.is_active }}
+          <div>
+            <span class="font-bold text-slate-900 block">En ligne</span>
+            <span class="text-[10px] text-slate-500">Visible</span>
+          </div>
+        </label>
+
+        <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/70 cursor-pointer">
+          {{ form.is_featured }}
+          <div>
+            <span class="font-bold text-slate-900 block">★ Vedette</span>
+            <span class="text-[10px] text-slate-500">Accueil</span>
+          </div>
+        </label>
+
+        <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/70 cursor-pointer">
+          {{ form.is_new }}
+          <div>
+            <span class="font-bold text-slate-900 block">Nouveau</span>
+            <span class="text-[10px] text-slate-500">Arrivage</span>
+          </div>
+        </label>
+
+        <label class="flex items-center gap-2.5 p-3 rounded-xl border border-emerald-200 bg-emerald-50/50 cursor-pointer">
+          {{ form.is_eco_solar }}
+          <div>
+            <span class="font-bold text-emerald-950 block">☀ Solaire/Éco</span>
+            <span class="text-[10px] text-emerald-700">Basse conso</span>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- 4. OPTION 1-CLIC (MONTAGE MEUBLE / POSE CLIM) & FICHE TECHNIQUE   -->
+    <!-- ================================================================= -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+      <button
+        type="button"
+        @click="advancedOpen = !advancedOpen"
+        class="w-full px-4 sm:px-5 py-3.5 flex items-center justify-between text-left cursor-pointer"
+      >
+        <div>
+          <h2 class="font-heading font-black text-sm text-slate-900">4. Option Montage / Pose &amp; Fiche détaillée</h2>
+          <p class="text-[11px] text-slate-400">Option payante en 1 clic, dimensions, description complète, prix d'achat</p>
+        </div>
+        <svg class="w-4 h-4 text-slate-500 transition-transform" :class="advancedOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+        </svg>
+      </button>
+
+      <div x-show="advancedOpen" x-cloak class="px-4 sm:px-5 pb-5 pt-2 border-t border-slate-100 space-y-3.5">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 rounded-xl bg-amber-50/50 border border-amber-200/70">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold text-slate-800 mb-1">Option 1-clic proposée au client (optionnel)</label>
+            {{ form.addon_label }}
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">Supplément (FCFA)</label>
+            {{ form.addon_price }}
+          </div>
+        </div>
+
+        <!-- ÉDITEUR INTERACTIF DES CARACTÉRISTIQUES TECHNIQUES (JSON SPECIFICATIONS) -->
+        <div
+          class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/90 space-y-2.5"
+          x-data="{
+            specs: [
+              {% if product and product.specifications %}
+                {% for k, v in product.specifications.items %}
+                { key: '{{ k|escapejs }}', val: '{{ v|escapejs }}' }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+              {% else %}
+                { key: 'Garantie', val: '1 an officiel Onizuka Shop' }
+              {% endif %}
+            ],
+            addSpec(k = '', v = '') {
+              this.specs.push({ key: k, val: v });
+            },
+            removeSpec(i) {
+              this.specs.splice(i, 1);
+            },
+            get specsJson() {
+              const out = {};
+              this.specs.forEach(s => {
+                const k = (s.key || '').trim();
+                const v = (s.val || '').trim();
+                if (k && v) out[k] = v;
+              });
+              return JSON.stringify(out);
+            }
+          }"
+        >
+          <input type="hidden" name="specifications_json" :value="specsJson">
+          <div class="flex items-center justify-between gap-2 flex-wrap">
+            <div>
+              <h3 class="text-xs font-extrabold text-slate-900">Caractéristiques techniques (Tableau Fiche Produit)</h3>
+              <p class="text-[11px] text-slate-500">Ex: Puissance → 1.5 CV, Gaz → R32, Capacité → 350L, Matière → Cuir...</p>
+            </div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button type="button" @click="addSpec('Puissance', '')" class="px-2 py-1 rounded-lg bg-white border border-slate-200 text-[10px] font-bold text-slate-700 hover:border-amber-400 cursor-pointer">+ Puissance</button>
+              <button type="button" @click="addSpec('Technologie', '')" class="px-2 py-1 rounded-lg bg-white border border-slate-200 text-[10px] font-bold text-slate-700 hover:border-amber-400 cursor-pointer">+ Technologie</button>
+              <button type="button" @click="addSpec('', '')" class="px-2.5 py-1 rounded-lg bg-slate-900 text-amber-400 text-[11px] font-extrabold cursor-pointer">+ Ajouter une ligne</button>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <template x-for="(sp, idx) in specs" :key="idx">
+              <div class="flex items-center gap-2">
+                <input
+                  type="text"
+                  x-model="sp.key"
+                  placeholder="Nom (ex: Puissance, Gaz, Batterie...)"
+                  class="w-2/5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-800 focus:outline-none focus:border-amber-500"
+                >
+                <input
+                  type="text"
+                  x-model="sp.val"
+                  placeholder="Valeur (ex: 12000 BTU / 1.5 CV)"
+                  class="flex-1 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-xs text-slate-900 focus:outline-none focus:border-amber-500"
+                >
+                <button
+                  type="button"
+                  @click="removeSpec(idx)"
+                  class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 font-black text-xs flex items-center justify-center shrink-0 cursor-pointer"
+                  title="Supprimer cette caractéristique"
+                >×</button>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Description complète</label>
+          {{ form.description }}
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Prix d'achat (FCFA)</label>
+            {{ form.cost_price }}
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Référence SKU</label>
+            {{ form.sku }}
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Seuil alerte stock</label>
+            {{ form.min_stock }}
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Dimensions</label>
+            {{ form.dimensions }}
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Poids (kg)</label>
+            {{ form.weight }}
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Statut stock</label>
+            {{ form.status }}
+          </div>
+          <div class="flex items-end">
+            <label class="w-full flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-800 cursor-pointer">
+              {{ form.track_stock }}
+              <span>Gérer automatiquement les quantités</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOUTONS DESKTOP -->
+    <div class="hidden lg:flex items-center justify-between gap-2.5 pt-2">
+      <div>
+        {% if product %}
+        <button
+          type="submit"
+          formaction="{% url 'backoffice:product_delete' product.id %}"
+          formnovalidate
+          onclick="return confirm('Supprimer définitivement cet article du catalogue ?')"
+          class="px-3.5 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold text-xs cursor-pointer"
+        >
+          🗑️ Supprimer l'article
+        </button>
         {% endif %}
+      </div>
+      <div class="flex items-center gap-2.5">
+        <a href="{% url 'backoffice:products' %}" class="px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-xs">
+          Annuler
+        </a>
+        {% if not product %}
+        <button type="submit" name="save_and_add" value="1" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs cursor-pointer">
+          Enregistrer + Ajouter un suivant
+        </button>
+        {% endif %}
+        <button type="submit" class="px-6 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs shadow-sm cursor-pointer">
+          {% if product %}Enregistrer les modifications{% else %}Publier sur la boutique{% endif %}
+        </button>
+      </div>
+    </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+  </form>
 
-            <!-- COLONNE GAUCHE (2/3) : Fiche produit et descriptif -->
-            <div class="lg:col-span-2 space-y-4">
-                
-                <!-- Identification -->
-                <div class="bg-white/90 backdrop-blur-xl p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3.5">
-                    <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                            <h2 class="text-sm font-bold text-slate-900 font-heading">
-                                Identification du produit
-                            </h2>
-                        </div>
-                        <span class="text-[11px] font-medium text-slate-400">* Champs obligatoires</span>
-                    </div>
+</div>
+{% endblock %}
 
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                            Désignation commerciale <span class="text-amber-600 font-bold">*</span>
-                        </label>
-                        {{ form.name }}
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                                Catégorie / Rayon <span class="text-amber-600 font-bold">*</span>
-                            </label>
-                            {{ form.category }}
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                                Marque officielle
-                            </label>
-                            {{ form.brand }}
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                            Résumé d'accroche (description courte)
-                        </label>
-                        {{ form.short_description }}
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                            Fiche technique détaillée & caractéristiques
-                        </label>
-                        {{ form.description }}
-                    </div>
-                </div>
-
-                <!-- Spécifications Physiques -->
-                <div class="bg-white/90 backdrop-blur-xl p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3.5">
-                    <div class="flex items-center gap-2 border-b border-slate-100 pb-2.5">
-                        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
-                        <h2 class="text-sm font-bold text-slate-900 font-heading">
-                            Caractéristiques physiques & logistique
-                        </h2>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                                Dimensions (L x l x H)
-                            </label>
-                            {{ form.dimensions }}
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                                Poids estimé (kg)
-                            </label>
-                            {{ form.weight }}
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- COLONNE DROITE (1/3) : Tarifs, Stocks, Image & Statut -->
-            <div class="space-y-4">
-
-                <!-- Tarification en FCFA -->
-                <div class="bg-white/90 backdrop-blur-xl p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3.5">
-                    <div class="flex items-center gap-2 border-b border-slate-100 pb-2.5">
-                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                        <h2 class="text-sm font-bold text-slate-900 font-heading">
-                            Tarification (FCFA)
-                        </h2>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                            Prix de vente public <span class="text-amber-600 font-bold">*</span>
-                        </label>
-                        {{ form.price }}
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                            Prix promotionnel
-                        </label>
-                        {{ form.sale_price }}
-                        <span class="text-[10px] text-slate-400 mt-1 block">Optionnel. Active automatiquement l'étiquette promotion.</span>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                            Prix d'achat (coût de revient)
-                        </label>
-                        {{ form.cost_price }}
-                        <span class="text-[10px] text-slate-400 mt-1 block">Confidentiel Direction. Pour calcul des marges brutes.</span>
-                    </div>
-                </div>
-
-                <!-- Stock & Alertes -->
-                <div class="bg-white/90 backdrop-blur-xl p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3.5">
-                    <div class="flex items-center gap-2 border-b border-slate-100 pb-2.5">
-                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                        <h2 class="text-sm font-bold text-slate-900 font-heading">
-                            Stock & Approvisionnement
-                        </h2>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2.5">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                                Quantité en stock
-                            </label>
-                            {{ form.stock }}
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                                Seuil d'alerte
-                            </label>
-                            {{ form.min_stock }}
-                        </div>
-                    </div>
-
-                    <div class="pt-1 text-xs">
-                        <label class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition cursor-pointer">
-                            {{ form.track_stock }}
-                            <span class="font-semibold text-slate-700">Décrémentation automatique</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Image Principale -->
-                <div class="bg-white/90 backdrop-blur-xl p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3.5">
-                    <div class="flex items-center gap-2 border-b border-slate-100 pb-2.5">
-                        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
-                        <h2 class="text-sm font-bold text-slate-900 font-heading">
-                            Photo principale du produit
-                        </h2>
-                    </div>
-
-                    {% if product and product.primary_image and product.primary_image.image %}
-                    <div class="relative group">
-                        <img src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" class="w-full h-36 object-contain rounded-xl border border-slate-200/80 bg-white p-2 shadow-2xs">
-                        <span class="absolute bottom-2 right-2 px-2 py-0.5 rounded-full bg-slate-900/80 text-white text-[10px] font-bold backdrop-blur-xs">Actuelle</span>
-                    </div>
-                    {% elif product and product.images.all %}
-                    <div class="relative group">
-                        <img src="{{ product.images.all.0.image.url }}" alt="{{ product.name }}" class="w-full h-36 object-contain rounded-xl border border-slate-200/80 bg-white p-2 shadow-2xs">
-                        <span class="absolute bottom-2 right-2 px-2 py-0.5 rounded-full bg-slate-900/80 text-white text-[10px] font-bold backdrop-blur-xs">Actuelle</span>
-                    </div>
-                    {% endif %}
-
-                    <div>
-                        <input type="file" name="primary_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2.5 file:py-1.5 file:px-3 file:rounded-xl file:border file:border-slate-200 file:text-xs file:font-bold file:bg-slate-50 file:text-slate-700 hover:file:bg-slate-100 cursor-pointer">
-                    </div>
-                </div>
-
-                <!-- Visibilité et Statuts -->
-                <div class="bg-white/90 backdrop-blur-xl p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3.5">
-                    <div class="flex items-center gap-2 border-b border-slate-100 pb-2.5">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        <h2 class="text-sm font-bold text-slate-900 font-heading">
-                            Visibilité sur la boutique
-                        </h2>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                            Disponibilité
-                        </label>
-                        {{ form.status }}
-                    </div>
-
-                    <div class="space-y-1 pt-1 text-xs">
-                        <label class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition cursor-pointer">
-                            {{ form.is_active }}
-                            <div>
-                                <span class="font-bold text-slate-800 text-xs block">En ligne sur la boutique</span>
-                                <span class="text-[10px] text-slate-400 block">Accessible aux clients à Bamako</span>
-                            </div>
-                        </label>
-                        <label class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition cursor-pointer">
-                            {{ form.is_featured }}
-                            <div>
-                                <span class="font-bold text-slate-800 text-xs block">Vitrine page d'accueil</span>
-                                <span class="text-[10px] text-slate-400 block">Mis en avant en haut du catalogue</span>
-                            </div>
-                        </label>
-                        <label class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition cursor-pointer">
-                            {{ form.is_new }}
-                            <div>
-                                <span class="font-bold text-slate-800 text-xs block">Badge Nouveauté</span>
-                                <span class="text-[10px] text-slate-400 block">Affiche l'étiquette Nouveau</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Actions d'enregistrement -->
-                <div class="space-y-2 pt-2">
-                    <button type="submit" 
-                            class="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs sm:text-sm rounded-xl shadow-xs transition active:scale-95 cursor-pointer flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4 text-slate-950 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                        </svg>
-                        <span>Enregistrer le produit</span>
-                    </button>
-                    
-                    <a href="{% url 'backoffice:products' %}" 
-                       class="block w-full py-2 text-center text-xs font-semibold text-slate-400 hover:text-slate-700 transition">
-                        Annuler et retourner
-                    </a>
-                </div>
-
-            </div>
-
-        </div>
-    </form>
-
+{% block mobile_bottom_bar %}
+<div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200 px-3 pt-2 pb-safe-bottom flex items-center gap-2 shadow-[0_-4px_20px_rgba(15,23,42,0.08)]">
+  <a href="{% url 'backoffice:products' %}" class="px-3.5 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold shrink-0">
+    Annuler
+  </a>
+  {% if not product %}
+  <button
+    type="submit"
+    form="product-editor-form"
+    name="save_and_add"
+    value="1"
+    class="px-3 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold shrink-0"
+  >+ Suivant</button>
+  {% endif %}
+  <button
+    type="submit"
+    form="product-editor-form"
+    class="flex-1 py-2.5 px-4 rounded-xl bg-amber-400 active:bg-amber-500 text-slate-950 font-extrabold text-xs shadow-sm"
+  >
+    {% if product %}Enregistrer{% else %}Publier sur la boutique{% endif %}
+  </button>
 </div>
 {% endblock %}

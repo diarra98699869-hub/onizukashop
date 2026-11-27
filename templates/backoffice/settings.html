@@ -1,356 +1,258 @@
 {% extends "backoffice/base.html" %}
 
-{% block title %}Paramètres & Entreprise - Direction Onizouka{% endblock %}
+{% block title %}Paramètres • Gestion Onizouka{% endblock %}
 
 {% block content %}
-<div class="space-y-4 max-w-5xl">
+<div class="max-w-4xl mx-auto space-y-3.5 pb-8">
 
-    <!-- EN-TÊTE COMPACT EFFET GLACE APPLE -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200/80">
+  <!-- EN-TÊTE -->
+  <div class="bg-white rounded-2xl border border-slate-200/80 p-3.5 sm:p-4 shadow-2xs flex items-center justify-between gap-2">
+    <div>
+      <h1 class="text-base sm:text-xl font-black text-slate-950 font-heading">Paramètres de la Boutique</h1>
+      <p class="text-xs text-slate-500">WhatsApp, Paiements Orange Money / Wave, Ventes Flash &amp; Pubs Facebook</p>
+    </div>
+    <span class="text-[10px] font-mono text-slate-400 hidden sm:inline">Maj: {{ settings.updated_at|date:"d/m H:i" }}</span>
+  </div>
+
+  <!-- NAVIGATION RAPIDE PAR SECTION -->
+  <div data-keep-scroll="bo-settings-nav" class="sticky top-[52px] lg:top-2 z-20 bg-[#f2f4f7]/95 backdrop-blur-md py-1.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs">
+    <a href="#boutique" class="px-3 py-1.5 rounded-full bg-white border border-slate-200 font-bold text-slate-800 whitespace-nowrap shrink-0">Boutique &amp; WhatsApp</a>
+    <a href="#paiements" class="px-3 py-1.5 rounded-full bg-white border border-slate-200 font-bold text-slate-800 whitespace-nowrap shrink-0">Paiements OM / Wave</a>
+    <a href="#livraison" class="px-3 py-1.5 rounded-full bg-white border border-slate-200 font-bold text-slate-800 whitespace-nowrap shrink-0">Livraison</a>
+    <a href="#flash" class="px-3 py-1.5 rounded-full bg-white border border-slate-200 font-bold text-amber-700 whitespace-nowrap shrink-0">Ventes Flash</a>
+    <a href="#meta" class="px-3 py-1.5 rounded-full bg-white border border-slate-200 font-bold text-blue-700 whitespace-nowrap shrink-0">Pubs Facebook / Meta</a>
+  </div>
+
+  <form id="settings-main-form" method="POST" class="space-y-3.5">
+    {% csrf_token %}
+
+    {% if form.errors %}
+    <div class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs space-y-1">
+      <p class="font-extrabold">Veuillez corriger les champs signalés :</p>
+      {% for field, errors in form.errors.items %}
+      <p>• <strong>{{ field }}</strong> : {{ errors|join:", " }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- 1. BOUTIQUE & WHATSAPP -->
+    <section id="boutique" class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-2xs space-y-3.5 scroll-mt-24">
+      <h2 class="font-heading font-black text-sm sm:text-base text-slate-950 pb-2 border-b border-slate-100">
+        1. Coordonnées Boutique &amp; WhatsApp Officiel
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-            <div class="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
-                <a href="{% url 'backoffice:dashboard' %}" class="hover:text-amber-600 transition">Tableau de bord</a>
-                <span>/</span>
-                <span class="text-slate-700 font-medium">Paramètres & Société</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <h1 class="text-base sm:text-xl font-extrabold text-slate-900 tracking-tight font-heading leading-tight">
-                    Paramètres de l'entreprise & boutique
-                </h1>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
-                    Actif
-                </span>
-            </div>
-            <p class="text-xs text-slate-500 mt-1">
-                Identité légale, frais de livraison à Bamako, comptes Orange Money & Wave, seuils de stock.
-            </p>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Nom de la boutique</label>
+          {{ form.site_name }}
         </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">WhatsApp de réception des commandes</label>
+          {{ form.phone_whatsapp }}
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Téléphone d'appel</label>
+          {{ form.phone_contact }}
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Adresse du magasin (Bamako)</label>
+          {{ form.address }}
+        </div>
+      </div>
 
-        <div class="flex items-center gap-2">
-            <span class="text-[11px] text-slate-400 font-mono">Dernière maj : {{ settings.updated_at|date:"d/m/Y H:i" }}</span>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Raison sociale (Factures)</label>
+          {{ form.company_name }}
         </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">NIF</label>
+            {{ form.nif }}
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">RCCM</label>
+            {{ form.rccm }}
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Email public</label>
+          {{ form.email_contact }}
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Email alertes commandes</label>
+          {{ form.email_orders }}
+        </div>
+      </div>
+      <div class="hidden">{{ form.currency }}</div>
+    </section>
+
+    <!-- 2. PAIEMENTS ORANGE MONEY, WAVE & ESPÈCES -->
+    <section id="paiements" class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-2xs space-y-3.5 scroll-mt-24">
+      <h2 class="font-heading font-black text-sm sm:text-base text-slate-950 pb-2 border-b border-slate-100">
+        2. Comptes Orange Money, Wave &amp; Paiement Livraison
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Numéro / Code Marchand Orange Money</label>
+          {{ form.orange_money_number }}
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Numéro Wave Mobile Money</label>
+          {{ form.wave_number }}
+        </div>
+      </div>
+
+      <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50/70 text-xs font-bold text-slate-800 cursor-pointer">
+        {{ form.cash_on_delivery_active }}
+        <span>Autoriser le paiement en espèces à la livraison</span>
+      </label>
+    </section>
+
+    <!-- 3. LIVRAISON & STOCKS -->
+    <section id="livraison" class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-2xs space-y-3.5 scroll-mt-24">
+      <h2 class="font-heading font-black text-sm sm:text-base text-slate-950 pb-2 border-b border-slate-100">
+        3. Livraison Bamako &amp; Règles de Stock
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Frais livraison (FCFA)</label>
+          {{ form.default_delivery_fee }}
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Livraison offerte dès (FCFA)</label>
+          {{ form.free_delivery_threshold }}
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Délai affiché</label>
+          {{ form.delivery_delay_text }}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Seuil alerte stock bas par défaut</label>
+          {{ form.default_min_stock_alert }}
+        </div>
+        <div class="space-y-2 pt-1 text-xs">
+          <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
+            {{ form.store_pickup_active }}
+            <span>Retrait gratuit en boutique Dibidani</span>
+          </label>
+          <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-slate-800">
+            {{ form.block_order_on_out_of_stock }}
+            <span>Bloquer l'achat si stock = 0</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-xs">
+        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-slate-700">
+          {{ form.email_notifications_active }}
+          <span>Emails automatiques de suivi</span>
+        </label>
+        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-slate-700">
+          {{ form.whatsapp_notifications_active }}
+          <span>Bouton de commande directe WhatsApp</span>
+        </label>
+      </div>
+      <div class="p-3 rounded-xl bg-amber-50/70 border border-amber-200 flex items-center justify-between gap-2 text-xs">
+        <span class="font-bold text-slate-800">Templates HTML, conditions d'envoi, alertes &amp; rappels de finalisation :</span>
+        <a href="{% url 'backoffice:emails_center' %}" class="px-3 py-1.5 rounded-lg bg-slate-950 text-amber-400 font-extrabold text-xs shrink-0">
+          Ouvrir le Centre Emails →
+        </a>
+      </div>
+    </section>
+
+    <!-- 4. VENTES FLASH SUR L'ACCUEIL -->
+    <section id="flash" class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-2xs space-y-3.5 scroll-mt-24">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <h2 class="font-heading font-black text-sm sm:text-base text-slate-950">4. Ventes Flash &amp; Compte à rebours</h2>
+        <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 text-[10px] font-extrabold">Accueil</span>
+      </div>
+
+      <label class="flex items-center gap-3 p-3 rounded-xl border border-amber-200 bg-amber-50/50 text-xs font-extrabold text-slate-900 cursor-pointer">
+        {{ form.flash_sale_active }}
+        <span>Afficher le bloc Ventes Flash sur la page d'accueil</span>
+      </label>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Titre de l'opération</label>
+          {{ form.flash_sale_title }}
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Fin du compte à rebours</label>
+          {{ form.flash_sale_end_date }}
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Sous-titre</label>
+        {{ form.flash_sale_subtitle }}
+      </div>
+    </section>
+
+    <!-- 5. META ADS / PIXEL FACEBOOK -->
+    <section id="meta" class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-2xs space-y-3.5 scroll-mt-24">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <h2 class="font-heading font-black text-sm sm:text-base text-slate-950">5. Publicités Facebook &amp; Instagram (Meta)</h2>
+        <span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[10px] font-extrabold">Meta Pixel</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">ID Pixel Meta</label>
+          {{ form.meta_pixel_id }}
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Vérification de domaine Meta</label>
+          {{ form.meta_domain_verification }}
+        </div>
+      </div>
+
+      <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1.5" x-data="{ copied: false }">
+        <div class="flex items-center justify-between gap-2">
+          <span class="font-bold text-slate-800">Lien du Catalogue XML automatique :</span>
+          <button
+            type="button"
+            @click="navigator.clipboard.writeText('{{ request.scheme }}://{{ request.get_host }}{% url 'shop:facebook_catalog' %}'); copied = true; setTimeout(() => copied = false, 2000)"
+            class="px-2.5 py-1 rounded-lg bg-white border border-slate-300 font-bold text-[11px] cursor-pointer"
+          >
+            <span x-text="copied ? 'Copié ✓' : 'Copier'">Copier</span>
+          </button>
+        </div>
+        <p class="font-mono text-[11px] text-blue-700 break-all">{{ request.scheme }}://{{ request.get_host }}{% url 'shop:facebook_catalog' %}</p>
+      </div>
+    </section>
+
+    <div class="hidden lg:flex justify-end pt-2">
+      <button type="submit" class="px-6 py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs shadow-xs cursor-pointer">
+        Enregistrer tous les paramètres
+      </button>
     </div>
 
-    <!-- FORMULAIRE DE PARAMÉTRAGE -->
-    <form method="POST" class="space-y-4">
-        {% csrf_token %}
+  </form>
 
-        {% if form.errors %}
-        <div class="p-3.5 rounded-2xl bg-rose-50/90 border border-rose-200 text-rose-800 text-xs space-y-1 shadow-xs">
-            <div class="font-bold flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
-                Veuillez vérifier les informations ci-dessous :
-            </div>
-            {% for field, errors in form.errors.items %}
-                <div class="pl-3"><strong>{{ field }}</strong>: {{ errors|join:", " }}</div>
-            {% endfor %}
-        </div>
-        {% endif %}
+</div>
+{% endblock %}
 
-        <!-- 1. IDENTITÉ & COORDONNÉES OFFICIELLES (BAMAKO) -->
-        <div class="bg-white/90 backdrop-blur-xl p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3.5">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                    <h2 class="text-sm font-bold text-slate-900 font-heading">
-                        1. Identité légale & Boutique Grand Marché de Bamako
-                    </h2>
-                </div>
-                <span class="text-[11px] font-medium text-slate-400 hidden sm:inline">Mentionné sur factures et reçus</span>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Nom Commercial de la Boutique
-                    </label>
-                    {{ form.site_name }}
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Raison Sociale Légale (SARL)
-                    </label>
-                    {{ form.company_name }}
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Numéro NIF (Fiscalité Mali)
-                    </label>
-                    {{ form.nif }}
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Numéro RCCM (Registre du Commerce)
-                    </label>
-                    {{ form.rccm }}
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Adresse physique de la boutique centrale (Grand Marché, Bamako)
-                </label>
-                {{ form.address }}
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Téléphone Service Client
-                    </label>
-                    {{ form.phone_contact }}
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        WhatsApp Commercial
-                    </label>
-                    {{ form.phone_whatsapp }}
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Email Officiel Client
-                    </label>
-                    {{ form.email_contact }}
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Email Alertes Direction
-                    </label>
-                    {{ form.email_orders }}
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. PARAMÈTRES COMMERCIAUX & LIVRAISON BAMAKO -->
-        <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-xs space-y-3">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-                <div class="flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                    <h2 class="text-xs font-semibold text-slate-800 uppercase tracking-wider">
-                        2. Tarifs de Livraison & Logistique Bamako
-                    </h2>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Frais de livraison forfaitaires (FCFA)
-                    </label>
-                    {{ form.default_delivery_fee }}
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Seuil livraison gratuite (FCFA)
-                    </label>
-                    {{ form.free_delivery_threshold }}
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Délai moyen affiché aux clients
-                    </label>
-                    {{ form.delivery_delay_text }}
-                </div>
-            </div>
-
-            <div class="pt-1 text-xs">
-                <label class="flex items-center gap-2 cursor-pointer">
-                    {{ form.store_pickup_active }}
-                    <span class="font-medium text-slate-800">Autoriser le retrait gratuit en magasin (Click & Collect en 15 min au Grand Marché de Bamako)</span>
-                </label>
-            </div>
-        </div>
-
-        <!-- 3. CANAUX DE PAIEMENT SÉCURISÉS (ORANGE MONEY & WAVE) -->
-        <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-xs space-y-3">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-                <div class="flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                    <h2 class="text-xs font-semibold text-slate-800 uppercase tracking-wider">
-                        3. Paramètres des Canaux de Paiement Mobile (Mali)
-                    </h2>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Numéro / Code Marchand Orange Money Mali
-                    </label>
-                    {{ form.orange_money_number }}
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Numéro Wave Mobile Money
-                    </label>
-                    {{ form.wave_number }}
-                </div>
-            </div>
-
-            <div class="pt-1 text-xs">
-                <label class="flex items-center gap-2 cursor-pointer">
-                    {{ form.cash_on_delivery_active }}
-                    <span class="font-medium text-slate-800">Activer le paiement en espèces (Cash) à la livraison après contrôle du colis</span>
-                </label>
-            </div>
-        </div>
-
-        <!-- 4. RÈGLES DE GESTION DES STOCKS & NOTIFICATIONS -->
-        <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-xs space-y-3">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-                <div class="flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                    <h2 class="text-xs font-semibold text-slate-800 uppercase tracking-wider">
-                        4. Stocks & Notifications Automatisées
-                    </h2>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Seuil d'alerte de stock critique par défaut (unités)
-                    </label>
-                    {{ form.default_min_stock_alert }}
-                </div>
-                <div class="flex flex-col justify-end">
-                    <label class="flex items-center gap-2 cursor-pointer text-xs mb-2">
-                        {{ form.block_order_on_out_of_stock }}
-                        <span class="font-medium text-slate-800">Bloquer l'ajout au panier si l'article est en rupture de stock</span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="pt-1 space-y-2 text-xs border-t border-slate-100">
-                <label class="flex items-center gap-2 cursor-pointer">
-                    {{ form.email_notifications_active }}
-                    <span class="font-medium text-slate-800">Envoyer les emails de confirmation et de suivi de livraison aux acheteurs</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer">
-                    {{ form.whatsapp_notifications_active }}
-                    <span class="font-medium text-slate-800">Activer le bouton de prise de contact rapide WhatsApp sur la boutique</span>
-                </label>
-            </div>
-        </div>
-
-        <!-- 5. CAMPAGNES COMMERCIALES, VENTES FLASH & COMPTE À REBOURS -->
-        <div class="bg-white/90 backdrop-blur-xl p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3.5">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                    <h2 class="text-sm font-bold text-slate-900 font-heading">
-                        5. Ventes Flash & Compte à Rebours (Page d'accueil)
-                    </h2>
-                </div>
-                <span class="text-[11px] font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
-                    Contrôle en direct
-                </span>
-            </div>
-
-            <div class="pt-1 text-xs">
-                <label class="flex items-center gap-2 cursor-pointer font-bold text-slate-900">
-                    {{ form.flash_sale_active }}
-                    <span>Activer la section "Ventes Flash" avec compte à rebours sur la page d'accueil</span>
-                </label>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Titre de la Vente Flash
-                    </label>
-                    {{ form.flash_sale_title }}
-                    <span class="text-[10px] text-slate-400">Ex : Ventes Flash de la Semaine, Offres Tabaski, Promo Canicule</span>
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Date & Heure de Fin du Compte à Rebours
-                    </label>
-                    {{ form.flash_sale_end_date }}
-                    <span class="text-[10px] text-slate-400">Le compte à rebours décompte en temps réel (jours, heures, minutes, secondes)</span>
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                    Sous-titre / Message promotionnel
-                </label>
-                {{ form.flash_sale_subtitle }}
-                <span class="text-[10px] text-slate-400">Ex : Tarifs remisés disponibles immédiatement en stock à Bamako</span>
-            </div>
-        </div>
-
-        <!-- 6. INTÉGRATION META BUSINESS, PIXEL FACEBOOK & PUBLICITÉS (STYLE SHOPIFY) -->
-        <div class="bg-white/90 backdrop-blur-xl p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3.5">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-                    <h2 class="text-sm font-bold text-slate-900 font-heading">
-                        6. Intégration Meta Business, Pixel Facebook & Publicités
-                    </h2>
-                </div>
-                <span class="text-[11px] font-medium text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full flex items-center gap-1">
-                    <svg class="w-3 h-3 fill-[#1877F2]" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                    Meta Ads Ready
-                </span>
-            </div>
-
-            <p class="text-xs text-slate-500">
-                Connectez votre boutique à Meta Business Suite (Facebook & Instagram Ads) comme sur Shopify. Suivi automatique des événements e-commerce (visites, ajouts au panier, achats FCFA et contacts WhatsApp).
-            </p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Identifiant Pixel Facebook (Meta Pixel ID)
-                    </label>
-                    {{ form.meta_pixel_id }}
-                    <span class="text-[10px] text-slate-400">À copier depuis <em>Meta Events Manager</em> (15-16 chiffres). Laissez vide pour désactiver.</span>
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
-                        Code de Vérification de Domaine Meta
-                    </label>
-                    {{ form.meta_domain_verification }}
-                    <span class="text-[10px] text-slate-400">Pour valider la propriété du nom de domaine dans Meta Business Suite.</span>
-                </div>
-            </div>
-
-            <!-- Lien du Flux Catalogue Produit (Data Feed XML) -->
-            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1.5" x-data="{ copied: false }">
-                <div class="flex items-center justify-between">
-                    <span class="font-bold text-slate-800 flex items-center gap-1.5">
-                        <svg class="w-4 h-4 text-blue-600 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>
-                        URL du Flux Catalogue Produits (Meta Commerce Manager)
-                    </span>
-                    <button 
-                        type="button" 
-                        @click="navigator.clipboard.writeText('{{ request.scheme }}://{{ request.get_host }}{% url 'shop:facebook_catalog' %}'); copied = true; setTimeout(() => copied = false, 2500)"
-                        class="px-2.5 py-1 rounded-md bg-white border border-slate-300 text-[11px] font-semibold text-slate-700 hover:bg-slate-100 transition shadow-2xs cursor-pointer"
-                    >
-                        <span x-text="copied ? 'Copié !' : 'Copier le lien'">Copier le lien</span>
-                    </button>
-                </div>
-                <div class="font-mono text-[11px] text-blue-700 bg-white p-2 rounded-lg border border-slate-200 select-all break-all">
-                    {{ request.scheme }}://{{ request.get_host }}{% url 'shop:facebook_catalog' %}
-                </div>
-                <p class="text-[10px] text-slate-400">
-                    Collez ce lien dans <strong>Meta Commerce Manager &gt; Catalogues &gt; Ajouter des articles &gt; Flux de données</strong> pour synchroniser automatiquement les 111 produits avec prix et photos.
-                </p>
-            </div>
-        </div>
-
-        <!-- BOUTON D'ENREGISTREMENT PRINCIPAL -->
-        <div class="flex items-center justify-end gap-3 pt-2">
-            <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs rounded-xl shadow-xs transition active:scale-95 cursor-pointer flex items-center justify-center gap-2">
-                <svg class="w-4 h-4 text-slate-950 stroke-[2.2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                </svg>
-                <span>Enregistrer les paramètres</span>
-            </button>
-        </div>
-
-    </form>
-
+{% block mobile_bottom_bar %}
+<div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200 px-3 pt-2 pb-safe-bottom flex items-center gap-2 shadow-[0_-4px_20px_rgba(15,23,42,0.08)]">
+  <a href="{% url 'backoffice:dashboard' %}" class="px-3.5 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold shrink-0">
+    Retour
+  </a>
+  <button
+    type="submit"
+    form="settings-main-form"
+    class="flex-1 py-2.5 px-4 rounded-xl bg-amber-400 active:bg-amber-500 text-slate-950 font-extrabold text-xs shadow-xs"
+  >
+    Enregistrer les paramètres
+  </button>
 </div>
 {% endblock %}

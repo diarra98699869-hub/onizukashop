@@ -13,10 +13,12 @@ urlpatterns = [
     path('modifier/<int:item_id>/', views.cart_update, name='cart_update'),
     path('coupon/', views.apply_coupon, name='apply_coupon'),
     path('coupon/retirer/', views.remove_coupon, name='remove_coupon'),
+    path('sauvegarder-contact/', views.cart_save_contact, name='cart_save_contact'),
     path('commander/', views.checkout, name='checkout'),
     path('valider/', views.place_order, name='place_order'),
     path('confirmation/<str:order_number>/', views.order_confirmation, name='confirmation'),
     path('mes-commandes/', views.order_history, name='history'),
     path('mes-commandes/<str:order_number>/', views.order_detail, name='order_detail'),
     path('mes-commandes/<str:order_number>/facture/', views.order_invoice, name='invoice'),
+    path('suivi/', views.track_order_public, name='track'),
 ]

@@ -1,6 +1,6 @@
 # ONIZOUKA SHOP 🇲🇱
 ### Plateforme E-Commerce Ultra-Premium pour Électronique & Électroménager
-**Grand Marché de Bamako (Dabanani, Bamako - Mali)** · **WhatsApp Officiel : +223 92 67 37 99**
+**Grand Marché de Bamako (Dibidani, Bamako - Mali)** · **WhatsApp Officiel : +223 92 67 37 99**
 
 ---
 

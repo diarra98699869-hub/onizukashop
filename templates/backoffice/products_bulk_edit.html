@@ -1,0 +1,581 @@
+{% extends "backoffice/base.html" %}
+{% load humanize %}
+
+{% block title %}Mode Tableur Excel • Modification en Masse • Onizuka Shop{% endblock %}
+
+{% block content %}
+<div
+  class="space-y-4 pb-20"
+  x-data="{
+    selectedIds: [],
+    selectAll: false,
+    modifiedItems: {},
+    actionModal: false,
+    selectedAction: 'add_stock',
+    stockDelta: 5,
+    stockValue: 10,
+    discountPct: 10,
+    isSaving: false,
+    saveMessage: '',
+
+    toggleSelectAll(ids) {
+      if (this.selectAll) {
+        this.selectedIds = [];
+        this.selectAll = false;
+      } else {
+        this.selectedIds = [...ids];
+        this.selectAll = true;
+      }
+    },
+
+    markDirty(id, field, value) {
+      if (!this.modifiedItems[id]) {
+        this.modifiedItems[id] = { id: id };
+      }
+      this.modifiedItems[id][field] = value;
+      if (field === 'cost_price' || field === 'price' || field === 'sale_price') {
+        this.recalcRowMargin(id);
+      }
+      this.$nextTick(() => {});
+    },
+
+    recalcRowMargin(id) {
+      const costEl = document.getElementById('cost-input-' + id);
+      const priceEl = document.getElementById('price-input-' + id);
+      const saleEl = document.getElementById('sale-input-' + id);
+      const marginCell = document.getElementById('margin-cell-' + id);
+      if (!costEl || !priceEl || !marginCell) return;
+
+      const costVal = parseFloat(costEl.value);
+      const priceVal = parseFloat(priceEl.value);
+      const saleVal = saleEl ? parseFloat(saleEl.value) : NaN;
+
+      if (isNaN(costVal) || costVal <= 0 || isNaN(priceVal)) {
+        marginCell.innerHTML = '<span class=\'text-slate-300 text-[10px]\'>—</span>';
+        return;
+      }
+      const sell = (!isNaN(saleVal) && saleVal > 0 && saleVal < priceVal) ? saleVal : priceVal;
+      const diff = Math.round(sell - costVal);
+      const pct = Math.round(((sell - costVal) / costVal) * 1000) / 10;
+      const fmtDiff = (diff >= 0 ? '+' : '') + diff.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      const cls = diff > 0 ? 'text-emerald-700' : 'text-rose-600';
+      marginCell.innerHTML = '<span class=\'font-mono text-[11px] font-black ' + cls + '\'>' + fmtDiff + '</span>' +
+                             '<span class=\'block text-[9px] text-slate-400 font-semibold\'>' + pct + '%</span>';
+    },
+
+    get modifiedCount() {
+      return Object.keys(this.modifiedItems).length;
+    },
+
+    async saveAllChanges() {
+      if (this.modifiedCount === 0) return;
+      this.isSaving = true;
+      this.saveMessage = 'Enregistrement en cours...';
+
+      const items = Object.values(this.modifiedItems);
+      try {
+        const res = await fetch('{% url 'backoffice:products_bulk_save' %}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({ items: items })
+        });
+        const data = await res.json();
+        if (data.status === 'ok') {
+          this.modifiedItems = {};
+          this.saveMessage = data.message || 'Enregistré avec succès !';
+          setTimeout(() => {
+            window.location.reload();
+          }, 800);
+        } else {
+          alert(data.message || 'Erreur lors de la sauvegarde');
+          this.isSaving = false;
+        }
+      } catch (e) {
+        alert('Erreur réseau ou serveur : ' + e.message);
+        this.isSaving = false;
+      }
+    },
+
+    async uploadImageQuick(productId, input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+      const imgElem = document.getElementById('thumb-' + productId);
+      if (imgElem) imgElem.style.opacity = '0.3';
+
+      try {
+        const res = await fetch('/gestion/produits/' + productId + '/upload-image-rapide/', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (data.status === 'ok' && data.url) {
+          if (imgElem) {
+            imgElem.src = data.url;
+            imgElem.style.opacity = '1';
+          }
+        } else {
+          alert(data.message || 'Erreur lors du téléversement de la photo');
+          if (imgElem) imgElem.style.opacity = '1';
+        }
+      } catch (err) {
+        alert('Erreur lors de l\'upload : ' + err.message);
+        if (imgElem) imgElem.style.opacity = '1';
+      }
+    }
+  }"
+>
+
+  <!-- =================================================================== -->
+  <!-- EN-TÊTE DU TABLEUR EXCEL + ONGLETS DE VUES                          -->
+  <!-- =================================================================== -->
+  <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-xl sm:text-2xl font-black text-slate-950 font-heading flex items-center gap-2">
+          <span class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm shadow-xs">📊</span>
+          <span>Mode Tableur Excel • Modification en Masse</span>
+        </h1>
+        <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-black">
+          {{ total_filtered_count }} / {{ total_products_count }} réf.
+        </span>
+      </div>
+      <p class="text-xs text-slate-500 mt-1">
+        Modifiez les prix, stocks, remises et photos directement dans le tableau comme dans un tableur Excel.
+      </p>
+    </div>
+
+    <!-- Actions & Bascule de vue -->
+    <div class="flex items-center gap-2 flex-wrap">
+      <a
+        href="{% url 'backoffice:products' %}"
+        class="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5"
+      >
+        <span>📋 Vue Fiches Classique</span>
+      </a>
+
+      <a
+        href="{% url 'backoffice:products_bulk_create' %}"
+        class="py-2 px-3.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-black transition flex items-center gap-1.5 shadow-xs"
+      >
+        <span>➕ Ajout en Masse (Grille)</span>
+      </a>
+
+      <a
+        href="{% url 'backoffice:export_products_csv' %}"
+        class="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition"
+        title="Exporter en fichier Excel UTF-8"
+      >
+        <span>📤 Exporter</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- BARRE DE RECHERCHE & FILTRES RAPIDES DU TABLEUR                     -->
+  <!-- =================================================================== -->
+  <form
+    method="GET"
+    action="{% url 'backoffice:products_bulk_edit' %}"
+    class="bg-white rounded-2xl border border-slate-200/80 p-3 shadow-sm grid grid-cols-1 sm:grid-cols-12 gap-2 text-xs"
+  >
+    <div class="sm:col-span-4 relative">
+      <input
+        type="search"
+        name="q"
+        value="{{ search_query }}"
+        placeholder="Rechercher nom, marque, SKU..."
+        class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:border-amber-500"
+      >
+    </div>
+
+    <div class="sm:col-span-3">
+      <select name="category" @change="$el.form.submit()" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white font-medium text-slate-800">
+        <option value="">Tous les rayons (Électro, Meubles, Déco)</option>
+        {% for cat in categories %}
+        <option value="{{ cat.slug }}" {% if selected_category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="sm:col-span-2">
+      <select name="stock" @change="$el.form.submit()" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white font-medium text-slate-800">
+        <option value="">Tous les stocks</option>
+        <option value="low" {% if selected_stock == 'low' %}selected{% endif %}>Stock faible (&le; min)</option>
+        <option value="out" {% if selected_stock == 'out' %}selected{% endif %}>Rupture (0 stock)</option>
+        <option value="featured" {% if selected_stock == 'featured' %}selected{% endif %}>En vedette</option>
+        <option value="inactive" {% if selected_stock == 'inactive' %}selected{% endif %}>Masqués / Inactifs</option>
+      </select>
+    </div>
+
+    <div class="sm:col-span-3 flex items-center gap-2">
+      <select name="per_page" @change="$el.form.submit()" class="w-24 px-2 py-2 rounded-xl border border-slate-200 bg-white font-bold text-slate-800">
+        <option value="30" {% if per_page == 30 %}selected{% endif %}>30 / page</option>
+        <option value="50" {% if per_page == 50 %}selected{% endif %}>50 / page</option>
+        <option value="100" {% if per_page == 100 %}selected{% endif %}>100 / page</option>
+      </select>
+      <button type="submit" class="flex-1 py-2 px-3 rounded-xl bg-slate-950 text-white font-black cursor-pointer hover:bg-slate-800">
+        Filtrer
+      </button>
+      {% if search_query or selected_category or selected_brand or selected_stock %}
+      <a href="{% url 'backoffice:products_bulk_edit' %}" class="py-2 px-2.5 rounded-xl bg-slate-100 text-slate-600 font-bold" title="Réinitialiser">✕</a>
+      {% endif %}
+    </div>
+  </form>
+
+  <!-- =================================================================== -->
+  <!-- BARRE D'ACTIONS GROUPÉES SUR LA SÉLECTION (STICKY)                  -->
+  <!-- =================================================================== -->
+  <div
+    x-show="selectedIds.length > 0"
+    x-transition
+    class="sticky top-14 z-30 bg-slate-950 text-white rounded-2xl p-3 shadow-xl flex flex-wrap items-center justify-between gap-3 border border-slate-800"
+  >
+    <div class="flex items-center gap-2 text-xs">
+      <span class="w-6 h-6 rounded-lg bg-amber-400 text-slate-950 font-black flex items-center justify-center text-xs" x-text="selectedIds.length"></span>
+      <span class="font-bold">article(s) sélectionné(s)</span>
+      <button type="button" @click="selectedIds = []; selectAll = false" class="text-xs text-slate-400 hover:text-white underline ml-2">Désélectionner tout</button>
+    </div>
+
+    <div class="flex items-center gap-2 flex-wrap">
+      <form method="POST" action="{% url 'backoffice:products_bulk_action' %}" class="flex items-center gap-2" onsubmit="return confirm('Confirmer cette action groupée sur la sélection ?')">
+        {% csrf_token %}
+        <template x-for="id in selectedIds" :key="id">
+          <input type="hidden" name="selected_ids" :value="id">
+        </template>
+
+        <select name="bulk_action" x-model="selectedAction" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white focus:outline-none">
+          <option value="add_stock">📦 Ajouter du stock (+N)</option>
+          <option value="set_stock">📦 Définir le stock exact</option>
+          <option value="discount_pct">🏷️ Appliquer remise (-N %)</option>
+          <option value="remove_discount">❌ Supprimer prix promo</option>
+          <option value="activate">👁️ Activer / Rendre visibles</option>
+          <option value="deactivate">🚫 Désactiver / Masquer</option>
+          <option value="feature">⭐ Mettre en vedette</option>
+          <option value="unfeature">☆ Retirer des vedettes</option>
+          <option value="delete">🗑️ Supprimer définitivement</option>
+        </select>
+
+        <template x-if="selectedAction === 'add_stock'">
+          <input type="number" name="stock_delta" value="5" class="w-16 px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-black text-amber-400 text-center">
+        </template>
+        <template x-if="selectedAction === 'set_stock'">
+          <input type="number" name="stock_value" value="10" class="w-16 px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-black text-amber-400 text-center">
+        </template>
+        <template x-if="selectedAction === 'discount_pct'">
+          <div class="flex items-center gap-1">
+            <input type="number" name="discount_pct" value="10" min="1" max="90" class="w-16 px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-black text-amber-400 text-center">
+            <span class="text-xs font-bold text-amber-400">%</span>
+          </div>
+        </template>
+
+        <button type="submit" class="py-1.5 px-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs transition cursor-pointer">
+          Appliquer à la sélection
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- GRILLE TABLEUR EXCEL INTERACTIVE                                    -->
+  <!-- =================================================================== -->
+  <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto max-h-[72vh] relative">
+      <table class="w-full text-left text-xs border-collapse">
+        <!-- En-tête Excel Sticky -->
+        <thead class="sticky top-0 z-20 bg-slate-900 text-white select-none">
+          <tr class="divide-x divide-slate-800 text-[11px] font-black uppercase tracking-wider">
+            <th class="py-3 px-3 w-10 text-center">
+              <input
+                type="checkbox"
+                @change="toggleSelectAll([{% for p in products %}'{{ p.id }}'{% if not forloop.last %},{% endif %}{% endfor %}])"
+                :checked="selectAll"
+                class="w-4 h-4 rounded text-amber-400 focus:ring-amber-400 border-slate-600 bg-slate-800 cursor-pointer"
+              >
+            </th>
+            <th class="py-3 px-3 w-14 text-center">Photo</th>
+            <th class="py-3 px-3 min-w-[240px]">Nom du Produit (Électro, Meuble, Déco)</th>
+            <th class="py-3 px-3 min-w-[150px]">Rayon / Catégorie</th>
+            <th class="py-3 px-3 min-w-[110px]">Marque</th>
+            <th class="py-3 px-3 min-w-[110px] text-right bg-emerald-950/70 text-emerald-300">Prix Achat</th>
+            <th class="py-3 px-3 min-w-[110px] text-right">Prix Vente</th>
+            <th class="py-3 px-2 min-w-[75px] text-center text-slate-400">Marge</th>
+            <th class="py-3 px-3 min-w-[110px] text-right">Prix Promo (FCFA)</th>
+            <th class="py-3 px-3 min-w-[85px] text-center">Stock</th>
+            <th class="py-3 px-3 min-w-[70px] text-center">Alerte</th>
+            <th class="py-3 px-3 w-16 text-center">Vedette</th>
+            <th class="py-3 px-3 w-16 text-center">Actif</th>
+            <th class="py-3 px-3 w-14 text-center">Fiche</th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-slate-200">
+          {% for product in products %}
+          <tr
+            class="hover:bg-amber-50/30 transition group divide-x divide-slate-100"
+            :class="{ 'bg-amber-50/50': selectedIds.includes('{{ product.id }}') }"
+          >
+            <!-- Checkbox Ligne -->
+            <td class="py-2.5 px-3 text-center">
+              <input
+                type="checkbox"
+                value="{{ product.id }}"
+                x-model="selectedIds"
+                class="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 border-slate-300 cursor-pointer"
+              >
+            </td>
+
+            <!-- Photo Produit (Upload Direct en 1 Clic) -->
+            <td class="py-2 px-2 text-center relative">
+              <label class="block relative cursor-pointer group/thumb" title="Cliquer pour changer la photo directement">
+                <input
+                  type="file"
+                  accept="image/*"
+                  class="hidden"
+                  @change="uploadImageQuick('{{ product.id }}', $event.target)"
+                >
+                <div class="w-11 h-11 mx-auto rounded-xl bg-slate-50 border border-slate-200 overflow-hidden flex items-center justify-center p-0.5 group-hover/thumb:border-amber-400 transition">
+                  {% if product.primary_image %}
+                  <img
+                    id="thumb-{{ product.id }}"
+                    src="{{ product.primary_image.thumbnail.url|default:product.primary_image.image.url }}"
+                    alt="{{ product.name }}"
+                    class="w-full h-full object-contain"
+                  >
+                  {% else %}
+                  <span id="thumb-{{ product.id }}" class="text-[9px] font-bold text-slate-400">📷 +</span>
+                  {% endif %}
+                </div>
+                <div class="absolute inset-0 bg-black/40 text-white rounded-xl opacity-0 group-hover/thumb:opacity-100 flex items-center justify-center text-[10px] font-bold transition">
+                  ✎
+                </div>
+              </label>
+            </td>
+
+            <!-- Nom du Produit (Édition Directe) -->
+            <td class="py-2 px-3">
+              <input
+                type="text"
+                value="{{ product.name }}"
+                @input="markDirty('{{ product.id }}', 'name', $event.target.value)"
+                class="w-full px-2.5 py-1.5 rounded-lg border border-transparent hover:border-slate-300 focus:border-amber-500 focus:bg-white text-xs font-bold text-slate-900 transition"
+              >
+              <div class="px-2.5 text-[10px] font-mono text-slate-400 mt-0.5 flex items-center gap-2">
+                <span>SKU: {{ product.sku|default:"N/A" }}</span>
+                {% if product.has_video %}
+                <span class="text-amber-600 font-bold">▶ Vidéo</span>
+                {% endif %}
+              </div>
+            </td>
+
+            <!-- Catégorie -->
+            <td class="py-2 px-2">
+              <select
+                @change="markDirty('{{ product.id }}', 'category_id', $event.target.value)"
+                class="w-full px-2 py-1.5 rounded-lg border border-transparent hover:border-slate-300 focus:border-amber-500 bg-transparent focus:bg-white text-xs font-semibold text-slate-800"
+              >
+                {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if product.category_id == cat.id %}selected{% endif %}>
+                  {{ cat.name }}
+                </option>
+                {% endfor %}
+              </select>
+            </td>
+
+            <!-- Marque -->
+            <td class="py-2 px-2">
+              <select
+                @change="markDirty('{{ product.id }}', 'brand_id', $event.target.value)"
+                class="w-full px-2 py-1.5 rounded-lg border border-transparent hover:border-slate-300 focus:border-amber-500 bg-transparent focus:bg-white text-xs text-slate-700"
+              >
+                <option value="">(Aucune)</option>
+                {% for brand in brands %}
+                <option value="{{ brand.id }}" {% if product.brand_id == brand.id %}selected{% endif %}>
+                  {{ brand.name }}
+                </option>
+                {% endfor %}
+              </select>
+            </td>
+
+            <!-- Prix d'Achat (FCFA) -->
+            <td class="py-2 px-2 text-right">
+              <input
+                id="cost-input-{{ product.id }}"
+                type="number"
+                step="500"
+                min="0"
+                placeholder="—"
+                value="{{ product.cost_price|default:'' }}"
+                @input="markDirty('{{ product.id }}', 'cost_price', $event.target.value)"
+                class="w-full px-2 py-1.5 rounded-lg border border-transparent hover:border-slate-300 focus:border-emerald-500 focus:bg-white text-right font-heading font-black text-emerald-800 bg-emerald-50/40 text-xs transition"
+                title="Prix d'achat fournisseur"
+              >
+            </td>
+
+            <!-- Prix Normal (FCFA) -->
+            <td class="py-2 px-2 text-right">
+              <input
+                id="price-input-{{ product.id }}"
+                type="number"
+                step="500"
+                min="0"
+                value="{{ product.price }}"
+                @input="markDirty('{{ product.id }}', 'price', $event.target.value)"
+                class="w-full px-2 py-1.5 rounded-lg border border-transparent hover:border-slate-300 focus:border-amber-500 focus:bg-white text-right font-heading font-black text-slate-950 text-xs transition"
+              >
+            </td>
+
+            <!-- Marge Bénéficiaire Brute Estimée (Recalculée en Direct) -->
+            <td id="margin-cell-{{ product.id }}" class="py-2 px-1 text-center whitespace-nowrap">
+              {% if product.cost_price and product.price %}
+                <span class="font-mono text-[11px] font-black {% if product.margin and product.margin > 0 %}text-emerald-700{% else %}text-rose-600{% endif %}" title="Marge brute en FCFA">
+                  {% if product.margin > 0 %}+{% endif %}{{ product.margin|floatformat:0|intcomma }}
+                </span>
+                {% if product.margin_percentage is not None %}
+                <span class="block text-[9px] text-slate-400 font-semibold">{{ product.margin_percentage }}%</span>
+                {% endif %}
+              {% else %}
+                <span class="text-slate-300 text-[10px]">—</span>
+              {% endif %}
+            </td>
+
+            <!-- Prix Promo (FCFA) -->
+            <td class="py-2 px-2 text-right">
+              <input
+                id="sale-input-{{ product.id }}"
+                type="number"
+                step="500"
+                min="0"
+                placeholder="—"
+                value="{{ product.sale_price|default:'' }}"
+                @input="markDirty('{{ product.id }}', 'sale_price', $event.target.value)"
+                class="w-full px-2 py-1.5 rounded-lg border border-transparent hover:border-slate-300 focus:border-amber-500 focus:bg-white text-right font-heading font-black text-rose-600 text-xs transition"
+              >
+            </td>
+
+            <!-- Stock (Quantité en Magasin) -->
+            <td class="py-2 px-2 text-center">
+              <input
+                type="number"
+                min="0"
+                value="{{ product.stock }}"
+                @input="markDirty('{{ product.id }}', 'stock', $event.target.value)"
+                class="w-20 mx-auto px-2 py-1.5 rounded-lg border border-transparent hover:border-slate-300 focus:border-amber-500 focus:bg-white text-center font-heading font-black text-xs transition {% if product.stock == 0 %}text-rose-600 bg-rose-50/50{% elif product.stock <= product.min_stock %}text-amber-700 bg-amber-50/50{% else %}text-emerald-700{% endif %}"
+              >
+            </td>
+
+            <!-- Seuil d'Alerte Min Stock -->
+            <td class="py-2 px-2 text-center">
+              <input
+                type="number"
+                min="0"
+                value="{{ product.min_stock }}"
+                @input="markDirty('{{ product.id }}', 'min_stock', $event.target.value)"
+                class="w-14 mx-auto px-1.5 py-1.5 rounded-lg border border-transparent hover:border-slate-300 focus:border-amber-500 text-center font-mono text-[11px] text-slate-500"
+              >
+            </td>
+
+            <!-- En Vedette (Checkbox) -->
+            <td class="py-2 px-2 text-center">
+              <input
+                type="checkbox"
+                {% if product.is_featured %}checked{% endif %}
+                @change="markDirty('{{ product.id }}', 'is_featured', $event.target.checked)"
+                class="w-4 h-4 rounded text-amber-500 border-slate-300 cursor-pointer"
+                title="Mettre en avant sur la page d'accueil"
+              >
+            </td>
+
+            <!-- Actif / Visible Boutique -->
+            <td class="py-2 px-2 text-center">
+              <input
+                type="checkbox"
+                {% if product.is_active %}checked{% endif %}
+                @change="markDirty('{{ product.id }}', 'is_active', $event.target.checked)"
+                class="w-4 h-4 rounded text-emerald-600 border-slate-300 cursor-pointer"
+                title="Visible par les clients"
+              >
+            </td>
+
+            <!-- Lien Fiche & Édition Complète -->
+            <td class="py-2 px-2 text-center whitespace-nowrap">
+              <a
+                href="{% url 'backoffice:product_edit' product.id %}"
+                class="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-slate-100 inline-block font-bold"
+                title="Édition complète (fiche technique, toutes photos, vidéo)"
+              >
+                ✎
+              </a>
+              <a
+                href="{% url 'shop:product' product.slug %}"
+                target="_blank"
+                class="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 inline-block"
+                title="Voir sur la boutique"
+              >
+                ↗
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="14" class="py-12 text-center text-slate-400 text-sm">
+              Aucun produit ne correspond à vos critères de recherche.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination du Tableur -->
+    {% if products.has_other_pages %}
+    <div class="p-3.5 border-t border-slate-200/80 bg-slate-50 flex items-center justify-between text-xs">
+      <span class="text-slate-500 font-semibold">
+        Affichage de la page {{ products.number }} sur {{ products.paginator.num_pages }} ({{ total_filtered_count }} produits)
+      </span>
+      <div class="flex items-center gap-1.5">
+        {% if products.has_previous %}
+        <a href="?page={{ products.previous_page_number }}&amp;q={{ search_query|urlencode }}&amp;category={{ selected_category }}&amp;stock={{ selected_stock }}&amp;per_page={{ per_page }}" class="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 font-bold hover:bg-slate-100">← Précédent</a>
+        {% endif %}
+        {% if products.has_next %}
+        <a href="?page={{ products.next_page_number }}&amp;q={{ search_query|urlencode }}&amp;category={{ selected_category }}&amp;stock={{ selected_stock }}&amp;per_page={{ per_page }}" class="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 font-bold hover:bg-slate-100">Suivant →</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- BOUTON FLOTTANT D'ENREGISTREMENT EXCEL (DÈS QU'UNE MODIF EST FAITE) -->
+  <!-- =================================================================== -->
+  <div
+    x-show="modifiedCount > 0"
+    x-transition:enter="ease-out duration-200"
+    x-transition:enter-start="translate-y-12 opacity-0"
+    x-transition:enter-end="translate-y-0 opacity-100"
+    class="fixed bottom-6 right-6 z-50 bg-slate-950 text-white p-3.5 sm:p-4 rounded-3xl shadow-2xl border border-amber-400/40 flex items-center gap-4"
+  >
+    <div class="flex items-center gap-2">
+      <span class="w-7 h-7 rounded-full bg-amber-400 text-slate-950 font-black flex items-center justify-center text-xs" x-text="modifiedCount"></span>
+      <span class="text-xs font-bold">modification(s) non enregistrée(s)</span>
+    </div>
+
+    <button
+      type="button"
+      @click="saveAllChanges()"
+      :disabled="isSaving"
+      class="py-2.5 px-5 rounded-2xl bg-amber-400 hover:bg-amber-500 disabled:opacity-50 text-slate-950 font-black text-xs flex items-center gap-2 shadow-sm transition active:scale-95 cursor-pointer"
+    >
+      <span x-text="isSaving ? 'Enregistrement...' : '💾 Enregistrer Tout'"></span>
+    </button>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Onizuka Shop • Bamako</title>
+  <meta name="theme-color" content="#0d0e12">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #0d0e12;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid rgba(250, 204, 21, 0.2);
+      border-top-color: #facc15;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      margin: 18px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .brand { font-size: 24px; font-weight: 900; letter-spacing: -0.02em; }
+    .brand span { color: #facc15; }
+    .sub { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+    .offline-box {
+      display: none;
+      max-width: 360px;
+      margin-top: 16px;
+      padding: 20px;
+      background: #161922;
+      border: 1px solid rgba(250, 204, 21, 0.25);
+      border-radius: 20px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 13px;
+      text-decoration: none;
+      margin-top: 10px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-gold { background: #facc15; color: #0d0e12; }
+    .btn-wa { background: #16a34a; color: #ffffff; }
+  </style>
+</head>
+<body>
+  <div class="brand">ONIZUKA <span>SHOP</span></div>
+  <div class="sub">Grand Marché de Bamako • Dibidani</div>
+  <div id="loader" class="spinner"></div>
+
+  <div id="offline-box" class="offline-box">
+    <p style="font-size:13px;color:#cbd5e1;margin-bottom:12px;">
+      Connexion au serveur en cours... Vérifiez votre réseau mobile 3G/4G ou Wi-Fi.
+    </p>
+    <button type="button" onclick="bootApp()" class="btn btn-gold">↻ Réessayer</button>
+    <a href="https://wa.me/22392673799" class="btn btn-wa">WhatsApp Direct (+223 92 67 37 99)</a>
+  </div>
+
+  <script>
+    const TARGET_URL = 'https://onizukashop.com/?source=capacitor';
+    function bootApp() {
+      document.getElementById('loader').style.display = 'block';
+      document.getElementById('offline-box').style.display = 'none';
+      if (navigator.onLine !== false) {
+        window.location.replace(TARGET_URL);
+      } else {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('offline-box').style.display = 'block';
+      }
+    }
+    setTimeout(bootApp, 300);
+    window.addEventListener('online', bootApp);
+  </script>
+</body>
+</html>

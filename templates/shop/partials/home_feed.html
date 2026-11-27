@@ -1,0 +1,60 @@
+{% if append_mode %}
+  {% for product in feed_products %}
+    {% include 'shop/partials/product_card.html' with product=product %}
+  {% endfor %}
+
+  {% if feed_products.has_next %}
+  <div
+    id="load-more-slot"
+    class="col-span-full pt-3 pb-1 text-center"
+    hx-get="{% url 'shop:home' %}?tab={{ active_tab }}&amp;page={{ feed_products.next_page_number }}&amp;append=1"
+    hx-trigger="revealed, click"
+    hx-target="#load-more-slot"
+    hx-indicator="#load-more-slot"
+    hx-swap="outerHTML"
+  >
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3">
+      <div class="rounded-2xl bg-white p-2.5 border border-slate-100 space-y-2">
+        <div class="aspect-square rounded-xl skeleton-shimmer"></div>
+        <div class="h-3 w-3/4 rounded skeleton-shimmer"></div>
+        <div class="h-4 w-1/2 rounded skeleton-shimmer"></div>
+      </div>
+      <div class="rounded-2xl bg-white p-2.5 border border-slate-100 space-y-2">
+        <div class="aspect-square rounded-xl skeleton-shimmer"></div>
+        <div class="h-3 w-2/3 rounded skeleton-shimmer"></div>
+        <div class="h-4 w-1/2 rounded skeleton-shimmer"></div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+{% else %}
+  {% if feed_products %}
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3">
+    {% for product in feed_products %}
+      {% include 'shop/partials/product_card.html' with product=product %}
+    {% endfor %}
+
+    {% if feed_products.has_next %}
+    <div
+      id="load-more-slot"
+      class="col-span-full pt-3 pb-1 text-center"
+      hx-get="{% url 'shop:home' %}?tab={{ active_tab }}&amp;page={{ feed_products.next_page_number }}&amp;append=1"
+      hx-trigger="revealed"
+      hx-target="#load-more-slot"
+    hx-indicator="#load-more-slot"
+      hx-swap="outerHTML"
+    >
+      <button
+        type="button"
+        class="w-full sm:w-auto min-w-[220px] px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-extrabold text-xs shadow-sm"
+      >Chargement de la suite...</button>
+    </div>
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="bg-white rounded-2xl border border-slate-200 p-8 text-center">
+    <p class="text-xs font-bold text-slate-700">Aucun produit disponible dans ce rayon pour le moment.</p>
+    <a href="{% url 'shop:catalog' %}" class="mt-2 inline-block text-xs font-extrabold text-amber-600 hover:underline">Voir tout le catalogue →</a>
+  </div>
+  {% endif %}
+{% endif %}

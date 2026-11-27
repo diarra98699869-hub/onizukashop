@@ -1,0 +1,572 @@
+{% extends "backoffice/base.html" %}
+{% load humanize %}
+
+{% block title %}Emails, Alertes & Rappels • Gestion Onizuka{% endblock %}
+
+{% block content %}
+<div class="space-y-4 pb-8" x-data="{ activeTab: '{{ active_tab|default:'conditions' }}', previewKey: 'order_confirmation', previewTitle: 'Confirmation de Commande (Client)' }">
+
+  <!-- EN-TÊTE + INDICATEURS RAPIDES -->
+  <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-base sm:text-xl font-black text-slate-950 font-heading">Centre de Contrôle Emails, Alertes &amp; Rappels</h1>
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold {% if settings.email_notifications_active %}bg-emerald-50 text-emerald-700 border border-emerald-200{% else %}bg-rose-50 text-rose-700 border border-rose-200{% endif %}">
+          {% if settings.email_notifications_active %}● Système Email Actif{% else %}○ Emails Pausés{% endif %}
+        </span>
+      </div>
+      <p class="text-xs text-slate-500 mt-0.5">
+        Pilotez vos 7 templates HTML, conditions d'envoi, alertes Direction et relances de finalisation (Commandes &amp; Paniers).
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2 shrink-0 text-xs">
+      <div class="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200">
+        <span class="text-slate-400 font-bold">Envoyés :</span>
+        <strong class="text-emerald-700 font-mono ml-1">{{ logs_sent_count }}</strong>
+      </div>
+      <div class="px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200">
+        <span class="text-amber-800 font-bold">À relancer :</span>
+        <strong class="text-amber-950 font-mono ml-1">{{ pending_orders|length }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- BARRE D'ONGLETS -->
+  <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5 text-xs">
+    <button
+      type="button"
+      @click="activeTab = 'conditions'"
+      :class="activeTab === 'conditions' ? 'bg-slate-950 text-amber-400 font-extrabold shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 font-bold'"
+      class="px-3.5 py-2.5 rounded-xl whitespace-nowrap transition cursor-pointer flex items-center gap-1.5"
+    >
+      <span>1. Conditions d'envoi &amp; Alertes</span>
+    </button>
+
+    <button
+      type="button"
+      @click="activeTab = 'templates'"
+      :class="activeTab === 'templates' ? 'bg-slate-950 text-amber-400 font-extrabold shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 font-bold'"
+      class="px-3.5 py-2.5 rounded-xl whitespace-nowrap transition cursor-pointer flex items-center gap-1.5"
+    >
+      <span>2. Templates HTML &amp; Aperçu Live (7)</span>
+    </button>
+
+    <button
+      type="button"
+      @click="activeTab = 'reminders'"
+      :class="activeTab === 'reminders' ? 'bg-slate-950 text-amber-400 font-extrabold shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 font-bold'"
+      class="px-3.5 py-2.5 rounded-xl whitespace-nowrap transition cursor-pointer flex items-center gap-1.5"
+    >
+      <span>3. Rappels de Finalisation</span>
+      <span class="px-1.5 py-0.2 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black">{{ pending_orders|length }}</span>
+    </button>
+
+    <button
+      type="button"
+      @click="activeTab = 'logs'"
+      :class="activeTab === 'logs' ? 'bg-slate-950 text-amber-400 font-extrabold shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 font-bold'"
+      class="px-3.5 py-2.5 rounded-xl whitespace-nowrap transition cursor-pointer flex items-center gap-1.5"
+    >
+      <span>4. Journal d'envoi ({{ email_logs|length }})</span>
+    </button>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- ONGLET 1 : CONDITIONS D'ENVOI, ALERTES DIRECTION & DÉLAIS DE RELANCE  -->
+  <!-- ===================================================================== -->
+  <div x-show="activeTab === 'conditions'" class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+
+    <form method="POST" class="lg:col-span-2 bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-2xs space-y-4">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="save_conditions">
+      <input type="hidden" name="tab" value="conditions">
+
+      <div class="flex items-center justify-between pb-2.5 border-b border-slate-100">
+        <div>
+          <h2 class="font-heading font-black text-sm sm:text-base text-slate-950">Règles &amp; Conditions de Déclenchement</h2>
+          <p class="text-[11px] text-slate-500">Choisissez exactement quels événements déclenchent un email automatique</p>
+        </div>
+        <label class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 cursor-pointer text-xs font-extrabold text-slate-900">
+          <input type="checkbox" name="email_notifications_active" {% if settings.email_notifications_active %}checked{% endif %} class="w-4 h-4 text-amber-500 rounded">
+          <span>Activer les Emails</span>
+        </label>
+      </div>
+
+      <!-- A. Emails envoyés aux Clients -->
+      <div class="space-y-2.5">
+        <p class="text-[11px] font-extrabold uppercase tracking-wider text-amber-700">A. Emails envoyés automatiquement aux Clients</p>
+
+        <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:border-amber-300 bg-slate-50/50 cursor-pointer transition">
+          <input type="checkbox" name="send_order_confirmation_email" {% if settings.send_order_confirmation_email %}checked{% endif %} class="mt-0.5 w-4 h-4 text-amber-500 rounded">
+          <div class="text-xs">
+            <span class="font-bold text-slate-900 block">1. Confirmation immédiate de commande</span>
+            <span class="text-slate-500 text-[11px]">Envoyé dès que le client valide son panier (avec récapitulatif FCFA et numéro Orange Money / Wave).</span>
+          </div>
+        </label>
+
+        <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:border-amber-300 bg-slate-50/50 cursor-pointer transition">
+          <input type="checkbox" name="send_order_status_email" {% if settings.send_order_status_email %}checked{% endif %} class="mt-0.5 w-4 h-4 text-amber-500 rounded">
+          <div class="text-xs">
+            <span class="font-bold text-slate-900 block">2. Notification à chaque changement de statut</span>
+            <span class="text-slate-500 text-[11px]">Envoyé automatiquement quand vous passez une commande en « Confirmée », « En préparation », « En livraison », « Livrée » ou « Annulée ».</span>
+          </div>
+        </label>
+
+        <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:border-amber-300 bg-slate-50/50 cursor-pointer transition">
+          <input type="checkbox" name="send_payment_reminder_email" {% if settings.send_payment_reminder_email %}checked{% endif %} class="mt-0.5 w-4 h-4 text-amber-500 rounded">
+          <div class="text-xs">
+            <span class="font-bold text-slate-900 block">3. Rappel de finalisation de commande / paiement</span>
+            <span class="text-slate-500 text-[11px]">Permet de relancer les commandes non payées (Orange Money / Wave) ou en attente de confirmation client.</span>
+          </div>
+        </label>
+
+        <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:border-amber-300 bg-slate-50/50 cursor-pointer transition">
+          <input type="checkbox" name="send_cart_abandon_reminder_email" {% if settings.send_cart_abandon_reminder_email %}checked{% endif %} class="mt-0.5 w-4 h-4 text-amber-500 rounded">
+          <div class="text-xs">
+            <span class="font-bold text-slate-900 block">4. Rappel de finalisation de panier abandonné</span>
+            <span class="text-slate-500 text-[11px]">Relance les clients ayant saisi leur email mais quitté la boutique avant de valider la commande.</span>
+          </div>
+        </label>
+      </div>
+
+      <!-- B. Alertes envoyées à la Direction -->
+      <div class="space-y-2.5 pt-2 border-t border-slate-100">
+        <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-600">B. Alertes Emails envoyées à la Direction (Grand Marché Dibidani)</p>
+
+        <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:border-amber-300 bg-slate-50/50 cursor-pointer transition">
+          <input type="checkbox" name="send_admin_new_order_alert" {% if settings.send_admin_new_order_alert %}checked{% endif %} class="mt-0.5 w-4 h-4 text-amber-500 rounded">
+          <div class="text-xs">
+            <span class="font-bold text-slate-900 block">5. Alerte Nouvelle Commande Reçue</span>
+            <span class="text-slate-500 text-[11px]">Notifie immédiatement la Direction avec le nom, téléphone, quartier à Bamako et montant total.</span>
+          </div>
+        </label>
+
+        <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:border-amber-300 bg-slate-50/50 cursor-pointer transition">
+          <input type="checkbox" name="send_admin_low_stock_alert" {% if settings.send_admin_low_stock_alert %}checked{% endif %} class="mt-0.5 w-4 h-4 text-amber-500 rounded">
+          <div class="text-xs">
+            <span class="font-bold text-slate-900 block">6. Alerte Stock Bas / Rupture en Magasin</span>
+            <span class="text-slate-500 text-[11px]">Déclenché automatiquement dès qu'un produit commandé descend sous son seuil d'alerte (`min_stock`).</span>
+          </div>
+        </label>
+
+        <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:border-amber-300 bg-slate-50/50 cursor-pointer transition">
+          <input type="checkbox" name="send_admin_contact_alert" {% if settings.send_admin_contact_alert %}checked{% endif %} class="mt-0.5 w-4 h-4 text-amber-500 rounded">
+          <div class="text-xs">
+            <span class="font-bold text-slate-900 block">7. Alerte Message Visiteur / Demande de Devis</span>
+            <span class="text-slate-500 text-[11px]">Envoyé lorsqu'un client remplit le formulaire de la page Contact.</span>
+          </div>
+        </label>
+      </div>
+
+      <!-- C. Adresses de réception & Délais de Relance -->
+      <div class="space-y-3 pt-2 border-t border-slate-100">
+        <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-600">C. Expéditeur, Destinataires d'Alerte &amp; Paramètres de Relance</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Nom d'expéditeur affiché aux clients</label>
+            <input type="text" name="email_sender_name" value="{{ settings.email_sender_name }}" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-semibold">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Email de réponse client (Reply-To)</label>
+            <input type="email" name="email_reply_to" value="{{ settings.email_reply_to }}" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Email Direction (Réception des Alertes Commandes &amp; Stocks)</label>
+            <input type="email" name="email_orders" value="{{ settings.email_orders }}" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono font-bold text-amber-900 bg-amber-50/40">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Email Service Client Public</label>
+            <input type="email" name="email_contact" value="{{ settings.email_contact }}" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-1">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Délai relance commande (heures)</label>
+            <input type="number" name="payment_reminder_hours" min="1" value="{{ settings.payment_reminder_hours }}" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono font-bold">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Délai relance panier (heures)</label>
+            <input type="number" name="cart_abandon_reminder_hours" min="1" value="{{ settings.cart_abandon_reminder_hours }}" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono font-bold">
+          </div>
+          <div>
+            <label class="block font-bold text-emerald-800 mb-1">Code Promo offert dans relance panier</label>
+            <input type="text" name="email_promo_code_reminder" value="{{ settings.email_promo_code_reminder }}" placeholder="Ex: BAMAKO5 (optionnel)" class="w-full px-3 py-2 rounded-xl border border-emerald-200 bg-emerald-50/30 font-mono uppercase">
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs shadow-xs cursor-pointer">
+          Enregistrer les conditions &amp; alertes
+        </button>
+      </div>
+    </form>
+
+    <!-- COLONNE DROITE : TEST D'ENVOI IMMÉDIAT & ALERTE STOCK 1-CLIC -->
+    <div class="space-y-4">
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-2xs space-y-3">
+        <h3 class="font-heading font-black text-sm text-slate-950">Tester un Email en Direct</h3>
+        <p class="text-[11px] text-slate-500">Envoyez immédiatement un exemplaire de n'importe quel template vers une boîte mail pour vérifier son rendu.</p>
+
+        <form method="POST" class="space-y-2.5 text-xs">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="send_test_email">
+          <input type="hidden" name="tab" value="conditions">
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Template à tester</label>
+            <select name="test_template" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white font-semibold">
+              <option value="order_confirmation">1. Confirmation de commande</option>
+              <option value="order_payment_reminder">2. Rappel de finalisation commande</option>
+              <option value="order_status_update">3. Mise à jour statut livraison</option>
+              <option value="admin_new_order_alert">4. Alerte Nouvelle Commande (Direction)</option>
+              <option value="admin_low_stock_alert">5. Alerte Stock Bas (Direction)</option>
+              <option value="admin_contact_message">6. Message Contact Visiteur</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Destinataire du test</label>
+            <input type="email" name="test_recipient" value="{{ settings.email_orders }}" required class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono">
+          </div>
+
+          <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-400 font-extrabold text-xs cursor-pointer">
+            ✉ Envoyer l'email de test maintenant
+          </button>
+        </form>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-2xs space-y-2.5">
+        <h3 class="font-heading font-black text-sm text-slate-950">Rapport d'Alerte Stock Immédiat</h3>
+        <p class="text-[11px] text-slate-500">Envoie en 1 clic à <strong>{{ settings.email_orders }}</strong> la liste de tous les produits actuellement proches de la rupture.</p>
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="send_low_stock_digest_now">
+          <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-extrabold text-xs cursor-pointer">
+            Déclencher l'alerte stock par email
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- ONGLET 2 : TEMPLATES EMAILS, PERSONNALISATION & APERÇU VISUEL LIVE    -->
+  <!-- ===================================================================== -->
+  <div x-show="activeTab === 'templates'" x-cloak class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+
+    <!-- Formulaire d'édition des textes & objets (5 colonnes) -->
+    <div class="lg:col-span-5 space-y-4">
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-2xs space-y-2">
+        <p class="text-xs font-extrabold text-slate-900">Choisir le template à prévisualiser :</p>
+        <div class="space-y-1.5">
+          {% for tpl in template_cards %}
+          <button
+            type="button"
+            @click="previewKey = '{{ tpl.key }}'; previewTitle = '{{ tpl.title|escapejs }}'"
+            :class="previewKey === '{{ tpl.key }}' ? 'border-amber-500 bg-amber-50/60 text-slate-950' : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'"
+            class="w-full p-2.5 rounded-xl border text-left transition cursor-pointer flex items-center justify-between gap-2"
+          >
+            <div class="min-w-0">
+              <div class="font-bold text-xs truncate">{{ tpl.title }}</div>
+              <div class="text-[11px] text-slate-500 truncate">{{ tpl.desc }}</div>
+            </div>
+            <span class="px-2 py-0.5 rounded-md bg-slate-900 text-amber-300 text-[10px] font-bold shrink-0">{{ tpl.badge }}</span>
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <form method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-2xs space-y-3 text-xs">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="save_templates">
+        <input type="hidden" name="tab" value="templates">
+
+        <div class="pb-2 border-b border-slate-100">
+          <h3 class="font-heading font-black text-sm text-slate-950">Personnaliser les Textes &amp; Objets</h3>
+          <p class="text-[11px] text-slate-500">Variables dynamiques supportées : <code>{order_number}</code>, <code>{total}</code>, <code>{status}</code>, <code>{name}</code></p>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Objet : Confirmation de commande</label>
+          <input type="text" name="email_confirmation_subject" value="{{ settings.email_confirmation_subject }}" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-semibold">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Texte d'accueil : Confirmation de commande</label>
+          <textarea name="email_confirmation_intro" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-200">{{ settings.email_confirmation_intro }}</textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-amber-800 mb-1">Objet : Rappel de finalisation commande / paiement</label>
+          <input type="text" name="email_payment_reminder_subject" value="{{ settings.email_payment_reminder_subject }}" class="w-full px-3 py-2 rounded-xl border border-amber-200 bg-amber-50/30 font-semibold">
+        </div>
+        <div>
+          <label class="block font-bold text-amber-800 mb-1">Message : Rappel de finalisation commande</label>
+          <textarea name="email_payment_reminder_intro" rows="2" class="w-full px-3 py-2 rounded-xl border border-amber-200 bg-amber-50/30">{{ settings.email_payment_reminder_intro }}</textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-emerald-800 mb-1">Objet : Rappel de panier abandonné</label>
+          <input type="text" name="email_cart_reminder_subject" value="{{ settings.email_cart_reminder_subject }}" class="w-full px-3 py-2 rounded-xl border border-emerald-200 bg-emerald-50/20 font-semibold">
+        </div>
+        <div>
+          <label class="block font-bold text-emerald-800 mb-1">Message : Rappel de panier abandonné</label>
+          <textarea name="email_cart_reminder_intro" rows="2" class="w-full px-3 py-2 rounded-xl border border-emerald-200 bg-emerald-50/20">{{ settings.email_cart_reminder_intro }}</textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Objet : Mise à jour statut livraison</label>
+          <input type="text" name="email_status_subject" value="{{ settings.email_status_subject }}" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-semibold">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Signature pied de page de tous les emails</label>
+          <input type="text" name="email_footer_signature" value="{{ settings.email_footer_signature }}" class="w-full px-3 py-2 rounded-xl border border-slate-200">
+        </div>
+
+        <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs cursor-pointer">
+          Enregistrer les textes des templates
+        </button>
+      </form>
+    </div>
+
+    <!-- Aperçu Visuel HTML en Direct (7 colonnes) -->
+    <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden lg:sticky lg:top-16">
+      <div class="px-4 py-3 bg-slate-950 text-white flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0"></span>
+          <span class="font-heading font-bold text-xs sm:text-sm truncate" x-text="'Aperçu Live : ' + previewTitle"></span>
+        </div>
+        <a :href="'/gestion/emails/apercu/' + previewKey + '/'" target="_blank" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-amber-300 text-[11px] font-bold shrink-0">
+          Ouvrir plein écran ↗
+        </a>
+      </div>
+      <div class="bg-slate-100 p-2 sm:p-3">
+        <iframe
+          :src="'/gestion/emails/apercu/' + previewKey + '/'"
+          class="w-full h-[640px] bg-white rounded-xl border border-slate-200 shadow-inner"
+          title="Aperçu du Template Email"
+        ></iframe>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- ONGLET 3 : RAPPELS DE FINALISATION (COMMANDES EN ATTENTE & PANIERS)   -->
+  <!-- ===================================================================== -->
+  <div x-show="activeTab === 'reminders'" x-cloak class="space-y-4">
+
+    <!-- Section 1 : Commandes en attente de paiement / finalisation -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
+      <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h2 class="font-heading font-black text-sm sm:text-base text-slate-950">
+            Commandes à Finaliser / En attente de règlement ({{ pending_orders|length }})
+          </h2>
+          <p class="text-[11px] text-slate-500">
+            Relancez le client en 1 clic par <strong>Email officiel</strong> ou sur <strong>WhatsApp</strong> avec le récapitulatif exact et les instructions Orange Money / Wave.
+          </p>
+        </div>
+        {% if pending_orders %}
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="remind_all_pending_orders">
+          <button type="submit" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs cursor-pointer shrink-0">
+            ✉ Relancer toutes les commandes en attente
+          </button>
+        </form>
+        {% endif %}
+      </div>
+
+      {% if pending_orders %}
+      <div class="divide-y divide-slate-100">
+        {% for ord in pending_orders %}
+        <div class="p-3.5 sm:p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3 text-xs">
+          <div class="space-y-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <a href="{% url 'backoffice:order_detail' ord.id %}" class="font-mono font-black text-sm text-slate-950 hover:text-amber-600">#{{ ord.order_number }}</a>
+              <span class="px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-extrabold">{{ ord.get_status_display }}</span>
+              <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-bold">{{ ord.get_payment_method_display }}</span>
+              <span class="font-heading font-black text-sm text-amber-600">{{ ord.total|floatformat:0|intcomma }} FCFA</span>
+            </div>
+            <p class="text-slate-700 font-semibold">
+              {{ ord.delivery_name }} • <a href="tel:{{ ord.delivery_phone }}" class="font-mono text-amber-700 hover:underline">{{ ord.delivery_phone }}</a>
+              • <span class="text-slate-500">{{ ord.delivery_district|default:ord.delivery_city }}</span>
+            </p>
+            <p class="text-[11px] text-slate-400">
+              Créée le {{ ord.created_at|date:"d/m/Y à H:i" }}
+              {% if ord.payment_reminder_sent_at %}
+              • <span class="text-emerald-700 font-semibold">Dernière relance email : {{ ord.payment_reminder_sent_at|date:"d/m H:i" }} ({{ ord.payment_reminder_count }}x)</span>
+              {% endif %}
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <form method="POST" class="flex items-center gap-1.5">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="remind_single_order">
+              <input type="hidden" name="order_id" value="{{ ord.id }}">
+              <input
+                type="email"
+                name="delivery_email"
+                value="{{ ord.delivery_email|default:ord.user.email }}"
+                placeholder="Email du client..."
+                class="px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-mono w-44 sm:w-52"
+              >
+              <button type="submit" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-amber-400 font-extrabold text-xs cursor-pointer">
+                ✉ Relancer Email
+              </button>
+            </form>
+
+            <a
+              href="https://wa.me/{{ ord.whatsapp_client_phone }}?text={{ 'Bonjour '|urlencode }}{{ ord.delivery_name|urlencode }}{{ ', ici ONIZUKA SHOP (Grand Marché de Bamako). Vos appareils pour la commande #'|urlencode }}{{ ord.order_number|urlencode }}{{ ' ('|urlencode }}{{ ord.total|floatformat:0 }}{{ ' FCFA) sont réservés. Souhaitez-vous finaliser la livraison aujourd\'hui ?'|urlencode }}"
+              target="_blank"
+              rel="noopener"
+              class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs"
+            >
+              WhatsApp ↗
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="p-8 text-center text-xs text-slate-400">
+        Aucune commande en attente de paiement actuellement.
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Section 2 : Paniers actifs / abandonnés -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
+      <div class="p-4 border-b border-slate-100">
+        <h2 class="font-heading font-black text-sm sm:text-base text-slate-950">
+          Paniers en Attente de Finalisation ({{ abandoned_carts|length }})
+        </h2>
+        <p class="text-[11px] text-slate-500">
+          Visiteurs ayant ajouté des appareils au panier sans encore valider l'étape finale.
+        </p>
+      </div>
+
+      {% if abandoned_carts %}
+      <div class="divide-y divide-slate-100">
+        {% for c_obj in abandoned_carts %}
+        <div class="p-3.5 sm:p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3 text-xs">
+          <div class="space-y-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-bold text-slate-900">
+                {{ c_obj.guest_name|default:c_obj.user.get_full_name|default:c_obj.user.username|default:"Visiteur Boutique" }}
+              </span>
+              {% if c_obj.guest_phone %}
+              <a href="tel:{{ c_obj.guest_phone }}" class="font-mono font-bold text-amber-700">{{ c_obj.guest_phone }}</a>
+              {% endif %}
+              <span class="px-2 py-0.5 rounded bg-amber-50 text-amber-900 font-extrabold">{{ c_obj.get_items_count }} article{{ c_obj.get_items_count|pluralize }}</span>
+              <span class="font-heading font-black text-sm text-slate-950">{{ c_obj.get_total|floatformat:0|intcomma }} FCFA</span>
+            </div>
+            <p class="text-[11px] text-slate-500 truncate">
+              {% for it in c_obj.items.all %}{{ it.quantity }}× {{ it.product.name }}{% if not forloop.last %} • {% endif %}{% endfor %}
+            </p>
+            <p class="text-[10px] text-slate-400">
+              Dernière activité : {{ c_obj.updated_at|date:"d/m/Y à H:i" }}
+              {% if c_obj.reminder_sent_at %}
+              • <span class="text-emerald-700 font-bold">Relancé le {{ c_obj.reminder_sent_at|date:"d/m H:i" }} ({{ c_obj.reminder_count }}x)</span>
+              {% endif %}
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <form method="POST" class="flex items-center gap-1.5">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="remind_single_cart">
+              <input type="hidden" name="cart_id" value="{{ c_obj.id }}">
+              <input
+                type="email"
+                name="guest_email"
+                value="{{ c_obj.guest_email|default:c_obj.user.email }}"
+                placeholder="Email pour relancer..."
+                class="px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-mono w-44 sm:w-52"
+              >
+              <button type="submit" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs cursor-pointer">
+                ✉ Relancer Panier
+              </button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="p-8 text-center text-xs text-slate-400">
+        Aucun panier en attente de finalisation pour le moment.
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- ONGLET 4 : JOURNAL D'ENVOI DES EMAILS (TRAÇABILITÉ COMPLÈTE)          -->
+  <!-- ===================================================================== -->
+  <div x-show="activeTab === 'logs'" x-cloak class="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
+    <div class="p-4 border-b border-slate-100 flex items-center justify-between gap-2">
+      <div>
+        <h2 class="font-heading font-black text-sm sm:text-base text-slate-950">Journal d'Envoi des Emails</h2>
+        <p class="text-[11px] text-slate-500">Historique des 60 derniers emails déclenchés par la boutique</p>
+      </div>
+      {% if email_logs %}
+      <form method="POST" onsubmit="return confirm('Vider l\'historique du journal des emails ?')">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="clear_email_logs">
+        <button type="submit" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-rose-50 hover:text-rose-700 text-slate-600 font-bold text-xs cursor-pointer">
+          Vider le journal
+        </button>
+      </form>
+      {% endif %}
+    </div>
+
+    {% if email_logs %}
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse text-xs">
+        <thead>
+          <tr class="bg-slate-50 text-slate-500 text-[10px] uppercase font-extrabold border-b border-slate-100">
+            <th class="py-2.5 px-3.5">Date</th>
+            <th class="py-2.5 px-3.5">Type d'Email</th>
+            <th class="py-2.5 px-3.5">Destinataire</th>
+            <th class="py-2.5 px-3.5">Objet</th>
+            <th class="py-2.5 px-3.5">Statut</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for log in email_logs %}
+          <tr class="hover:bg-slate-50/80">
+            <td class="py-2.5 px-3.5 font-mono text-[11px] text-slate-500 whitespace-nowrap">{{ log.created_at|date:"d/m/Y H:i" }}</td>
+            <td class="py-2.5 px-3.5 font-bold text-slate-900">{{ log.get_email_type_display }}</td>
+            <td class="py-2.5 px-3.5 font-mono text-slate-700">{{ log.recipient }}</td>
+            <td class="py-2.5 px-3.5 text-slate-600 max-w-xs truncate" title="{{ log.subject }}">{{ log.subject }}</td>
+            <td class="py-2.5 px-3.5 whitespace-nowrap">
+              {% if log.status == 'sent' %}
+              <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold">✓ Envoyé</span>
+              {% elif log.status == 'skipped' %}
+              <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold">Ignoré (Condition OFF)</span>
+              {% else %}
+              <span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-extrabold" title="{{ log.error_message }}">✕ Échec</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="p-8 text-center text-xs text-slate-400">
+      Aucun email enregistré dans le journal pour le moment. Utilisez le bouton « Tester un Email en Direct » dans l'onglet 1 pour vérifier votre configuration.
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

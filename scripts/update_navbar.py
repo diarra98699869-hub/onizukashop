@@ -36,10 +36,10 @@ new_header_code = """  <!-- ===== BANDEAU SUPÉRIEUR DIRECTION & SHOWROOM (CHART
           <span>Système en direct</span>
         </span>
         <span class="truncate hidden md:inline text-slate-400 text-xs">
-          Showroom Grand Marché (Dabanani, Bamako) &bull; Livraison express 24h &bull; Garantie constructeur 12 à 24 mois
+          Showroom Grand Marché (Dibidani, Bamako) &bull; Livraison express 24h &bull; Garantie constructeur 12 à 24 mois
         </span>
         <span class="truncate md:hidden text-slate-400 text-[11px]">
-          Grand Marché (Dabanani) &bull; Livraison 24h Bamako
+          Grand Marché (Dibidani) &bull; Livraison 24h Bamako
         </span>
       </div>
       <div class="flex items-center gap-3 sm:gap-4 shrink-0 text-xs">
@@ -144,7 +144,7 @@ new_header_code = """  <!-- ===== BANDEAU SUPÉRIEUR DIRECTION & SHOWROOM (CHART
                 </div>
                 <div>
                   <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Boutique Bamako</span>
-                  <span class="block text-xs font-bold text-slate-900">Grand Marché (Dabanani)</span>
+                  <span class="block text-xs font-bold text-slate-900">Grand Marché (Dibidani)</span>
                 </div>
               </a>
 
@@ -161,7 +161,7 @@ new_header_code = """  <!-- ===== BANDEAU SUPÉRIEUR DIRECTION & SHOWROOM (CHART
                 style="display: none;"
               >
                 <p class="text-xs font-bold text-slate-900 font-heading">Boutique Principale Bamako</p>
-                <p class="text-[11px] text-slate-500 mt-0.5">Grand Marché de Bamako, Dabanani</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">Grand Marché de Bamako, Dibidani</p>
                 <div class="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
                   <span class="text-emerald-600 font-bold">Ouvert 7j/7</span>
                   <span class="text-slate-500">08h30 - 20h30</span>
@@ -488,7 +488,7 @@ new_header_code = """  <!-- ===== BANDEAU SUPÉRIEUR DIRECTION & SHOWROOM (CHART
           </a>
         </div>
 
-        <!-- Bloc Droite : Ventes Flash Animées & Boutique Dabanani -->
+        <!-- Bloc Droite : Ventes Flash Animées & Boutique Dibidani -->
         <div class="flex items-center gap-2 shrink-0">
           <!-- Badge Ventes Flash Dynamique & Élégant (Noir & Or) -->
           <a 
@@ -507,12 +507,12 @@ new_header_code = """  <!-- ===== BANDEAU SUPÉRIEUR DIRECTION & SHOWROOM (CHART
           <a 
             href="{% url 'shop:contact' %}" 
             class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-slate-950 hover:bg-black/10 transition-all font-bold text-xs whitespace-nowrap"
-            title="Notre showroom au Grand Marché de Bamako (Dabanani)"
+            title="Notre showroom au Grand Marché de Bamako (Dibidani)"
           >
             <svg class="w-3.5 h-3.5 text-slate-950 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.651V9.35m0 0a3.001 3.001 0 003.75-.614A2.993 2.993 0 009 9.35c.773 0 1.492-.294 2.036-.78M15 9.35c.544.486 1.263.78 2.036.78a2.993 2.993 0 002.214-.964 3.001 3.001 0 00.75.614M3 6.75h18l-1.5-3H4.5L3 6.75z" />
             </svg>
-            <span>Showroom Dabanani</span>
+            <span>Showroom Dibidani</span>
           </a>
         </div>
 
@@ -579,7 +579,7 @@ new_header_code = """  <!-- ===== BANDEAU SUPÉRIEUR DIRECTION & SHOWROOM (CHART
           href="{% url 'shop:contact' %}" 
           class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 text-slate-950 hover:bg-black/10"
         >
-          Dabanani Showroom
+          Dibidani Showroom
         </a>
 
       </div>

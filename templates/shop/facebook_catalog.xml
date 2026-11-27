@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
   <channel>
-    <title>ONIZOUKA SHOP - Catalogue Officiel</title>
+    <title>ONIZUKA SHOP - Catalogue Officiel Bamako</title>
     <link>{{ base_url }}</link>
-    <description>Catalogue officiel des produits électroménager et électronique Onizouka Shop Bamako</description>
-    {% for product in products %}
+    <description>Catalogue officiel des climatiseurs, ventilateurs solaires, réfrigérateurs et électronique ONIZUKA SHOP au Grand Marché de Bamako (Dibidani)</description>
+    {% for product in products %}{% if product.price > 0 or product.current_price > 0 %}
     <item>
       <g:id>{{ product.sku|default:product.id }}</g:id>
-      <g:title><![CDATA[{{ product.name }}]]></g:title>
-      <g:description><![CDATA[{{ product.description|default:product.short_description|default:product.name|striptags|truncatewords:45 }}]]></g:description>
+      <g:item_group_id>{{ product.category.slug|default:"onizuka-shop" }}</g:item_group_id>
+      <g:title><![CDATA[{{ product.name|truncatechars:150 }}]]></g:title>
+      <g:description><![CDATA[{{ product.short_description|default:product.description|default:product.name|striptags|truncatechars:950 }}]]></g:description>
       <g:link>{{ base_url }}{{ product.get_absolute_url }}</g:link>
       {% if product.primary_image %}
       <g:image_link>{{ base_url }}{{ product.primary_image.image.url }}</g:image_link>
+      {% else %}
+      <g:image_link>{{ base_url }}/static/images/pwa/icon-512.png</g:image_link>
       {% endif %}
-      <g:brand><![CDATA[{{ product.brand.name|default:"Onizouka Shop" }}]]></g:brand>
+      {% for extra_img in product.images.all %}{% if not extra_img.is_primary and forloop.counter <= 10 %}
+      <g:additional_image_link>{{ base_url }}{{ extra_img.image.url }}</g:additional_image_link>
+      {% endif %}{% endfor %}
+      {% if product.video_file %}
+      <g:video_link>{{ base_url }}{{ product.video_file.url }}</g:video_link>
+      {% endif %}
+      <g:brand><![CDATA[{{ product.brand.name|default:"ONIZUKA SHOP" }}]]></g:brand>
+      <g:mpn>{{ product.sku|default:product.id }}</g:mpn>
+      <g:identifier_exists>no</g:identifier_exists>
       <g:condition>new</g:condition>
-      <g:availability>{% if product.stock > 0 %}in stock{% else %}out of stock{% endif %}</g:availability>
+      <g:availability>{% if product.is_in_stock %}in stock{% else %}out of stock{% endif %}</g:availability>
+      <g:inventory>{{ product.stock|default:0 }}</g:inventory>
       <g:price>{{ product.price|floatformat:0 }} XOF</g:price>
-      {% if product.is_on_sale and product.sale_price %}
+      {% if product.is_on_sale and product.sale_price and product.sale_price > 0 %}
       <g:sale_price>{{ product.sale_price|floatformat:0 }} XOF</g:sale_price>
       {% endif %}
-      <g:product_type><![CDATA[{{ product.category.name }}]]></g:product_type>
-      <g:google_product_category>Electronics</g:google_product_category>
+      <g:product_type><![CDATA[{{ product.category.name|default:"Électroménager & Climatisation" }}]]></g:product_type>
+      <g:google_product_category>Home &amp; Garden &gt; Household Appliances</g:google_product_category>
     </item>
-    {% endfor %}
+    {% endif %}{% endfor %}
   </channel>
 </rss>

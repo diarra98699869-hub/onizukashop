@@ -1,0 +1,345 @@
+{% load static humanize %}
+<div
+  id="catalog-workspace"
+  class="space-y-2.5 sm:space-y-3.5"
+  hx-indicator="#catalog-workspace"
+  x-data="{ filterDrawer: false }"
+>
+
+  <!-- EN-TÊTE COMPACT DU RAYON + BARRE RAPIDE DES UNIVERS (SANS RELOAD) -->
+  <div class="bg-white rounded-2xl border border-slate-200/80 p-3 sm:p-4 shadow-sm space-y-2.5">
+    <div class="flex items-center justify-between gap-3">
+      <div class="min-w-0">
+        <div class="flex items-center gap-1.5 text-[11px] text-slate-400 mb-0.5">
+          <a href="{% url 'shop:home' %}" class="hover:text-amber-600">Accueil</a>
+          <span>/</span>
+          <span class="text-slate-700 font-semibold truncate">{% if category %}{{ category.name }}{% else %}Boutique{% endif %}</span>
+        </div>
+        <h1 class="font-display text-base sm:text-2xl font-black text-slate-950 truncate">
+          {% if category %}{{ category.name }}{% else %}Tous nos Rayons (Électroménager, Meubles &amp; Déco){% endif %}
+        </h1>
+      </div>
+      <span class="px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-extrabold shrink-0 tabular-nums">
+        {{ total_count }} réf.
+      </span>
+    </div>
+
+    {% if all_categories %}
+    <div data-keep-scroll="cats" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 text-xs">
+      <a
+        href="{% url 'shop:catalog' %}"
+        hx-get="{% url 'shop:catalog' %}"
+        hx-target="#catalog-workspace"
+        hx-swap="outerHTML show:none"
+        hx-push-url="true"
+        class="px-3 py-1 rounded-full font-bold whitespace-nowrap shrink-0 transition active:scale-95 {% if not category %}bg-slate-950 text-amber-400{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}"
+      >Tout voir</a>
+      {% for rc in all_categories %}
+      <a
+        href="{{ rc.get_absolute_url }}"
+        hx-get="{{ rc.get_absolute_url }}"
+        hx-target="#catalog-workspace"
+        hx-swap="outerHTML show:none"
+        hx-push-url="true"
+        class="px-3 py-1 rounded-full font-bold whitespace-nowrap shrink-0 transition active:scale-95 {% if category and category.id == rc.id %}bg-slate-950 text-amber-400{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}"
+      >{{ rc.short_name }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- PUCES INTELLIGENTES MÉTIER & BUDGET EN 1 TAP INSTANTANÉ (ZÉRO RELOAD) -->
+  <div class="sticky top-[var(--hdr)] lg:static z-30 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 p-2.5 sm:p-3 shadow-sm space-y-2">
+    <!-- Ligne 1 : Tri + Vidéo + Promos + Solaire + Bouton Filtres Mobile -->
+    <div data-keep-scroll="sort" class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
+      <div class="flex items-center gap-1.5 shrink-0">
+        <a
+          href="{{ request.path }}?tri=nouveautes{% if selected_budget %}&amp;budget={{ selected_budget }}{% endif %}{% if selected_tag %}&amp;tag={{ selected_tag|urlencode }}{% endif %}{% if request.GET.avec_video %}&amp;avec_video=true{% endif %}{% if request.GET.en_promo %}&amp;en_promo=true{% endif %}{% if request.GET.eco_solaire %}&amp;eco_solaire=true{% endif %}"
+          hx-get="{{ request.path }}?tri=nouveautes{% if selected_budget %}&amp;budget={{ selected_budget }}{% endif %}{% if selected_tag %}&amp;tag={{ selected_tag|urlencode }}{% endif %}{% if request.GET.avec_video %}&amp;avec_video=true{% endif %}{% if request.GET.en_promo %}&amp;en_promo=true{% endif %}{% if request.GET.eco_solaire %}&amp;eco_solaire=true{% endif %}"
+          hx-target="#catalog-workspace"
+          hx-swap="outerHTML show:none"
+          hx-push-url="true"
+          class="px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-extrabold transition active:scale-95 {% if sort == 'nouveautes' or not sort %}bg-slate-950 text-amber-400{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}"
+        >Récents</a>
+
+        <a
+          href="{{ request.path }}?tri=prix_asc{% if selected_budget %}&amp;budget={{ selected_budget }}{% endif %}{% if selected_tag %}&amp;tag={{ selected_tag|urlencode }}{% endif %}{% if request.GET.avec_video %}&amp;avec_video=true{% endif %}{% if request.GET.en_promo %}&amp;en_promo=true{% endif %}{% if request.GET.eco_solaire %}&amp;eco_solaire=true{% endif %}"
+          hx-get="{{ request.path }}?tri=prix_asc{% if selected_budget %}&amp;budget={{ selected_budget }}{% endif %}{% if selected_tag %}&amp;tag={{ selected_tag|urlencode }}{% endif %}{% if request.GET.avec_video %}&amp;avec_video=true{% endif %}{% if request.GET.en_promo %}&amp;en_promo=true{% endif %}{% if request.GET.eco_solaire %}&amp;eco_solaire=true{% endif %}"
+          hx-target="#catalog-workspace"
+          hx-swap="outerHTML show:none"
+          hx-push-url="true"
+          class="px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-extrabold transition active:scale-95 {% if sort == 'prix_asc' %}bg-slate-950 text-amber-400{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}"
+        >Prix ↑</a>
+
+        <a
+          href="{{ request.path }}?tri=prix_desc{% if selected_budget %}&amp;budget={{ selected_budget }}{% endif %}{% if selected_tag %}&amp;tag={{ selected_tag|urlencode }}{% endif %}{% if request.GET.avec_video %}&amp;avec_video=true{% endif %}{% if request.GET.en_promo %}&amp;en_promo=true{% endif %}{% if request.GET.eco_solaire %}&amp;eco_solaire=true{% endif %}"
+          hx-get="{{ request.path }}?tri=prix_desc{% if selected_budget %}&amp;budget={{ selected_budget }}{% endif %}{% if selected_tag %}&amp;tag={{ selected_tag|urlencode }}{% endif %}{% if request.GET.avec_video %}&amp;avec_video=true{% endif %}{% if request.GET.en_promo %}&amp;en_promo=true{% endif %}{% if request.GET.eco_solaire %}&amp;eco_solaire=true{% endif %}"
+          hx-target="#catalog-workspace"
+          hx-swap="outerHTML show:none"
+          hx-push-url="true"
+          class="px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-extrabold transition active:scale-95 {% if sort == 'prix_desc' %}bg-slate-950 text-amber-400{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}"
+        >Prix ↓</a>
+
+        <a
+          href="{{ request.path }}?{% if not request.GET.avec_video %}avec_video=true&amp;{% endif %}{% if selected_budget %}budget={{ selected_budget }}&amp;{% endif %}{% if selected_tag %}tag={{ selected_tag|urlencode }}&amp;{% endif %}tri={{ sort|default:'nouveautes' }}"
+          hx-get="{{ request.path }}?{% if not request.GET.avec_video %}avec_video=true&amp;{% endif %}{% if selected_budget %}budget={{ selected_budget }}&amp;{% endif %}{% if selected_tag %}tag={{ selected_tag|urlencode }}&amp;{% endif %}tri={{ sort|default:'nouveautes' }}"
+          hx-target="#catalog-workspace"
+          hx-swap="outerHTML show:none"
+          hx-push-url="true"
+          class="px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-extrabold transition active:scale-95 inline-flex items-center gap-1 {% if request.GET.avec_video %}bg-amber-400 text-slate-950{% else %}bg-amber-50 text-amber-800 hover:bg-amber-100{% endif %}"
+        ><span>▶</span><span>Avec vidéo</span></a>
+
+        <a
+          href="{{ request.path }}?{% if not request.GET.en_promo %}en_promo=true&amp;{% endif %}{% if selected_budget %}budget={{ selected_budget }}&amp;{% endif %}{% if selected_tag %}tag={{ selected_tag|urlencode }}&amp;{% endif %}tri={{ sort|default:'nouveautes' }}"
+          hx-get="{{ request.path }}?{% if not request.GET.en_promo %}en_promo=true&amp;{% endif %}{% if selected_budget %}budget={{ selected_budget }}&amp;{% endif %}{% if selected_tag %}tag={{ selected_tag|urlencode }}&amp;{% endif %}tri={{ sort|default:'nouveautes' }}"
+          hx-target="#catalog-workspace"
+          hx-swap="outerHTML show:none"
+          hx-push-url="true"
+          class="px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-extrabold transition active:scale-95 {% if request.GET.en_promo %}bg-rose-600 text-white{% else %}bg-rose-50 text-rose-600 hover:bg-rose-100{% endif %}"
+        >Promos</a>
+
+        <a
+          href="{{ request.path }}?{% if not request.GET.eco_solaire %}eco_solaire=true&amp;{% endif %}{% if selected_budget %}budget={{ selected_budget }}&amp;{% endif %}{% if selected_tag %}tag={{ selected_tag|urlencode }}&amp;{% endif %}tri={{ sort|default:'nouveautes' }}"
+          hx-get="{{ request.path }}?{% if not request.GET.eco_solaire %}eco_solaire=true&amp;{% endif %}{% if selected_budget %}budget={{ selected_budget }}&amp;{% endif %}{% if selected_tag %}tag={{ selected_tag|urlencode }}&amp;{% endif %}tri={{ sort|default:'nouveautes' }}"
+          hx-target="#catalog-workspace"
+          hx-swap="outerHTML show:none"
+          hx-push-url="true"
+          class="px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-extrabold transition active:scale-95 {% if request.GET.eco_solaire %}bg-emerald-600 text-white{% else %}bg-emerald-50 text-emerald-700 hover:bg-emerald-100{% endif %}"
+        >☀ Solaire / Éco</a>
+      </div>
+
+      <button
+        type="button"
+        @click="filterDrawer = true"
+        class="lg:hidden inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-400 text-slate-950 text-[11px] font-extrabold shrink-0 cursor-pointer active:scale-95"
+      >
+        <svg class="w-3.5 h-3.5 stroke-[2.3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/>
+        </svg>
+        <span>Filtres</span>
+        {% if selected_budget or selected_tag or request.GET.avec_video or request.GET.en_promo or request.GET.eco_solaire or selected_brands or request.GET.prix_min or request.GET.prix_max or request.GET.en_stock %}
+        <span class="w-1.5 h-1.5 rounded-full bg-slate-950"></span>
+        {% endif %}
+      </button>
+    </div>
+
+    <!-- Ligne 2 : Tranches de budget 1-Tap + Puces de caractéristiques du rayon -->
+    <div data-keep-scroll="chips" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 border-t border-slate-100 text-[11px]">
+      <span class="text-slate-400 font-bold shrink-0">Budget :</span>
+      {% for b_code, b_label, _bmin, _bmax in budget_brackets %}
+      <a
+        href="{{ request.path }}?{% if selected_budget != b_code %}budget={{ b_code }}&amp;{% endif %}{% if selected_tag %}tag={{ selected_tag|urlencode }}&amp;{% endif %}tri={{ sort|default:'nouveautes' }}"
+        hx-get="{{ request.path }}?{% if selected_budget != b_code %}budget={{ b_code }}&amp;{% endif %}{% if selected_tag %}tag={{ selected_tag|urlencode }}&amp;{% endif %}tri={{ sort|default:'nouveautes' }}"
+        hx-target="#catalog-workspace"
+        hx-swap="outerHTML show:none"
+        hx-push-url="true"
+        class="px-2.5 py-1 rounded-full font-bold whitespace-nowrap shrink-0 transition active:scale-95 {% if selected_budget == b_code %}bg-amber-400 text-slate-950 font-extrabold{% else %}bg-slate-50 border border-slate-200 text-slate-600 hover:border-amber-400{% endif %}"
+      >{{ b_label }}</a>
+      {% endfor %}
+
+      {% if smart_chips %}
+      <span class="text-slate-300 px-0.5">|</span>
+      {% for chip in smart_chips %}
+      <a
+        href="{{ request.path }}?{% if selected_tag != chip %}tag={{ chip|urlencode }}&amp;{% endif %}{% if selected_budget %}budget={{ selected_budget }}&amp;{% endif %}tri={{ sort|default:'nouveautes' }}"
+        hx-get="{{ request.path }}?{% if selected_tag != chip %}tag={{ chip|urlencode }}&amp;{% endif %}{% if selected_budget %}budget={{ selected_budget }}&amp;{% endif %}tri={{ sort|default:'nouveautes' }}"
+        hx-target="#catalog-workspace"
+        hx-swap="outerHTML show:none"
+        hx-push-url="true"
+        class="px-2.5 py-1 rounded-full font-bold whitespace-nowrap shrink-0 transition active:scale-95 {% if selected_tag == chip %}bg-slate-950 text-amber-400{% else %}bg-slate-50 border border-slate-200 text-slate-700 hover:border-amber-400{% endif %}"
+      >{{ chip }}</a>
+      {% endfor %}
+      {% endif %}
+
+      {% if selected_budget or selected_tag or request.GET.avec_video or request.GET.en_promo or request.GET.eco_solaire or selected_brands or request.GET.prix_min or request.GET.prix_max %}
+      <a
+        href="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'shop:catalog' %}{% endif %}"
+        hx-get="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'shop:catalog' %}{% endif %}"
+        hx-target="#catalog-workspace"
+        hx-swap="outerHTML show:none"
+        hx-push-url="true"
+        class="px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 font-extrabold shrink-0 active:scale-95"
+      >Effacer ✕</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- LAYOUT SIDEBAR + GRILLE PRODUITS LIVE -->
+  <div class="flex gap-4 xl:gap-5 items-start">
+
+    <!-- SIDEBAR FILTRES DESKTOP (INSTANTANÉ AU COCHAGE SANS RELOAD) -->
+    <aside class="hidden lg:block w-60 shrink-0 catalog-sticky-sidebar">
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-4 space-y-4 shadow-sm">
+        <div class="flex items-center justify-between pb-2.5 border-b border-slate-100">
+          <span class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">Filtres précis</span>
+          <a
+            href="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'shop:catalog' %}{% endif %}"
+            hx-get="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'shop:catalog' %}{% endif %}"
+            hx-target="#catalog-workspace"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+            class="text-[11px] font-bold text-amber-600 hover:underline"
+          >Tout effacer</a>
+        </div>
+
+        <form
+          method="get"
+          action="{{ request.path }}"
+          hx-get="{{ request.path }}"
+          hx-target="#catalog-workspace"
+          hx-swap="outerHTML show:none"
+          hx-push-url="true"
+          hx-trigger="change from:find input[type='checkbox'], submit"
+          class="space-y-4 text-xs"
+        >
+          <input type="hidden" name="tri" value="{{ sort|default:'nouveautes' }}">
+          {% if selected_tag %}<input type="hidden" name="tag" value="{{ selected_tag }}">{% endif %}
+
+          <div class="space-y-2">
+            <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Critères rapides</p>
+            <label class="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+              <input type="checkbox" name="en_stock" value="true" {% if request.GET.en_stock %}checked{% endif %} class="rounded border-slate-300 text-amber-500">
+              <span>En stock à Bamako</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+              <input type="checkbox" name="en_promo" value="true" {% if request.GET.en_promo %}checked{% endif %} class="rounded border-slate-300 text-amber-500">
+              <span>Offres en promotion</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+              <input type="checkbox" name="avec_video" value="true" {% if request.GET.avec_video %}checked{% endif %} class="rounded border-slate-300 text-amber-500">
+              <span>▶ Avec démonstration vidéo</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+              <input type="checkbox" name="eco_solaire" value="true" {% if request.GET.eco_solaire %}checked{% endif %} class="rounded border-slate-300 text-amber-500">
+              <span>☀ Compatible Solaire / Éco</span>
+            </label>
+          </div>
+
+          <div class="space-y-2 pt-3 border-t border-slate-100">
+            <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Budget FCFA sur mesure</p>
+            <div class="grid grid-cols-2 gap-1.5">
+              <input type="number" name="prix_min" value="{{ request.GET.prix_min }}" placeholder="Min" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs">
+              <input type="number" name="prix_max" value="{{ request.GET.prix_max }}" placeholder="Max" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs">
+            </div>
+            <button type="submit" class="w-full py-2 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs transition cursor-pointer active:scale-95">
+              Appliquer le budget
+            </button>
+          </div>
+
+          {% if brands %}
+          <div class="space-y-2 pt-3 border-t border-slate-100">
+            <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Marques &amp; Collections</p>
+            <div class="space-y-1.5 max-h-52 overflow-y-auto pr-1">
+              {% for brand in brands %}
+              <label class="flex items-center gap-2 cursor-pointer font-medium text-slate-700 hover:text-amber-600">
+                <input type="checkbox" name="marque" value="{{ brand.pk }}" {% if brand.pk|stringformat:'s' in selected_brands %}checked{% endif %} class="rounded border-slate-300 text-amber-500">
+                <span>{{ brand.name }}</span>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+        </form>
+      </div>
+    </aside>
+
+    <!-- GRILLE PRINCIPALE + SKELETON SHIMMER INSTANTANÉ PENDANT LE FILTRAGE -->
+    <div class="flex-1 w-full min-w-0 relative">
+      <!-- Skeleton en surimpression (affiché seulement si le réseau est lent, sans décaler la page) -->
+      <div class="onz-loading-overlay pointer-events-none absolute inset-x-0 top-0 z-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
+        <div class="rounded-2xl bg-white p-2.5 border border-slate-100 space-y-2"><div class="aspect-square rounded-xl skeleton-shimmer"></div><div class="h-3 w-4/5 rounded skeleton-shimmer"></div><div class="h-4 w-1/2 rounded skeleton-shimmer"></div></div>
+        <div class="rounded-2xl bg-white p-2.5 border border-slate-100 space-y-2"><div class="aspect-square rounded-xl skeleton-shimmer"></div><div class="h-3 w-3/4 rounded skeleton-shimmer"></div><div class="h-4 w-1/2 rounded skeleton-shimmer"></div></div>
+        <div class="hidden sm:block rounded-2xl bg-white p-2.5 border border-slate-100 space-y-2"><div class="aspect-square rounded-xl skeleton-shimmer"></div><div class="h-3 w-3/4 rounded skeleton-shimmer"></div><div class="h-4 w-1/2 rounded skeleton-shimmer"></div></div>
+        <div class="hidden xl:block rounded-2xl bg-white p-2.5 border border-slate-100 space-y-2"><div class="aspect-square rounded-xl skeleton-shimmer"></div><div class="h-3 w-2/3 rounded skeleton-shimmer"></div><div class="h-4 w-1/2 rounded skeleton-shimmer"></div></div>
+      </div>
+
+      <div class="catalog-results-live">
+        {% include 'shop/partials/product_grid.html' %}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TIROIR FILTRES MOBILE (SOUMISSION INSTANTANÉE HTMX SANS RECHARGEMENT) -->
+  <div x-show="filterDrawer" x-cloak class="fixed inset-0 z-[95] lg:hidden overflow-hidden" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="filterDrawer = false"></div>
+    <div class="absolute inset-y-0 right-0 w-[86%] max-w-xs bg-white shadow-2xl p-4 flex flex-col justify-between overflow-y-auto pb-safe-bottom">
+      <div>
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4 pt-safe-top">
+          <span class="font-display text-base font-black text-slate-950">Affiner ma recherche</span>
+          <button type="button" @click="filterDrawer = false" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center" aria-label="Fermer">×</button>
+        </div>
+
+        <form
+          method="get"
+          action="{{ request.path }}"
+          hx-get="{{ request.path }}"
+          hx-target="#catalog-workspace"
+          hx-swap="outerHTML show:none"
+          hx-push-url="true"
+          @submit="filterDrawer = false"
+          class="space-y-4 text-xs"
+        >
+          <input type="hidden" name="tri" value="{{ sort|default:'nouveautes' }}">
+          <div class="space-y-2.5">
+            <p class="font-extrabold text-slate-400 uppercase text-[10px]">Disponibilité &amp; Média</p>
+            <label class="flex items-center gap-2 font-semibold text-slate-800">
+              <input type="checkbox" name="en_stock" value="true" {% if request.GET.en_stock %}checked{% endif %} class="rounded border-slate-300 text-amber-500">
+              <span>En stock Bamako</span>
+            </label>
+            <label class="flex items-center gap-2 font-semibold text-slate-800">
+              <input type="checkbox" name="en_promo" value="true" {% if request.GET.en_promo %}checked{% endif %} class="rounded border-slate-300 text-amber-500">
+              <span>En promotion</span>
+            </label>
+            <label class="flex items-center gap-2 font-semibold text-slate-800">
+              <input type="checkbox" name="avec_video" value="true" {% if request.GET.avec_video %}checked{% endif %} class="rounded border-slate-300 text-amber-500">
+              <span>▶ Avec vidéo de démonstration</span>
+            </label>
+            <label class="flex items-center gap-2 font-semibold text-slate-800">
+              <input type="checkbox" name="eco_solaire" value="true" {% if request.GET.eco_solaire %}checked{% endif %} class="rounded border-slate-300 text-amber-500">
+              <span>☀ Compatible Solaire / Éco</span>
+            </label>
+          </div>
+
+          <div class="space-y-2 pt-3 border-t border-slate-100">
+            <p class="font-extrabold text-slate-400 uppercase text-[10px]">Budget (FCFA)</p>
+            <div class="grid grid-cols-2 gap-2">
+              <input type="number" name="prix_min" value="{{ request.GET.prix_min }}" placeholder="Min" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-base">
+              <input type="number" name="prix_max" value="{{ request.GET.prix_max }}" placeholder="Max" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-base">
+            </div>
+          </div>
+
+          {% if brands %}
+          <div class="space-y-2 pt-3 border-t border-slate-100">
+            <p class="font-extrabold text-slate-400 uppercase text-[10px]">Marques</p>
+            <div class="space-y-2 max-h-44 overflow-y-auto">
+              {% for brand in brands %}
+              <label class="flex items-center gap-2 font-semibold text-slate-800">
+                <input type="checkbox" name="marque" value="{{ brand.pk }}" {% if brand.pk|stringformat:'s' in selected_brands %}checked{% endif %} class="rounded border-slate-300 text-amber-500">
+                <span>{{ brand.name }}</span>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 text-slate-950 font-extrabold text-xs active:scale-95">
+            Afficher les résultats instantanément
+          </button>
+        </form>
+      </div>
+
+      <div class="pt-4 border-t border-slate-100 text-center">
+        <a
+          href="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'shop:catalog' %}{% endif %}"
+          hx-get="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'shop:catalog' %}{% endif %}"
+          hx-target="#catalog-workspace"
+          hx-swap="outerHTML show:none"
+          hx-push-url="true"
+          class="text-xs font-bold text-slate-500 hover:text-amber-600"
+        >Réinitialiser tous les filtres</a>
+      </div>
+    </div>
+  </div>
+
+</div>

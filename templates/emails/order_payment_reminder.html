@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalisez votre commande #{{ order.order_number }} - {{ settings.site_name|default:"ONIZUKA SHOP" }}</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1e293b; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f8fafc; padding: 30px 10px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" style="max-width: 620px; background-color: #ffffff; border-radius: 14px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);" cellspacing="0" cellpadding="0">
+                    
+                    <!-- En-tête Sombre & Or -->
+                    <tr>
+                        <td style="background-color: #0f172a; padding: 26px 32px; text-align: left; border-bottom: 3px solid #f59e0b;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td>
+                                        <div style="font-size: 20px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; text-transform: uppercase;">
+                                            ONIZUKA <span style="color: #f59e0b;">SHOP</span>
+                                        </div>
+                                        <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 3px;">
+                                            Rappel de Finalisation &bull; Bamako
+                                        </div>
+                                    </td>
+                                    <td align="right">
+                                        <span style="display: inline-block; background-color: #1e293b; color: #fbbf24; border: 1px solid #d97706; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; font-family: monospace;">
+                                            #{{ order.order_number }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Corps -->
+                    <tr>
+                        <td style="padding: 32px;">
+                            <div style="margin-bottom: 22px;">
+                                <span style="display: inline-block; background-color: #fef3c7; color: #92400e; font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; margin-bottom: 10px;">
+                                    Appareils réservés pour vous
+                                </span>
+                                <h1 style="font-size: 20px; font-weight: 800; color: #0f172a; margin: 0 0 10px 0;">
+                                    Bonjour {{ order.delivery_name }}, votre commande #{{ order.order_number }} est prête à être expédiée !
+                                </h1>
+                                <p style="font-size: 14px; color: #475569; line-height: 1.55; margin: 0;">
+                                    {{ custom_intro|default:"Nous avons bien mis de côté vos appareils au Grand Marché de Bamako (Dibidani). Il ne reste plus qu'à finaliser la confirmation ou le règlement pour lancer la livraison rapide." }}
+                                </p>
+                            </div>
+
+                            <!-- Instructions Orange Money / Wave / Livraison -->
+                            <div style="background-color: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 10px; margin-bottom: 24px;">
+                                <div style="font-size: 13px; font-weight: 800; color: #92400e; margin-bottom: 6px;">
+                                    Comment finaliser en 30 secondes :
+                                </div>
+                                <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
+                                    &bull; <strong>Orange Money Mali :</strong> transfert au <strong>{{ settings.orange_money_number|default:"+223 92 67 37 99" }}</strong> (Réf: <strong>#{{ order.order_number }}</strong>)<br>
+                                    &bull; <strong>Wave Mobile Money :</strong> envoi au <strong>{{ settings.wave_number|default:"+223 92 67 37 99" }}</strong><br>
+                                    &bull; <strong>Paiement à la livraison :</strong> cliquez sur le bouton WhatsApp ci-dessous pour confirmer l'heure de passage du livreur à <strong>{{ order.delivery_district|default:order.delivery_city }}</strong>.
+                                </div>
+                            </div>
+
+                            <!-- Articles réservés -->
+                            <div style="font-size: 12px; font-weight: 800; color: #0f172a; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Récapitulatif de votre commande
+                            </div>
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 24px;">
+                                <tbody>
+                                    {% for item in order.items.all %}
+                                    <tr style="border-bottom: 1px solid #e2e8f0; font-size: 13px;">
+                                        <td style="padding: 12px 14px; color: #0f172a; font-weight: 600;">
+                                            {{ item.product_name }} <span style="color: #64748b; font-weight: 400;">(×{{ item.quantity }})</span>
+                                        </td>
+                                        <td style="padding: 12px 14px; text-align: right; color: #0f172a; font-weight: 700; font-family: monospace;">
+                                            {{ item.total_price|floatformat:0 }} FCFA
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr style="background-color: #0f172a; color: #ffffff; font-size: 14px;">
+                                        <td style="padding: 13px 14px; font-weight: 700;">TOTAL NET À RÉGLER :</td>
+                                        <td style="padding: 13px 14px; text-align: right; font-weight: 800; font-family: monospace; color: #f59e0b; font-size: 16px;">
+                                            {{ order.total|floatformat:0 }} FCFA
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <!-- Boutons d'Action -->
+                            <div style="text-align: center; margin: 26px 0 18px 0;">
+                                <a href="{{ order.get_whatsapp_order_url }}" style="display: inline-block; background-color: #059669; color: #ffffff; text-decoration: none; padding: 14px 26px; border-radius: 10px; font-weight: 800; font-size: 13px; margin: 4px;">
+                                    Finaliser ma commande sur WhatsApp &rarr;
+                                </a>
+                            </div>
+
+                            <div style="font-size: 12px; color: #64748b; line-height: 1.5; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 16px;">
+                                Service Client ONIZUKA SHOP : <strong>{{ settings.phone_contact|default:"+223 92 67 37 99" }}</strong> &bull; Email : <strong>{{ settings.email_contact|default:"contact@onizukashop.com" }}</strong>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Pied de page -->
+                    <tr>
+                        <td style="background-color: #f1f5f9; padding: 20px 32px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 11px; color: #64748b;">
+                            {{ settings.email_footer_signature|default:"ONIZUKA SHOP • Grand Marché de Bamako, Dibidani • Tél & WhatsApp : +223 92 67 37 99" }}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

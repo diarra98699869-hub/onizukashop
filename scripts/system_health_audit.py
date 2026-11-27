@@ -86,10 +86,10 @@ def audit_configuration():
     hosts = settings.ALLOWED_HOSTS
     if '*' in hosts:
         log_pass("ALLOWED_HOSTS", f"{hosts} (Accepte tous les reverse-proxies sans erreur 400 DisallowedHost)")
-    elif 'onizouka.danayaplus.com' in hosts:
+    elif 'onizukashop.com' in hosts or 'onizouka.danayaplus.com' in hosts:
         log_pass("ALLOWED_HOSTS", f"{hosts} (Domaine de production bien declare)")
     else:
-        log_fail("ALLOWED_HOSTS", f"{hosts} -> 'onizouka.danayaplus.com' absent ! Risque d'erreur 400.")
+        log_fail("ALLOWED_HOSTS", f"{hosts} -> 'onizukashop.com' absent ! Risque d'erreur 400.")
 
     # Reverse Proxy SSL
     if getattr(settings, 'SECURE_PROXY_SSL_HEADER', None) == ('HTTP_X_FORWARDED_PROTO', 'https'):

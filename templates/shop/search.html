@@ -2,112 +2,67 @@
 {% load static humanize %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 py-10">
+<div class="max-w-[1400px] mx-auto px-2 sm:px-4 xl:px-6 py-3 sm:py-5 space-y-3" id="search-workspace">
 
-  <!-- En-tête de recherche -->
-  <div class="max-w-2xl mx-auto text-center mb-10">
-    <span class="text-xs uppercase font-heading font-extrabold tracking-widest text-brand-600">Recherche Avancée</span>
-    <h1 class="font-heading font-black text-2xl sm:text-4xl text-slate-900 tracking-tight mt-1">
-      {% if query %}
-        Résultats pour <span class="text-brand-600">"{{ query }}"</span>
-      {% else %}
-        Trouvez Votre Appareil Idéal
-      {% endif %}
-    </h1>
-    {% if query %}
-    <p class="text-xs sm:text-sm text-slate-500 mt-2 font-medium">
-      <strong class="text-slate-900 font-mono">{{ total }}</strong> modèle{{ total|pluralize }} certifié{{ total|pluralize }} trouvé{{ total|pluralize }} au Mali
-    </p>
-    {% endif %}
-
-    <!-- Barre de recherche centrale -->
-    <form action="{% url 'shop:search' %}" method="GET" class="mt-6">
-      <div class="relative flex items-center bg-white rounded-2xl border border-slate-200/90 shadow-flagship p-1.5 focus-within:ring-4 focus-within:ring-brand-500/10 focus-within:border-brand-500 transition">
-        <span class="material-icons-round text-slate-400 pl-3">search</span>
-        <input 
-          type="search" 
-          name="q" 
-          value="{{ query }}"
-          placeholder="Ex: Frigo Samsung, Split Midea, TV LG 55..." 
-          class="w-full px-4 py-3 text-sm text-slate-800 placeholder-slate-400 bg-transparent focus:outline-none"
-          autofocus
-        >
-        <button 
-          type="submit" 
-          class="px-6 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-heading font-bold text-xs shadow-md shadow-brand-500/20 transition shrink-0"
-        >
-          Rechercher
-        </button>
-      </div>
+  <!-- Barre de recherche en direct + Suggestions Rapides Sans Reload -->
+  <div class="bg-white rounded-2xl border border-slate-200/80 p-3 sm:p-4 shadow-sm space-y-2.5">
+    <form
+      method="GET"
+      action="{% url 'shop:search' %}"
+      hx-get="{% url 'shop:search' %}"
+      hx-trigger="keyup changed delay:220ms from:find input[name='q'], submit"
+      hx-target="#search-results-zone"
+      hx-select="#search-results-zone"
+      hx-indicator="#search-results-zone"
+      hx-swap="outerHTML"
+      hx-push-url="true"
+      class="flex items-center gap-2"
+    >
+      <input
+        type="search"
+        name="q"
+        value="{{ query }}"
+        placeholder="Filtrer instantanément (meuble, salon, lustre, frigo, clim, TV...)"
+        class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm text-slate-900 focus:outline-none focus:border-amber-500"
+      >
+      <button type="submit" class="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs shrink-0 cursor-pointer">
+        Filtrer
+      </button>
     </form>
 
-    <!-- Suggestions de recherche rapide -->
-    <div class="mt-4 flex flex-wrap items-center justify-center gap-2">
-      <span class="text-xs text-slate-400">Populaires :</span>
-      <a href="?q=Réfrigérateur" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-50 hover:text-brand-600 text-slate-600 text-xs font-medium transition">Réfrigérateur</a>
-      <a href="?q=Climatiseur" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-50 hover:text-brand-600 text-slate-600 text-xs font-medium transition">Climatiseur Inverter</a>
-      <a href="?q=Téléviseur" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-50 hover:text-brand-600 text-slate-600 text-xs font-medium transition">Smart TV 4K</a>
-      <a href="?q=Samsung" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-50 hover:text-brand-600 text-slate-600 text-xs font-medium transition">Samsung</a>
-      <a href="?q=Midea" class="px-3 py-1 rounded-full bg-slate-100 hover:bg-amber-50 hover:text-brand-600 text-slate-600 text-xs font-medium transition">Midea</a>
+    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[11px]">
+      <span class="text-slate-400 font-bold shrink-0">Populaires :</span>
+      <a href="?q=Salon" hx-get="{% url 'shop:search' %}?q=Salon" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Salon &amp; Meubles</a>
+      <a href="?q=Lustre" hx-get="{% url 'shop:search' %}?q=Lustre" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Déco &amp; Lustres</a>
+      <a href="?q=Refrigerateur" hx-get="{% url 'shop:search' %}?q=Refrigerateur" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Réfrigérateur</a>
+      <a href="?q=Climatiseur" hx-get="{% url 'shop:search' %}?q=Climatiseur" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Climatiseur</a>
+      <a href="?q=TV" hx-get="{% url 'shop:search' %}?q=TV" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Smart TV</a>
+      <a href="?q=Samsung" hx-get="{% url 'shop:search' %}?q=Samsung" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">Samsung</a>
+      <a href="?q=LG" hx-get="{% url 'shop:search' %}?q=LG" hx-target="#search-workspace" hx-select="#search-workspace" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-amber-400 text-slate-700 hover:text-slate-950 font-bold shrink-0 transition">LG</a>
     </div>
   </div>
 
-  <!-- Résultats -->
-  {% if query %}
-    {% if products %}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
-      {% for product in products %}
-        {% include 'shop/partials/product_card.html' with product=product %}
-      {% endfor %}
-    </div>
-
-    <!-- Pagination -->
-    {% if products.has_other_pages %}
-    <div class="mt-12 flex justify-center items-center gap-2">
-      {% if products.has_previous %}
-      <a href="?q={{ query }}&page={{ products.previous_page_number }}" class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm transition">
-        Précédent
-      </a>
-      {% endif %}
-
-      {% for num in products.paginator.page_range %}
-        {% if products.number == num %}
-        <span class="w-9 h-9 rounded-xl bg-brand-500 text-white font-heading font-black text-xs flex items-center justify-center shadow-md">
-          {{ num }}
-        </span>
-        {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
-        <a href="?q={{ query }}&page={{ num }}" class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-xs flex items-center justify-center transition">
-          {{ num }}
-        </a>
-        {% endif %}
-      {% endfor %}
-
-      {% if products.has_next %}
-      <a href="?q={{ query }}&page={{ products.next_page_number }}" class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm transition">
-        Suivant
-      </a>
-      {% endif %}
-    </div>
-    {% endif %}
-
-    {% else %}
-    <!-- État aucun résultat -->
-    <div class="bg-white rounded-3xl p-16 text-center border border-slate-200/80 shadow-flagship max-w-lg mx-auto">
-      <div class="w-16 h-16 rounded-full bg-amber-50 text-brand-500 flex items-center justify-center mx-auto mb-4">
-        <span class="material-icons-round text-3xl">search_off</span>
+  <!-- Zone de résultats dynamique -->
+  <div id="search-results-zone" class="space-y-3">
+    {% if query %}
+      <div class="flex items-center justify-between gap-2 flex-wrap px-0.5">
+        <h1 class="font-display text-sm sm:text-lg font-black text-slate-950">
+          « <span class="text-amber-600">{{ query }}</span> » • <span class="text-slate-500 font-bold">{{ total }} résultat{{ total|pluralize }}</span>
+        </h1>
+        <div class="flex items-center gap-1.5 text-[11px]">
+          <a href="?q={{ query|urlencode }}&amp;tri=pertinence" hx-get="{% url 'shop:search' %}?q={{ query|urlencode }}&amp;tri=pertinence" hx-target="#search-results-zone" hx-select="#search-results-zone" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-lg font-extrabold {% if sort == 'pertinence' %}bg-slate-950 text-amber-400{% else %}bg-white border border-slate-200 text-slate-700{% endif %}">Pertinence</a>
+          <a href="?q={{ query|urlencode }}&amp;tri=prix_asc" hx-get="{% url 'shop:search' %}?q={{ query|urlencode }}&amp;tri=prix_asc" hx-target="#search-results-zone" hx-select="#search-results-zone" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-lg font-extrabold {% if sort == 'prix_asc' %}bg-slate-950 text-amber-400{% else %}bg-white border border-slate-200 text-slate-700{% endif %}">Prix ↑</a>
+          <a href="?q={{ query|urlencode }}&amp;tri=prix_desc" hx-get="{% url 'shop:search' %}?q={{ query|urlencode }}&amp;tri=prix_desc" hx-target="#search-results-zone" hx-select="#search-results-zone" hx-swap="outerHTML" hx-push-url="true" class="px-2.5 py-1 rounded-lg font-extrabold {% if sort == 'prix_desc' %}bg-slate-950 text-amber-400{% else %}bg-white border border-slate-200 text-slate-700{% endif %}">Prix ↓</a>
+        </div>
       </div>
-      <h3 class="font-heading font-bold text-lg text-slate-900 mb-2">Aucun résultat trouvé pour "{{ query }}"</h3>
-      <p class="text-xs text-slate-500 mb-6">
-        Vérifiez l'orthographe du mot ou parcourez nos grandes catégories de produits.
-      </p>
-      <a href="{% url 'shop:catalog' %}" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-brand-500 text-white font-heading font-bold text-xs shadow-md transition">
-        <span>Consulter le Catalogue Complet</span>
-        <span class="material-icons-round text-sm">arrow_forward</span>
-      </a>
-    </div>
-    {% endif %}
 
-  {% endif %}
+      {% include 'shop/partials/product_grid.html' %}
+    {% else %}
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-8 text-center">
+        <p class="text-xs text-slate-600 font-medium">Tapez le nom d'un meuble, d'une décoration ou d'un appareil ci-dessus pour filtrer instantanément.</p>
+      </div>
+    {% endif %}
+  </div>
 
 </div>
 {% endblock %}

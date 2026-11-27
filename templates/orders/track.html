@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static humanize %}
+
+{% block title %}Suivre ma commande • Onizouka Shop Bamako{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-2.5 sm:px-4 py-4 sm:py-8 pb-10 space-y-4">
+
+  <!-- Formulaire de recherche rapide sans compte -->
+  <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-6 shadow-sm space-y-4">
+    <div>
+      <nav class="flex items-center gap-1.5 text-xs text-slate-400 mb-1.5">
+        <a href="{% url 'shop:home' %}" class="hover:text-amber-600">Accueil</a>
+        <span>/</span>
+        <span class="text-slate-800 font-bold">Suivi de commande</span>
+      </nav>
+      <h1 class="font-display font-black text-xl sm:text-2xl text-slate-950">Suivre ma commande en direct</h1>
+      <p class="text-xs text-slate-500 mt-0.5">Aucun compte requis : entrez votre numéro de commande et le téléphone utilisé lors de l'achat.</p>
+    </div>
+
+    <form method="GET" action="{% url 'orders:track' %}" class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+      <div class="sm:col-span-5">
+        <label class="block text-[11px] font-bold text-slate-600 mb-1">N° de commande *</label>
+        <input
+          type="text"
+          name="order_number"
+          value="{{ order_number_val }}"
+          required
+          placeholder="Ex: ONZ12345678"
+          class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm font-mono uppercase focus:outline-none focus:border-amber-500"
+        >
+      </div>
+      <div class="sm:col-span-5">
+        <label class="block text-[11px] font-bold text-slate-600 mb-1">Téléphone de livraison *</label>
+        <input
+          type="tel"
+          name="phone"
+          value="{{ phone_val }}"
+          required
+          placeholder="Ex: +223 70 00 00 00"
+          class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm font-mono focus:outline-none focus:border-amber-500"
+        >
+      </div>
+      <div class="sm:col-span-2 flex items-end">
+        <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs sm:text-sm shadow-sm cursor-pointer transition">
+          Vérifier
+        </button>
+      </div>
+    </form>
+
+    {% if error_msg %}
+    <div class="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold">
+      {{ error_msg }}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Résultat du suivi -->
+  {% if order %}
+  <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-6 shadow-sm space-y-5">
+    <div class="flex flex-wrap items-center justify-between gap-2 pb-3.5 border-b border-slate-100">
+      <div>
+        <div class="flex items-center gap-2">
+          <h2 class="font-display font-black text-lg sm:text-xl text-slate-950">Commande #{{ order.order_number }}</h2>
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold
+            {% if order.status == 'delivered' %}bg-emerald-50 text-emerald-700 border border-emerald-200
+            {% elif order.status == 'shipped' %}bg-blue-50 text-blue-700 border border-blue-200
+            {% elif order.status == 'cancelled' %}bg-rose-50 text-rose-700 border border-rose-200
+            {% else %}bg-amber-50 text-amber-800 border border-amber-200{% endif %}">
+            {{ order.get_status_display }}
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 mt-0.5">Client : {{ order.delivery_name }} • {{ order.delivery_district|default:order.delivery_city }}</p>
+      </div>
+      <div class="font-display font-black text-lg sm:text-xl text-amber-600">{{ order.get_formatted_total }}</div>
+    </div>
+
+    {% if order.status != 'cancelled' %}
+    <div class="py-2">
+      <div class="relative flex items-center justify-between max-w-lg mx-auto">
+        <div class="absolute left-0 top-4 h-1 w-full bg-slate-100 rounded-full"></div>
+        <div class="absolute left-0 top-4 h-1 bg-amber-400 rounded-full
+          {% if order.status == 'pending' %}w-[12%]
+          {% elif order.status == 'confirmed' %}w-[38%]
+          {% elif order.status == 'processing' %}w-[62%]
+          {% elif order.status == 'shipped' %}w-[85%]
+          {% elif order.status == 'delivered' %}w-full
+          {% else %}w-0{% endif %}"></div>
+
+        <div class="relative z-10 flex flex-col items-center">
+          <div class="w-8 h-8 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-xs font-black">✓</div>
+          <span class="text-[11px] font-bold text-slate-800 mt-1">Reçue</span>
+        </div>
+        <div class="relative z-10 flex flex-col items-center">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black {% if order.status in 'confirmed,processing,shipped,delivered' %}bg-amber-400 text-slate-950{% else %}bg-white border-2 border-slate-200 text-slate-400{% endif %}">2</div>
+          <span class="text-[11px] font-semibold text-slate-700 mt-1">Confirmée</span>
+        </div>
+        <div class="relative z-10 flex flex-col items-center">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black {% if order.status in 'shipped,delivered' %}bg-amber-400 text-slate-950{% else %}bg-white border-2 border-slate-200 text-slate-400{% endif %}">3</div>
+          <span class="text-[11px] font-semibold text-slate-700 mt-1">En route</span>
+        </div>
+        <div class="relative z-10 flex flex-col items-center">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black {% if order.status == 'delivered' %}bg-emerald-500 text-white{% else %}bg-white border-2 border-slate-200 text-slate-400{% endif %}">4</div>
+          <span class="text-[11px] font-semibold text-slate-700 mt-1">Livrée</span>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="divide-y divide-slate-100 border-t border-slate-100 text-xs">
+      {% for item in order.items.all %}
+      <div class="py-2.5 flex items-center justify-between gap-2">
+        <span class="font-bold text-slate-800">{{ item.quantity }}× {{ item.product_name }}</span>
+        <span class="font-extrabold text-slate-950 shrink-0">{{ item.get_formatted_total_price }}</span>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+      <a href="{% url 'orders:invoice' order.order_number %}" target="_blank" class="py-3 px-4 rounded-xl bg-slate-950 hover:bg-slate-900 text-amber-400 font-extrabold text-xs text-center transition">
+        Télécharger la Facture / Garantie (PDF)
+      </a>
+      <a href="{{ order.get_whatsapp_order_url }}" target="_blank" rel="noopener" class="py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs text-center transition">
+        Contacter le livreur / magasin sur WhatsApp
+      </a>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

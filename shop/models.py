@@ -53,7 +53,7 @@ class Category(MPTTModel):
 
     @property
     def short_name(self):
-        """Nom concis style Apple pour les barres de navigation"""
+        """Nom concis pour les barres de navigation mobile et onglets"""
         short_map = {
             'refrigerateurs': 'Réfrigérateurs',
             'climatisation': 'Climatiseurs',
@@ -61,6 +61,13 @@ class Category(MPTTModel):
             'cuisinieres': 'Cuisinières',
             'congelateurs': 'Congélateurs',
             'petit-electromenager': 'Petit Électro',
+            'meubles': 'Meubles',
+            'mobilier': 'Mobilier',
+            'decoration': 'Déco & Design',
+            'literie': 'Literie',
+            'salon': 'Salons',
+            'bureau': 'Bureau',
+            'solaire': 'Solaire',
         }
         for key, val in short_map.items():
             if key in self.slug:
@@ -134,11 +141,22 @@ class Product(models.Model):
     min_stock = models.PositiveIntegerField(default=5, verbose_name='Stock minimum (alerte)')
     track_stock = models.BooleanField(default=True, verbose_name='Gerer le stock')
 
-    # Caracteristiques physiques
+    # Caracteristiques physiques & Média Vidéo
     weight = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True,
                                  verbose_name='Poids (kg)')
     dimensions = models.CharField(max_length=100, blank=True,
                                   help_text='LxlxH en cm', verbose_name='Dimensions')
+    video_file = models.FileField(upload_to='products/videos/', blank=True, null=True,
+                                  verbose_name='Vidéo du produit (MP4/MOV/WebM)')
+    video_url = models.URLField(blank=True,
+                                verbose_name='Lien vidéo externe (YouTube, TikTok ou MP4)')
+    is_eco_solar = models.BooleanField(default=False,
+                                       verbose_name='Éco-Énergie / Compatible Solaire')
+    addon_label = models.CharField(max_length=120, blank=True,
+                                   verbose_name='Option 1-clic (ex: Montage meuble, Installation clim, Stabilisateur)')
+    addon_price = models.DecimalField(max_digits=10, decimal_places=0, default=0,
+                                      validators=[MinValueValidator(0)],
+                                      verbose_name='Prix de l\'option (FCFA)')
 
     # SEO
     meta_title = models.CharField(max_length=200, blank=True, verbose_name='Meta titre SEO')
@@ -203,6 +221,20 @@ class Product(models.Model):
         return bool(self.sale_price and self.sale_price < self.price)
 
     @property
+    def margin(self):
+        """Marge bénéficiaire brute en FCFA (Prix de vente actuel - Prix d'achat)"""
+        if self.cost_price:
+            return int(self.current_price - self.cost_price)
+        return None
+
+    @property
+    def margin_percentage(self):
+        """Pourcentage de marge commerciale"""
+        if self.cost_price and self.cost_price > 0:
+            return round(((self.current_price - self.cost_price) / self.cost_price) * 100, 1)
+        return None
+
+    @property
     def is_in_stock(self):
         if not self.track_stock:
             return True
@@ -214,11 +246,25 @@ class Product(models.Model):
 
     @property
     def primary_image(self):
-        """Retourne l'image principale du produit"""
-        img = self.images.filter(is_primary=True).first()
-        if not img:
-            img = self.images.first()
-        return img
+        """Retourne l'image principale du produit en exploitant le cache prefetch_related (0 requête N+1)"""
+        imgs = list(self.images.all())
+        if not imgs:
+            return None
+        for img in imgs:
+            if img.is_primary:
+                return img
+        return imgs[0]
+
+    @property
+    def secondary_image(self):
+        """Retourne la seconde image du produit si disponible (0 requête N+1)"""
+        imgs = list(self.images.all())
+        if len(imgs) > 1:
+            primary = self.primary_image
+            for img in imgs:
+                if img != primary:
+                    return img
+        return None
 
     def get_average_rating(self):
         reviews = self.reviews.filter(is_approved=True)
@@ -234,7 +280,41 @@ class Product(models.Model):
 
     def get_specifications_list(self):
         """Retourne les specs comme liste de tuples"""
-        return list(self.specifications.items())
+        return list((self.specifications or {}).items())
+
+    @property
+    def has_video(self):
+        return bool(self.video_file or self.video_url)
+
+    @property
+    def youtube_embed_url(self):
+        """Extrait un lien embed propre si video_url pointe vers YouTube / Shorts."""
+        if not self.video_url:
+            return ''
+        import re
+        url = self.video_url.strip()
+        patterns = [
+            r'(?:youtube\.com/watch\?v=|youtu\.be/|youtube\.com/shorts/|youtube\.com/embed/)([A-Za-z0-9_-]{6,})',
+        ]
+        for pat in patterns:
+            m = re.search(pat, url)
+            if m:
+                return f"https://www.youtube.com/embed/{m.group(1)}?rel=0&playsinline=1"
+        return ''
+
+    @property
+    def smart_addon(self):
+        """Option 1-clic personnalisée ou suggérée intelligemment selon le rayon (Meubles, Clims, Frigos, TV)."""
+        if self.addon_label and self.addon_price is not None:
+            return {'label': self.addon_label, 'price': int(self.addon_price)}
+        cat_text = f"{self.category.slug} {self.category.name}".lower() if self.category_id else ''
+        if any(k in cat_text for k in ('clim', 'split')):
+            return {'label': 'Pose & installation murale (Bamako)', 'price': 15000}
+        if any(k in cat_text for k in ('meuble', 'mobilier', 'salon', 'lit', 'armoire', 'table', 'bureau')):
+            return {'label': 'Montage & installation à domicile', 'price': 10000}
+        if any(k in cat_text for k in ('frigo', 'refrig', 'congel', 'tele', 'tv')):
+            return {'label': 'Régulateur / Stabilisateur anti-surtension', 'price': 15000}
+        return None
 
 
 class ProductImage(models.Model):
@@ -270,6 +350,27 @@ class ProductImage(models.Model):
         return f"Image de {self.product.name}"
 
     def save(self, *args, **kwargs):
+        # Compression automatique WebP haute netteté des photos lourdes prises au téléphone
+        if self.image and not str(self.image.name).lower().endswith('.webp'):
+            try:
+                from PIL import Image, ImageOps
+                from io import BytesIO
+                from django.core.files.base import ContentFile
+                import os
+
+                self.image.open()
+                im = Image.open(self.image)
+                im = ImageOps.exif_transpose(im)
+                if im.mode not in ('RGB', 'RGBA'):
+                    im = im.convert('RGBA' if 'A' in im.getbands() else 'RGB')
+                im.thumbnail((1400, 1400), Image.Resampling.LANCZOS)
+                buf = BytesIO()
+                im.save(buf, format='WEBP', quality=85, method=4)
+                base_name = os.path.splitext(os.path.basename(self.image.name))[0]
+                self.image.save(f"{base_name}.webp", ContentFile(buf.getvalue()), save=False)
+            except Exception:
+                pass
+
         # Si c'est la premiere image, la definir comme principale
         if not self.pk and not self.product.images.exists():
             self.is_primary = True

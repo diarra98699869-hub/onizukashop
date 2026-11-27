@@ -1,554 +1,610 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="fr" class="h-full bg-slate-50">
+{% load static %}<!DOCTYPE html>
+<html lang="fr" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Direction Onizouka ERP{% endblock %}</title>
-    
-    <!-- Google Fonts Inter & Outfit -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#fefce8',
-                            100: '#fef9c3',
-                            200: '#fef08a',
-                            300: '#fde047',
-                            400: '#facc15',
-                            500: '#eab308',
-                            600: '#ca8a04',
-                            700: '#a16207',
-                            800: '#854d0e',
-                            900: '#713f12',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-                        heading: ['Outfit', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>{% block title %}Gestion • Onizouka Shop{% endblock %}</title>
+  <meta name="theme-color" content="#0d0e12">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/png" sizes="192x192" href="{% static 'images/pwa/icon-192.png' %}">
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/app-icon.svg' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/pwa/apple-touch-icon.png' %}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          spacing: {
+            '4.5': '1.125rem',
+            '5.5': '1.375rem',
+            '7.5': '1.875rem',
+            '8.5': '2.125rem',
+            '9.5': '2.375rem',
+            '13': '3.25rem',
+            '15': '3.75rem',
+            '88': '22rem',
+          },
+          boxShadow: {
+            '2xs': '0 1px 2px 0 rgba(15, 23, 42, 0.04)',
+            'xs': '0 1px 2px 0 rgba(15, 23, 42, 0.06)',
+          },
+          backdropBlur: {
+            'xs': '2px',
+          },
+          colors: {
+            brand: {
+              50: '#fefce8', 100: '#fef9c3', 200: '#fef08a', 300: '#fde047',
+              400: '#facc15', 500: '#eab308', 600: '#ca8a04', 700: '#a16207',
+              800: '#854d0e', 900: '#713f12',
+            },
+            primary: {
+              50: '#fffbeb', 100: '#fef3c7', 200: '#fde68a', 300: '#fcd34d',
+              400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309',
+              800: '#92400e', 900: '#78350f',
             }
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            heading: ['Outfit', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            display: ['Outfit', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          }
         }
-    </script>
-    
-    <!-- Alpine.js & HTMX -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: #0f172a;
-        }
-        h1, h2, h3, h4, .font-heading {
-            font-family: 'Outfit', sans-serif;
-        }
-        /* Custom scrollbar fine et sobre */
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
-        .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
-        .sidebar-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
-    </style>
-    {% block extra_head %}{% endblock %}
+      }
+    }
+  </script>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <script defer src="{% static 'js/capacitor-bridge.js' %}?v=20261127.1"></script>
+
+  <style>
+    [x-cloak] { display: none !important; }
+    *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    svg:not([width]):not([class*="w-"]) { width: 1.25rem; height: 1.25rem; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: #f2f4f7;
+      color: #0f172a;
+      overflow-x: clip;
+    }
+    h1, h2, h3, h4, .font-heading { font-family: 'Outfit', sans-serif; letter-spacing: -0.02em; }
+    a, button, input, select, textarea, label { touch-action: manipulation; }
+    .pt-safe-top { padding-top: env(safe-area-inset-top, 0px); }
+    .pb-safe-bottom { padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    #bo-progress-bar {
+      position: fixed; top: 0; left: 0; height: 2.5px; width: 0%; z-index: 9999;
+      background: linear-gradient(90deg, #facc15 0%, #f59e0b 65%, #fef08a 100%);
+      box-shadow: 0 0 10px rgba(250, 204, 21, 0.75);
+      pointer-events: none; opacity: 0;
+      transition: width 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease;
+    }
+    @keyframes boFadeIn { from { opacity: 0.7; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
+    .bo-view-enter { animation: boFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1); }
+    #bo-live-results.htmx-request { opacity: 0.45; transition: opacity 0.12s ease; }
+  </style>
+  {% block extra_head %}{% endblock %}
 </head>
-<body class="h-full antialiased text-slate-800 bg-slate-50" x-data="{ mobileMenuOpen: false }">
+<body class="min-h-full antialiased text-slate-900 bg-[#f2f4f7]" x-data="{ moreSheet: false }" @bo-navigated.window="moreSheet = false" :class="{ 'overflow-hidden': moreSheet }">
+  <div id="bo-progress-bar" aria-hidden="true"></div>
 
-    <!-- Configuration CSRF pour requêtes HTMX -->
-    <script>
-        document.body.addEventListener('htmx:configRequest', (event) => {
-            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
-        });
-    </script>
+  <script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+      event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    });
+  </script>
 
-    <div class="min-h-screen flex flex-col lg:flex-row bg-slate-50">
-        
-        <!-- SIDEBAR DESKTOP PROFESSIONNELLE COMPACTE (STYLE STRIPE / LINEAR) -->
-        <aside class="hidden lg:flex lg:flex-col lg:w-60 lg:min-h-screen lg:sticky lg:top-0 lg:self-start bg-[#0f172a] text-slate-300 border-r border-slate-800 z-30 flex-shrink-0">
-            <!-- Brand Logo & Identity -->
-            <div class="h-12 flex items-center justify-between px-3.5 border-b border-slate-800/80 bg-[#0b1120]">
-                <a href="{% url 'backoffice:dashboard' %}" class="flex items-center gap-2 group">
-                    <div class="w-6 h-6 rounded bg-amber-500 text-slate-950 font-heading font-black text-xs flex items-center justify-center">
-                        O
-                    </div>
-                    <div class="min-w-0">
-                        <div class="font-heading font-bold text-xs text-white tracking-tight leading-none flex items-center gap-1.5">
-                            ONIZOUKA
-                            <span class="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-400/15 text-amber-300 border border-amber-400/25">ERP</span>
-                        </div>
-                        <span class="text-[10px] text-slate-400 block mt-0.5">Direction · Bamako</span>
-                    </div>
-                </a>
+  <div id="bo-shell">
+  <div class="min-h-screen flex flex-col lg:flex-row">
+
+    <!-- ================================================================= -->
+    <!-- SIDEBAR DESKTOP (OBSIDIAN & GOLD - STYLE SHOPIFY ADMIN / LINEAR)  -->
+    <!-- ================================================================= -->
+    <aside class="hidden lg:flex lg:flex-col lg:w-60 lg:min-h-screen lg:sticky lg:top-0 lg:self-start bg-[#0d0e12] text-slate-300 border-r border-slate-800 z-30 shrink-0">
+      <!-- Identité -->
+      <div class="h-14 flex items-center justify-between px-4 border-b border-white/10">
+        <a href="{% url 'backoffice:dashboard' %}" class="flex items-center gap-2.5">
+          <img src="{% static 'images/logo_icon.png' %}" alt="Onizuka Shop" class="w-8 h-8 object-contain shrink-0 filter drop-shadow-[0_2px_8px_rgba(245,158,11,0.3)]">
+          <div>
+            <div class="font-heading font-black text-sm text-white leading-none flex items-center gap-1.5">
+              <span>ONIZUKA</span>
+              <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold">PRO</span>
             </div>
+            <span class="text-[10px] text-slate-400 block mt-0.5">Dibidani • Bamako</span>
+          </div>
+        </a>
+      </div>
 
-            <!-- Navigation Links -->
-            <nav class="flex-1 px-2.5 py-2.5 space-y-0.5 overflow-y-auto sidebar-scroll text-xs">
-                
-                <div class="text-[10px] font-semibold uppercase tracking-wider text-slate-500 px-2 pt-1.5 pb-1">
-                    Gestion Commerciale
-                </div>
-                
-                <!-- Tableau de bord -->
-                <a href="{% url 'backoffice:dashboard' %}" 
-                   class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md font-medium transition-colors {% if current_page == 'dashboard' %}bg-slate-800 text-white font-semibold border-l-2 border-amber-400 pl-2{% else %}text-slate-400 hover:text-slate-200 hover:bg-slate-800/50{% endif %}">
-                    <svg class="w-4 h-4 {% if current_page == 'dashboard' %}text-amber-400{% else %}text-slate-400{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-                    </svg>
-                    <span>Tableau de bord</span>
-                </a>
+      <!-- Bouton Rapide + Nouveau Produit -->
+      <div class="p-3 border-b border-white/[0.07]">
+        <a
+          href="{% url 'backoffice:product_create' %}"
+          class="w-full py-2.5 px-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-sm transition active:scale-[0.98]"
+        >
+          <svg class="w-4 h-4 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+          <span>Nouveau produit</span>
+        </a>
+      </div>
 
-                <!-- Commandes -->
-                <a href="{% url 'backoffice:orders' %}" 
-                   class="flex items-center justify-between px-2.5 py-1.5 rounded-md font-medium transition-colors {% if current_page == 'orders' %}bg-slate-800 text-white font-semibold border-l-2 border-amber-400 pl-2{% else %}text-slate-400 hover:text-slate-200 hover:bg-slate-800/50{% endif %}">
-                    <div class="flex items-center gap-2.5">
-                        <svg class="w-4 h-4 {% if current_page == 'orders' %}text-amber-400{% else %}text-slate-400{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25c-.669 0-1.189-.578-1.119-1.243l1.263-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                        </svg>
-                        <span>Commandes</span>
-                    </div>
-                    {% if pending_orders_count and pending_orders_count > 0 %}
-                    <span class="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300 font-mono">{{ pending_orders_count }}</span>
-                    {% endif %}
-                </a>
+      <!-- Liens Principaux -->
+      <nav class="flex-1 px-2.5 py-3 space-y-1 overflow-y-auto text-xs">
+        <a href="{% url 'backoffice:dashboard' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-semibold transition {% if current_page == 'dashboard' %}bg-white/15 text-amber-300 font-bold{% else %}text-slate-400 hover:text-white hover:bg-white/[0.06]{% endif %}">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
+          </svg>
+          <span>Tableau de bord</span>
+        </a>
 
-                <!-- Catalogue & Produits -->
-                <a href="{% url 'backoffice:products' %}" 
-                   class="flex items-center justify-between px-2.5 py-1.5 rounded-md font-medium transition-colors {% if current_page == 'products' %}bg-slate-800 text-white font-semibold border-l-2 border-amber-400 pl-2{% else %}text-slate-400 hover:text-slate-200 hover:bg-slate-800/50{% endif %}">
-                    <div class="flex items-center gap-2.5">
-                        <svg class="w-4 h-4 {% if current_page == 'products' %}text-amber-400{% else %}text-slate-400{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                        </svg>
-                        <span>Catalogue & Prix</span>
-                    </div>
-                </a>
+        <a href="{% url 'backoffice:orders' %}" class="flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold transition {% if current_page == 'orders' %}bg-white/15 text-amber-300 font-bold{% else %}text-slate-400 hover:text-white hover:bg-white/[0.06]{% endif %}">
+          <div class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25c-.669 0-1.189-.578-1.119-1.243l1.263-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/>
+            </svg>
+            <span>Commandes</span>
+          </div>
+          {% if bo_pending_orders and bo_pending_orders > 0 %}
+          <span class="px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black">{{ bo_pending_orders }}</span>
+          {% endif %}
+        </a>
 
-                <!-- Stocks & Alertes -->
-                <a href="{% url 'backoffice:stocks' %}" 
-                   class="flex items-center justify-between px-2.5 py-1.5 rounded-md font-medium transition-colors {% if current_page == 'stocks' %}bg-slate-800 text-white font-semibold border-l-2 border-amber-400 pl-2{% else %}text-slate-400 hover:text-slate-200 hover:bg-slate-800/50{% endif %}">
-                    <div class="flex items-center gap-2.5">
-                        <svg class="w-4 h-4 {% if current_page == 'stocks' %}text-amber-400{% else %}text-slate-400{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
-                        </svg>
-                        <span>Stocks & Alertes</span>
-                    </div>
-                    {% if low_stock_count and low_stock_count > 0 %}
-                    <span class="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono">{{ low_stock_count }}</span>
-                    {% endif %}
-                </a>
+        <a href="{% url 'backoffice:products' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-semibold transition {% if current_page == 'products' and request.resolver_match.url_name != 'products_bulk_edit' %}bg-white/15 text-amber-300 font-bold{% else %}text-slate-400 hover:text-white hover:bg-white/[0.06]{% endif %}">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+          </svg>
+          <span>Produits &amp; Prix</span>
+        </a>
 
-                <!-- Clients & Adresses -->
-                <a href="{% url 'backoffice:clients' %}" 
-                   class="flex items-center justify-between px-2.5 py-1.5 rounded-md font-medium transition-colors {% if current_page == 'clients' %}bg-slate-800 text-white font-semibold border-l-2 border-amber-400 pl-2{% else %}text-slate-400 hover:text-slate-200 hover:bg-slate-800/50{% endif %}">
-                    <div class="flex items-center gap-2.5">
-                        <svg class="w-4 h-4 {% if current_page == 'clients' %}text-amber-400{% else %}text-slate-400{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                        </svg>
-                        <span>Clients & Bamako</span>
-                    </div>
-                </a>
+        <a href="{% url 'backoffice:products_bulk_edit' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-semibold transition {% if request.resolver_match.url_name == 'products_bulk_edit' %}bg-white/15 text-emerald-400 font-bold{% else %}text-slate-400 hover:text-white hover:bg-white/[0.06]{% endif %}">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5"/>
+          </svg>
+          <span>Tableur Excel (Masse)</span>
+        </a>
 
-                <!-- Équipe & Utilisateurs -->
-                <a href="{% url 'backoffice:users' %}" 
-                   class="flex items-center justify-between px-2.5 py-1.5 rounded-md font-medium transition-colors {% if current_page == 'users' %}bg-slate-800 text-white font-semibold border-l-2 border-amber-400 pl-2{% else %}text-slate-400 hover:text-slate-200 hover:bg-slate-800/50{% endif %}">
-                    <div class="flex items-center gap-2.5">
-                        <svg class="w-4 h-4 {% if current_page == 'users' %}text-amber-400{% else %}text-slate-400{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.999-3.199a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-                        </svg>
-                        <span>Équipe & Accès</span>
-                    </div>
-                </a>
+        <a href="{% url 'backoffice:catalog_config' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-semibold transition {% if current_page == 'catalog_config' %}bg-white/15 text-amber-300 font-bold{% else %}text-slate-400 hover:text-white hover:bg-white/[0.06]{% endif %}">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z"/>
+          </svg>
+          <span>Rayons, Marques &amp; Promos</span>
+        </a>
 
-                <!-- Paramètres & Société -->
-                <a href="{% url 'backoffice:settings' %}" 
-                   class="flex items-center justify-between px-2.5 py-1.5 rounded-md font-medium transition-colors {% if current_page == 'settings' %}bg-slate-800 text-white font-semibold border-l-2 border-amber-400 pl-2{% else %}text-slate-400 hover:text-slate-200 hover:bg-slate-800/50{% endif %}">
-                    <div class="flex items-center gap-2.5">
-                        <svg class="w-4 h-4 {% if current_page == 'settings' %}text-amber-400{% else %}text-slate-400{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.004.827c-.292.24-.437.613-.43.992a7.723 7.723 0 010 .255c-.007.378.138.75.43.99l1.004.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.6 6.6 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a7.023 7.023 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span>Paramètres & Société</span>
-                    </div>
-                </a>
+        <a href="{% url 'backoffice:emails_center' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-semibold transition {% if current_page == 'emails' %}bg-white/15 text-amber-300 font-bold{% else %}text-slate-400 hover:text-white hover:bg-white/[0.06]{% endif %}">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+          </svg>
+          <span>Emails, Alertes &amp; Rappels</span>
+        </a>
 
-                <div class="pt-3 pb-1">
-                    <div class="text-[10px] font-semibold uppercase tracking-wider text-slate-500 px-2 mb-1">
-                        Système
-                    </div>
+        <a href="{% url 'backoffice:stocks' %}" class="flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold transition {% if current_page == 'stocks' %}bg-white/15 text-amber-300 font-bold{% else %}text-slate-400 hover:text-white hover:bg-white/[0.06]{% endif %}">
+          <div class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/>
+            </svg>
+            <span>Stocks</span>
+          </div>
+          {% if bo_low_stock and bo_low_stock > 0 %}
+          <span class="px-1.5 py-0.5 rounded-full bg-rose-500 text-white text-[10px] font-black">{{ bo_low_stock }}</span>
+          {% endif %}
+        </a>
 
-                    <!-- Voir Boutique Client -->
-                    <a href="{% url 'shop:home' %}" target="_blank"
-                       class="flex items-center justify-between px-2.5 py-1.5 rounded-md text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition">
-                        <div class="flex items-center gap-2.5">
-                            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                            </svg>
-                            <span>Boutique publique</span>
-                        </div>
-                        <span class="text-[10px] text-slate-500">↗</span>
-                    </a>
+        <a href="{% url 'backoffice:clients' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-semibold transition {% if current_page == 'clients' %}bg-white/15 text-amber-300 font-bold{% else %}text-slate-400 hover:text-white hover:bg-white/[0.06]{% endif %}">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0z"/>
+          </svg>
+          <span>Clients</span>
+        </a>
 
-                    {% if request.user.is_superuser %}
-                    <!-- Accès technique Django Admin -->
-                    <a href="/admin/" target="_blank"
-                       class="flex items-center justify-between px-2.5 py-1.5 rounded-md text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition">
-                        <div class="flex items-center gap-2.5">
-                            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <span>Django Root</span>
-                        </div>
-                        <span class="text-[9px] font-mono px-1 py-0.2 rounded bg-slate-800 text-slate-400">IT</span>
-                    </a>
-                    {% endif %}
-                </div>
-            </nav>
+        <a href="{% url 'backoffice:users' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-semibold transition {% if current_page == 'users' %}bg-white/15 text-amber-300 font-bold{% else %}text-slate-400 hover:text-white hover:bg-white/[0.06]{% endif %}">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <span>Équipe &amp; Accès</span>
+        </a>
 
-            <!-- User Profile & Logout Box -->
-            <div class="p-2.5 border-t border-slate-800 bg-[#0b1120]">
-                <div class="flex items-center justify-between px-2 py-1.5 rounded hover:bg-slate-800/40 transition">
-                    <div class="flex items-center gap-2 min-w-0">
-                        <div class="w-6 h-6 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30 flex items-center justify-center font-bold text-xs flex-shrink-0">
-                            {{ request.user.username|slice:":1"|upper }}
-                        </div>
-                        <div class="text-xs min-w-0">
-                            <div class="font-medium text-slate-200 truncate max-w-[100px]">{{ request.user.username }}</div>
-                            <div class="text-slate-400 text-[10px]">{% if request.user.is_superuser %}Superadmin IT{% else %}Direction{% endif %}</div>
-                        </div>
-                    </div>
-                    <a href="{% url 'account_logout' %}" title="Se déconnecter" class="text-slate-400 hover:text-rose-300 p-1 transition" aria-label="Déconnexion">
-                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </aside>
+        <a href="{% url 'backoffice:settings' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-semibold transition {% if current_page == 'settings' %}bg-white/15 text-amber-300 font-bold{% else %}text-slate-400 hover:text-white hover:bg-white/[0.06]{% endif %}">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.004.827c-.292.24-.437.613-.43.992a7.723 7.723 0 010 .255c-.007.378.138.75.43.99l1.004.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.6 6.6 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a7.023 7.023 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <span>Paramètres</span>
+        </a>
 
-        <!-- MOBILE TOPBAR EFFET GLACE APPLE (TRANSLUCIDE & LUMINEUSE SANS MOT DIRECT) -->
-        <header class="lg:hidden bg-white/80 backdrop-blur-3xl text-slate-900 border-b border-slate-200/70 sticky top-0 z-40 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
-            <div class="px-4 h-14 flex items-center justify-between">
-                <!-- Brand & Logo iOS Squircle -->
-                <div class="flex items-center gap-2.5">
-                    <a href="{% url 'backoffice:dashboard' %}" class="flex items-center gap-2.5 group">
-                        <div class="w-8 h-8 rounded-[10px] bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center text-slate-950 font-heading font-black text-sm shadow-[0_2px_8px_rgba(234,179,8,0.35)] ring-1 ring-amber-300/70">
-                            O
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="flex items-center gap-1.5">
-                                <span class="font-heading font-black text-xs tracking-tight text-slate-950">ONIZOUKA</span>
-                                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded-md bg-amber-500/15 text-amber-900 border border-amber-300/70 font-extrabold">ERP</span>
-                            </div>
-                            <span class="text-[10px] text-slate-400 font-medium leading-none mt-0.5">Direction · Bamako</span>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Action Droite Épurée Apple -->
-                <div class="flex items-center gap-2">
-                    <a href="{% url 'shop:home' %}" target="_blank" 
-                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/5 hover:bg-slate-900/10 active:scale-95 text-slate-800 text-xs font-semibold border border-slate-200/80 backdrop-blur-md transition shadow-2xs">
-                        <span>Boutique</span>
-                        <svg class="w-3.5 h-3.5 text-slate-500 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Mobile Drawer Menu Complet - Effet Glace Lumineux Apple -->
-            <div x-show="mobileMenuOpen" 
-                 x-cloak
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0 -translate-y-3"
-                 x-transition:enter-end="opacity-100 translate-y-0"
-                 x-transition:leave="transition ease-in duration-150"
-                 x-transition:leave-start="opacity-100 translate-y-0"
-                 x-transition:leave-end="opacity-0 -translate-y-3"
-                 @click.outside="mobileMenuOpen = false"
-                 class="p-4 bg-white/95 backdrop-blur-2xl border-b border-slate-200/80 space-y-1 text-xs select-none shadow-2xl" 
-                 style="display: none;">
-                
-                <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2 pt-1 pb-1">
-                    Modules de Gestion Direction
-                </div>
-
-                <a href="{% url 'backoffice:dashboard' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-100/80 {% if current_page == 'dashboard' %}bg-amber-50 text-amber-900 font-bold border-l-2 border-amber-500{% endif %}">
-                    <svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
-                    <span>Tableau de bord exécutif</span>
-                </a>
-
-                <a href="{% url 'backoffice:orders' %}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-100/80 {% if current_page == 'orders' %}bg-amber-50 text-amber-900 font-bold border-l-2 border-amber-500{% endif %}">
-                    <div class="flex items-center gap-2.5">
-                        <svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25c-.669 0-1.189-.578-1.119-1.243l1.263-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
-                        <span>Commandes & Ventes</span>
-                    </div>
-                    {% if pending_orders_count and pending_orders_count > 0 %}
-                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 font-mono">{{ pending_orders_count }}</span>
-                    {% endif %}
-                </a>
-
-                <a href="{% url 'backoffice:products' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-100/80 {% if current_page == 'products' %}bg-amber-50 text-amber-900 font-bold border-l-2 border-amber-500{% endif %}">
-                    <svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>
-                    <span>Catalogue & Prix</span>
-                </a>
-
-                <a href="{% url 'backoffice:stocks' %}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-100/80 {% if current_page == 'stocks' %}bg-amber-50 text-amber-900 font-bold border-l-2 border-amber-500{% endif %}">
-                    <div class="flex items-center gap-2.5">
-                        <svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
-                        <span>Stocks & Alertes</span>
-                    </div>
-                    {% if low_stock_count and low_stock_count > 0 %}
-                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono">{{ low_stock_count }}</span>
-                    {% endif %}
-                </a>
-
-                <a href="{% url 'backoffice:clients' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-100/80 {% if current_page == 'clients' %}bg-amber-50 text-amber-900 font-bold border-l-2 border-amber-500{% endif %}">
-                    <svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
-                    <span>Clients & Répertoire Bamako</span>
-                </a>
-
-                <a href="{% url 'backoffice:users' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-100/80 {% if current_page == 'users' %}bg-amber-50 text-amber-900 font-bold border-l-2 border-amber-500{% endif %}">
-                    <svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.999-3.199a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
-                    <span>Équipe & Droits d'Accès</span>
-                </a>
-
-                <a href="{% url 'backoffice:settings' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-100/80 {% if current_page == 'settings' %}bg-amber-50 text-amber-900 font-bold border-l-2 border-amber-500{% endif %}">
-                    <svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.004.827c-.292.24-.437.613-.43.992a7.723 7.723 0 010 .255c-.007.378.138.75.43.99l1.004.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.6 6.6 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a7.023 7.023 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    <span>Paramètres & Société</span>
-                </a>
-
-                <div class="pt-3 border-t border-slate-200">
-                    <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-full bg-slate-900 text-amber-400 font-bold text-xs flex items-center justify-center">
-                                {{ request.user.username|slice:":1"|upper }}
-                            </div>
-                            <div>
-                                <div class="font-bold text-slate-900 text-xs">{{ request.user.username }}</div>
-                                <div class="text-[10px] text-amber-700 font-bold">{% if request.user.is_superuser %}Superadmin IT{% else %}Direction Bamako{% endif %}</div>
-                            </div>
-                        </div>
-                        <a href="{% url 'account_logout' %}" class="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 text-xs font-bold transition">
-                            Déconnexion
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-        </header>
-
-        <!-- MAIN CONTENT AREA (AVEC SAFE-PADDING POUR DOCK MOBILE) -->
-        <main class="flex-1 flex flex-col min-w-0 bg-slate-50 min-h-screen pb-20 lg:pb-0">
-            
-            <!-- TOPBAR DESKTOP EXECUTIVE HAUTE PRÉCISION (STYLE LINEAR & APPLE) -->
-            <div class="hidden lg:flex items-center justify-between px-6 h-13 bg-white/95 backdrop-blur-md border-b border-slate-200/90 sticky top-0 z-20 shadow-xs">
-                
-                <!-- Fil d'Ariane & Statut Direction -->
-                <div class="flex items-center gap-3 text-xs">
-                    <div class="flex items-center gap-2">
-                        <span class="font-heading font-black text-xs text-slate-900 tracking-tight flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                            Direction ERP
-                        </span>
-                        <span class="text-slate-300">/</span>
-                        <span class="font-bold text-slate-700 uppercase tracking-wider text-[11px] font-mono">
-                            {{ current_page|default:'Tableau de bord'|title }}
-                        </span>
-                    </div>
-
-                    <span class="text-slate-200">|</span>
-
-                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200/60">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span>Système en ligne</span>
-                    </span>
-
-                    <span class="text-slate-200">|</span>
-                    <span class="text-slate-400 text-[11px]">Grand Marché (Dabanani, Bamako)</span>
-                    <span class="text-slate-200">|</span>
-                    <span class="font-mono text-[11px] text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">FCFA (XOF)</span>
-                </div>
-
-                <!-- Actions Rapides & Profil Direction -->
-                <div class="flex items-center gap-3 text-xs">
-                    
-                    <!-- Bouton Nouveau Produit Shortcut -->
-                    <a href="{% url 'backoffice:product_create' %}" 
-                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-black text-white font-bold text-xs shadow-xs transition active:scale-95 border border-slate-800">
-                        <svg class="w-3.5 h-3.5 text-amber-400 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                        <span>Ajouter un produit</span>
-                    </a>
-
-                    <!-- Bouton Voir la Boutique Flambant Neuf -->
-                    <a href="{% url 'shop:home' %}" target="_blank" 
-                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold text-xs border border-amber-200/80 transition shadow-2xs">
-                        <span>Voir la boutique</span>
-                        <svg class="w-3 h-3 text-amber-700 stroke-[2.2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                        </svg>
-                    </a>
-
-                    <span class="text-slate-200">|</span>
-
-                    <!-- Profil Opérateur Compact -->
-                    <div class="flex items-center gap-2 pl-1">
-                        <div class="w-7 h-7 rounded-full bg-[#0f172a] text-amber-400 font-bold text-xs flex items-center justify-center shadow-xs border border-slate-700">
-                            {{ request.user.username|slice:":1"|upper }}
-                        </div>
-                        <div class="text-left leading-tight hidden xl:block">
-                            <span class="block text-xs font-bold text-slate-900 font-mono">{{ request.user.username }}</span>
-                            <span class="block text-[10px] text-amber-600 font-bold">{% if request.user.is_superuser %}Superadmin IT{% else %}Direction{% endif %}</span>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- Global Flash Messages Notification Banner -->
-            {% if messages %}
-            <div class="px-6 pt-3">
-                {% for message in messages %}
-                <div class="p-2.5 mb-2 rounded-md flex items-center justify-between text-xs transition duration-200 {% if message.tags == 'success' %}bg-emerald-50 border border-emerald-200 text-emerald-800{% elif message.tags == 'error' %}bg-red-50 border border-red-200 text-red-800{% else %}bg-amber-50 border border-amber-200 text-amber-800{% endif %}" role="alert">
-                    <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full {% if message.tags == 'success' %}bg-emerald-500{% elif message.tags == 'error' %}bg-red-500{% else %}bg-amber-500{% endif %}"></span>
-                        <p class="font-medium">{{ message }}</p>
-                    </div>
-                    <button type="button" onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-700 p-0.5">✕</button>
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <!-- Page Body Compact -->
-            <div class="flex-1 px-6 py-5 max-w-7xl w-full mx-auto">
-                {% block content %}{% endblock %}
-            </div>
-
-            <!-- Footer Sobre -->
-            <footer class="mt-auto px-6 py-3 border-t border-slate-200 bg-white text-[11px] text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
-                <div>
-                    <strong>Onizouka Shop ERP</strong> &bull; Système de Gestion Commerciale Bamako
-                </div>
-                <div class="text-slate-400 font-mono text-[10px]">
-                    v2.4.0 · Stable · 2026
-                </div>
-            </footer>
-        </main>
-    </div>
-
-    <!-- ===== DOCK DE NAVIGATION MOBILE EFFET GLACE APPLE (LUMINEUX, BLUR 28PX, NATIVE IOS) ===== -->
-    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/85 backdrop-blur-2xl border-t border-slate-200/80 shadow-[0_-8px_30px_rgba(0,0,0,0.06)] px-1 pt-2 pb-[max(env(safe-area-inset-bottom),10px)] select-none">
-        <div class="flex items-center justify-around max-w-lg mx-auto">
-            
-            <!-- 1. Dashboard -->
-            <a href="{% url 'backoffice:dashboard' %}" 
-               class="flex flex-col items-center justify-center flex-1 py-1 transition-transform duration-100 active:scale-88 relative {% if current_page == 'dashboard' %}text-amber-600{% else %}text-slate-400 hover:text-slate-700{% endif %}">
-                <div class="relative flex items-center justify-center">
-                    <svg class="w-5 h-5 {% if current_page == 'dashboard' %}stroke-[2.2] text-amber-500{% else %}stroke-[1.8]{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-                    </svg>
-                    {% if current_page == 'dashboard' %}
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 absolute -bottom-1"></span>
-                    {% endif %}
-                </div>
-                <span class="text-[10px] tracking-tight leading-none mt-1 {% if current_page == 'dashboard' %}font-black text-amber-600{% else %}font-medium text-slate-500{% endif %}">
-                    Dashboard
-                </span>
-            </a>
-
-            <!-- 2. Commandes -->
-            <a href="{% url 'backoffice:orders' %}" 
-               class="flex flex-col items-center justify-center flex-1 py-1 transition-transform duration-100 active:scale-88 relative {% if current_page == 'orders' %}text-amber-600{% else %}text-slate-400 hover:text-slate-700{% endif %}">
-                <div class="relative flex items-center justify-center">
-                    <svg class="w-5 h-5 {% if current_page == 'orders' %}stroke-[2.2] text-amber-500{% else %}stroke-[1.8]{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25c-.669 0-1.189-.578-1.119-1.243l1.263-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                    </svg>
-                    {% if pending_orders_count and pending_orders_count > 0 %}
-                    <span class="absolute -top-1.5 -right-2 min-w-[17px] h-[17px] px-1 bg-amber-500 text-slate-950 font-black text-[9px] flex items-center justify-center rounded-full shadow-xs">
-                        {{ pending_orders_count }}
-                    </span>
-                    {% endif %}
-                    {% if current_page == 'orders' %}
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 absolute -bottom-1"></span>
-                    {% endif %}
-                </div>
-                <span class="text-[10px] tracking-tight leading-none mt-1 {% if current_page == 'orders' %}font-black text-amber-600{% else %}font-medium text-slate-500{% endif %}">
-                    Commandes
-                </span>
-            </a>
-
-            <!-- 3. Catalogue -->
-            <a href="{% url 'backoffice:products' %}" 
-               class="flex flex-col items-center justify-center flex-1 py-1 transition-transform duration-100 active:scale-88 relative {% if current_page == 'products' %}text-amber-600{% else %}text-slate-400 hover:text-slate-700{% endif %}">
-                <div class="relative flex items-center justify-center">
-                    <svg class="w-5 h-5 {% if current_page == 'products' %}stroke-[2.2] text-amber-500{% else %}stroke-[1.8]{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                    </svg>
-                    {% if current_page == 'products' %}
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 absolute -bottom-1"></span>
-                    {% endif %}
-                </div>
-                <span class="text-[10px] tracking-tight leading-none mt-1 {% if current_page == 'products' %}font-black text-amber-600{% else %}font-medium text-slate-500{% endif %}">
-                    Catalogue
-                </span>
-            </a>
-
-            <!-- 4. Stocks & Alertes -->
-            <a href="{% url 'backoffice:stocks' %}" 
-               class="flex flex-col items-center justify-center flex-1 py-1 transition-transform duration-100 active:scale-88 relative {% if current_page == 'stocks' %}text-amber-600{% else %}text-slate-400 hover:text-slate-700{% endif %}">
-                <div class="relative flex items-center justify-center">
-                    <svg class="w-5 h-5 {% if current_page == 'stocks' %}stroke-[2.2] text-amber-500{% else %}stroke-[1.8]{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
-                    </svg>
-                    {% if low_stock_count and low_stock_count > 0 %}
-                    <span class="absolute -top-1.5 -right-2 min-w-[17px] h-[17px] px-1 bg-rose-500 text-white font-black text-[9px] flex items-center justify-center rounded-full shadow-xs">
-                        {{ low_stock_count }}
-                    </span>
-                    {% endif %}
-                    {% if current_page == 'stocks' %}
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 absolute -bottom-1"></span>
-                    {% endif %}
-                </div>
-                <span class="text-[10px] tracking-tight leading-none mt-1 {% if current_page == 'stocks' %}font-black text-amber-600{% else %}font-medium text-slate-500{% endif %}">
-                    Stocks
-                </span>
-            </a>
-
-            <!-- 5. Menu Plus (Ouvre le Drawer complet) -->
-            <button type="button" 
-                    @click="mobileMenuOpen = !mobileMenuOpen" 
-                    class="flex flex-col items-center justify-center flex-1 py-1 transition-transform duration-100 active:scale-88 relative cursor-pointer"
-                    :class="mobileMenuOpen ? 'text-amber-600' : 'text-slate-400 hover:text-slate-700'">
-                <div class="relative flex items-center justify-center">
-                    <svg class="w-5 h-5 stroke-[1.8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                    </svg>
-                    <span x-show="mobileMenuOpen" class="w-1.5 h-1.5 rounded-full bg-amber-500 absolute -bottom-1"></span>
-                </div>
-                <span class="text-[10px] tracking-tight leading-none mt-1 font-medium" :class="mobileMenuOpen ? 'font-black text-amber-600' : 'text-slate-500'">
-                    Menu
-                </span>
-            </button>
-
+        <div class="pt-3 mt-2 border-t border-white/10 space-y-1">
+          <a href="{% url 'shop:home' %}" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/[0.06] transition">
+            <span>Voir la boutique</span>
+            <span>↗</span>
+          </a>
+          {% if request.user.is_superuser %}
+          <a href="/admin/" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-500 hover:text-slate-300 hover:bg-white/[0.06] transition">
+            <span>Django Admin IT</span>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/10">ROOT</span>
+          </a>
+          {% endif %}
         </div>
-    </nav>
+      </nav>
 
-    {% block extra_js %}{% endblock %}
+      <!-- Utilisateur Connecté -->
+      <div class="p-3 border-t border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-2 min-w-0">
+          <div class="w-8 h-8 rounded-full bg-amber-400/20 text-amber-300 font-bold text-xs flex items-center justify-center shrink-0">
+            {{ request.user.username|slice:":1"|upper }}
+          </div>
+          <div class="min-w-0">
+            <p class="text-xs font-bold text-white truncate">{{ request.user.username }}</p>
+            <p class="text-[10px] text-slate-400">{% if request.user.is_superuser %}Superadmin{% else %}Direction{% endif %}</p>
+          </div>
+        </div>
+        <a href="{% url 'account_logout' %}" title="Déconnexion" class="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-white/5 transition" aria-label="Déconnexion">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/>
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- ================================================================= -->
+    <!-- TOPBAR MOBILE APP NATIVE (OBSIDIAN & GOLD COMPACT)                -->
+    <!-- ================================================================= -->
+    <header class="lg:hidden sticky top-0 z-40 bg-[#0d0e12] text-white border-b border-white/10 shadow-sm pt-safe-top">
+      <div class="px-3 h-13 flex items-center justify-between gap-2">
+        <a href="{% url 'backoffice:dashboard' %}" class="flex items-center gap-2 min-w-0">
+          <img src="{% static 'images/logo_icon.png' %}" alt="Onizuka Shop" class="w-8 h-8 object-contain shrink-0 filter drop-shadow-[0_2px_8px_rgba(245,158,11,0.3)]">
+          <div class="min-w-0 leading-tight">
+            <div class="flex items-center gap-1.5">
+              <span class="font-heading font-black text-sm text-white">ONIZUKA</span>
+              <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold">GESTION</span>
+            </div>
+            <span class="text-[10px] text-slate-400 block truncate">Grand Marché • Dibidani</span>
+          </div>
+        </a>
+
+        <div class="flex items-center gap-1.5 shrink-0" x-data="{ canInstallBo: Boolean(window.OnizukaNative && window.OnizukaNative.canInstall) }" @pwa-install-available.window="canInstallBo = true" @pwa-installed.window="canInstallBo = false">
+          <button
+            type="button"
+            x-show="canInstallBo"
+            x-cloak
+            @click="window.onizukaInstallPWA && window.onizukaInstallPWA()"
+            class="h-8 px-2.5 rounded-full bg-white/15 text-amber-300 border border-amber-400/35 font-extrabold text-[11px] inline-flex items-center gap-1 active:scale-95 transition cursor-pointer"
+          >
+            <span>📲 App</span>
+          </button>
+
+          <a
+            href="{% url 'backoffice:product_create' %}"
+            class="h-8 px-3 rounded-full bg-amber-400 active:bg-amber-500 text-slate-950 font-extrabold text-xs inline-flex items-center gap-1 shadow-xs active:scale-95 transition"
+          >
+            <svg class="w-3.5 h-3.5 stroke-[2.6]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            <span>Produit</span>
+          </a>
+
+          <a
+            href="{% url 'shop:home' %}"
+            class="w-8 h-8 rounded-full bg-white/10 text-slate-200 flex items-center justify-center active:scale-95 transition"
+            title="Voir la boutique"
+            aria-label="Voir la boutique"
+          >
+            <svg class="w-4 h-4 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- ================================================================= -->
+    <!-- ZONE DE CONTENU PRINCIPALE                                        -->
+    <!-- ================================================================= -->
+    <main class="flex-1 flex flex-col min-w-0 min-h-screen pb-24 lg:pb-6">
+
+      <!-- Barre supérieure Desktop -->
+      <div class="hidden lg:flex items-center justify-between px-6 h-13 bg-white border-b border-slate-200/80 sticky top-0 z-20">
+        <div class="flex items-center gap-2 text-xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span class="font-bold text-slate-800">Portail de Gestion</span>
+          <span class="text-slate-300">•</span>
+          <span class="text-slate-500">Grand Marché de Bamako (Dibidani)</span>
+        </div>
+        <div class="flex items-center gap-2.5 text-xs">
+          <a href="{% url 'shop:home' %}" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold transition">
+            Ouvrir la boutique ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- Notifications Flash -->
+      {% if messages %}
+      <div class="max-w-7xl w-full mx-auto px-2.5 sm:px-5 lg:px-6 pt-3 space-y-1.5">
+        {% for message in messages %}
+        <div
+          x-data="{ open: true }"
+          x-show="open"
+          x-init="setTimeout(() => open = false, 5000)"
+          class="p-3 rounded-xl flex items-center justify-between gap-2 text-xs font-semibold shadow-2xs {% if message.tags == 'success' %}bg-emerald-50 border border-emerald-200 text-emerald-900{% elif message.tags == 'error' %}bg-rose-50 border border-rose-200 text-rose-900{% else %}bg-amber-50 border border-amber-200 text-amber-900{% endif %}"
+        >
+          <span>{{ message }}</span>
+          <button type="button" @click="open = false" class="text-slate-400 hover:text-slate-700 px-1">✕</button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Corps de page responsive (marges optimisées pour mobile 320px+) -->
+      <div class="flex-1 px-2.5 sm:px-5 lg:px-6 py-3 sm:py-5 max-w-7xl w-full mx-auto bo-view-enter">
+        {% block content %}{% endblock %}
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- BARRE D'ONGLETS MOBILE APP GESTION (5 ONGLETS SOUS LE POUCE)      -->
+  <!-- ================================================================= -->
+  {% block mobile_bottom_bar %}
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200/90 shadow-[0_-4px_20px_rgba(15,23,42,0.06)] px-1 pt-1.5 pb-safe-bottom select-none">
+    <div class="grid grid-cols-5 items-center max-w-lg mx-auto">
+
+      <!-- 1. Accueil / Dashboard -->
+      <a href="{% url 'backoffice:dashboard' %}" class="flex flex-col items-center justify-center py-1 active:scale-90 transition {% if current_page == 'dashboard' %}text-amber-600 font-extrabold{% else %}text-slate-500 font-medium{% endif %}">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
+        </svg>
+        <span class="text-[10px] leading-none mt-1">Accueil</span>
+      </a>
+
+      <!-- 2. Commandes -->
+      <a href="{% url 'backoffice:orders' %}" class="flex flex-col items-center justify-center py-1 active:scale-90 transition {% if current_page == 'orders' %}text-amber-600 font-extrabold{% else %}text-slate-500 font-medium{% endif %}">
+        <div class="relative">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25c-.669 0-1.189-.578-1.119-1.243l1.263-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/>
+          </svg>
+          {% if bo_pending_orders and bo_pending_orders > 0 %}
+          <span class="absolute -top-1.5 -right-2 min-w-[16px] h-[16px] px-1 rounded-full bg-amber-400 text-slate-950 text-[9px] font-black flex items-center justify-center">{{ bo_pending_orders }}</span>
+          {% endif %}
+        </div>
+        <span class="text-[10px] leading-none mt-1">Commandes</span>
+      </a>
+
+      <!-- 3. Produits -->
+      <a href="{% url 'backoffice:products' %}" class="flex flex-col items-center justify-center py-1 active:scale-90 transition {% if current_page == 'products' %}text-amber-600 font-extrabold{% else %}text-slate-500 font-medium{% endif %}">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+        </svg>
+        <span class="text-[10px] leading-none mt-1">Produits</span>
+      </a>
+
+      <!-- 4. Stocks -->
+      <a href="{% url 'backoffice:stocks' %}" class="flex flex-col items-center justify-center py-1 active:scale-90 transition {% if current_page == 'stocks' %}text-amber-600 font-extrabold{% else %}text-slate-500 font-medium{% endif %}">
+        <div class="relative">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/>
+          </svg>
+          {% if bo_low_stock and bo_low_stock > 0 %}
+          <span class="absolute -top-1.5 -right-2 min-w-[16px] h-[16px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center">{{ bo_low_stock }}</span>
+          {% endif %}
+        </div>
+        <span class="text-[10px] leading-none mt-1">Stocks</span>
+      </a>
+
+      <!-- 5. Plus (Ouvre le Bottom Sheet Natif sous le pouce) -->
+      <button
+        type="button"
+        @click="moreSheet = true"
+        class="flex flex-col items-center justify-center py-1 active:scale-90 transition cursor-pointer {% if current_page in 'clients,users,settings' %}text-amber-600 font-extrabold{% else %}text-slate-500 font-medium{% endif %}"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+        </svg>
+        <span class="text-[10px] leading-none mt-1">Plus</span>
+      </button>
+
+    </div>
+  </nav>
+  {% endblock %}
+
+  <!-- ================================================================= -->
+  <!-- BOTTOM SHEET MOBILE "PLUS D'OUTILS" (SOUS LE POUCE)               -->
+  <!-- ================================================================= -->
+  <div
+    x-show="moreSheet"
+    x-cloak
+    class="fixed inset-0 z-50 lg:hidden"
+    role="dialog"
+    aria-modal="true"
+    @keydown.escape.window="moreSheet = false"
+  >
+    <div x-show="moreSheet" x-transition.opacity class="fixed inset-0 bg-black/60 backdrop-blur-xs" @click="moreSheet = false"></div>
+
+    <div
+      x-show="moreSheet"
+      x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="translate-y-full"
+      x-transition:enter-end="translate-y-0"
+      x-transition:leave="transition ease-in duration-150"
+      x-transition:leave-start="translate-y-0"
+      x-transition:leave-end="translate-y-full"
+      class="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl p-4 pb-safe-bottom space-y-3 z-10"
+    >
+      <div class="w-10 h-1 rounded-full bg-slate-200 mx-auto"></div>
+
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <div>
+          <p class="font-heading font-black text-sm text-slate-950">Menu Gestion Onizouka</p>
+          <p class="text-[11px] text-slate-500">Connecté : <strong>{{ request.user.username }}</strong></p>
+        </div>
+        <button type="button" @click="moreSheet = false" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center">✕</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <a href="{% url 'backoffice:order_create_pos' %}" @click="moreSheet = false" class="col-span-2 p-3 rounded-2xl bg-emerald-600 text-white font-extrabold flex items-center justify-between">
+          <span>+ Vente Boutique / WhatsApp (Caisse)</span>
+          <span>→</span>
+        </a>
+        <a href="{% url 'backoffice:product_create' %}" @click="moreSheet = false" class="p-3 rounded-2xl bg-amber-400 text-slate-950 font-extrabold flex items-center gap-2">
+          <span>+ Nouveau Produit</span>
+        </a>
+        <a href="{% url 'backoffice:products_bulk_edit' %}" @click="moreSheet = false" class="p-3 rounded-2xl bg-emerald-50 text-emerald-900 border border-emerald-200 font-extrabold flex items-center gap-2">
+          <span>📊 Tableur Excel</span>
+        </a>
+        <a href="{% url 'backoffice:catalog_config' %}" @click="moreSheet = false" class="col-span-2 p-3 rounded-2xl bg-slate-900 text-amber-400 font-extrabold flex items-center justify-between">
+          <span>🏷️ Rayons, Marques, Codes Promo &amp; Avis</span>
+          <span>→</span>
+        </a>
+        <a href="{% url 'backoffice:emails_center' %}" @click="moreSheet = false" class="col-span-2 p-3 rounded-2xl bg-amber-50 text-amber-950 border border-amber-300 font-extrabold flex items-center justify-between">
+          <span>✉️ Emails, Templates, Alertes &amp; Rappels</span>
+          <span>→</span>
+        </a>
+        <a href="{% url 'backoffice:settings' %}" @click="moreSheet = false" class="p-3 rounded-2xl bg-slate-100 text-slate-900 font-bold flex items-center gap-2">
+          <span>Paramètres &amp; Pubs</span>
+        </a>
+        <a href="{% url 'backoffice:clients' %}" @click="moreSheet = false" class="p-3 rounded-2xl bg-slate-100 text-slate-900 font-bold flex items-center gap-2">
+          <span>Clients Bamako</span>
+        </a>
+        <a href="{% url 'backoffice:users' %}" @click="moreSheet = false" class="p-3 rounded-2xl bg-slate-100 text-slate-900 font-bold flex items-center gap-2">
+          <span>Équipe &amp; Accès</span>
+        </a>
+      </div>
+
+      <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+        <a href="{% url 'shop:home' %}" class="flex-1 py-2.5 px-3 rounded-xl bg-slate-900 text-white text-xs font-bold text-center">
+          Aller sur la boutique ↗
+        </a>
+        <a href="{% url 'account_logout' %}" class="py-2.5 px-4 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold">
+          Déconnexion
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {% block extra_js %}{% endblock %}
+  </div><!-- /#bo-shell -->
+
+  <script>
+    /* Navigation App-Shell Instantanée + Prefetch Tactile pour la Gestion (/gestion/) */
+    (function() {
+      const bar = document.getElementById('bo-progress-bar');
+      let t = null;
+      function startBar() {
+        if (!bar) return;
+        clearTimeout(t);
+        bar.style.transition = 'none'; bar.style.width = '15%'; bar.style.opacity = '1';
+        requestAnimationFrame(() => {
+          bar.style.transition = 'width 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease';
+          bar.style.width = '80%';
+        });
+      }
+      function finishBar() {
+        if (!bar) return;
+        bar.style.width = '100%';
+        t = setTimeout(() => { bar.style.opacity = '0'; setTimeout(() => { bar.style.width = '0%'; }, 160); }, 100);
+      }
+      const boScrollLeft = new Map();
+      let boScrollY = null;
+      document.addEventListener('htmx:beforeRequest', function(e) {
+        startBar();
+        const tEl = e.detail && e.detail.target;
+        if (tEl && (tEl.id === 'bo-live-results' || tEl.id === 'bo-workspace')) {
+          boScrollY = window.scrollY;
+          document.querySelectorAll('[data-keep-scroll]').forEach(el => {
+            boScrollLeft.set(el.getAttribute('data-keep-scroll'), el.scrollLeft);
+          });
+        } else {
+          boScrollY = null;
+        }
+      });
+      document.addEventListener('htmx:afterSettle', function(e) {
+        finishBar();
+        if (boScrollLeft.size) {
+          document.querySelectorAll('[data-keep-scroll]').forEach(el => {
+            const k = el.getAttribute('data-keep-scroll');
+            if (boScrollLeft.has(k)) el.scrollLeft = boScrollLeft.get(k);
+          });
+          boScrollLeft.clear();
+        }
+        const tEl = e.detail && e.detail.target;
+        if (boScrollY !== null && tEl && (tEl.id === 'bo-live-results' || tEl.id === 'bo-workspace')) {
+          const y = boScrollY;
+          boScrollY = null;
+          if (Math.abs(window.scrollY - y) > 4) window.scrollTo({ top: y, behavior: 'instant' });
+        }
+      });
+      document.addEventListener('htmx:responseError', () => { boScrollY = null; boScrollLeft.clear(); finishBar(); });
+
+      const cache = new Map();
+      function okLink(a) {
+        if (!a || !a.href) return false;
+        if (a.target && a.target !== '_self') return false;
+        if (a.hasAttribute('download') || a.hasAttribute('data-no-spa') || a.hasAttribute('hx-get') || a.hasAttribute('hx-post')) return false;
+        let u;
+        try { u = new URL(a.href, window.location.origin); } catch (e) { return false; }
+        if (u.protocol !== 'http:' && u.protocol !== 'https:') return false;
+        if (u.origin !== window.location.origin) return false;
+        if (!u.pathname.startsWith('/gestion/')) return false;
+        if (u.pathname === window.location.pathname && u.search === window.location.search && u.hash) return false;
+        if (u.pathname.includes('export-csv') || u.pathname.includes('modele-csv') || u.pathname.endsWith('/facture/')) return false;
+        return true;
+      }
+      function prefetch(href) {
+        const hit = cache.get(href);
+        if (hit && Date.now() - hit.ts < 8000) return hit.p;
+        const p = fetch(href, { credentials: 'same-origin' })
+          .then(r => (r.ok && (r.headers.get('content-type') || '').includes('text/html')) ? r.text() : null)
+          .catch(() => null);
+        cache.set(href, { ts: Date.now(), p });
+        return p;
+      }
+      ['mouseover', 'touchstart'].forEach(ev => {
+        document.addEventListener(ev, e => {
+          const a = e.target.closest && e.target.closest('a[href]');
+          if (okLink(a)) prefetch(a.href);
+        }, { passive: true });
+      });
+
+      async function go(href, push) {
+        startBar();
+        if (navigator.vibrate) { try { navigator.vibrate(5); } catch (e) {} }
+        const html = await prefetch(href);
+        if (!html) { window.location.href = href; return; }
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const next = doc.getElementById('bo-shell');
+        const cur = document.getElementById('bo-shell');
+        if (!next || !cur) { window.location.href = href; return; }
+        if (doc.title) document.title = doc.title;
+        cur.replaceWith(next);
+        if (window.htmx) window.htmx.process(next);
+        next.querySelectorAll('script').forEach(oldScript => {
+          if (oldScript.type && oldScript.type !== 'text/javascript' && oldScript.type !== 'module') return;
+          const s = document.createElement('script');
+          Array.from(oldScript.attributes).forEach(attr => s.setAttribute(attr.name, attr.value));
+          s.textContent = oldScript.textContent;
+          oldScript.replaceWith(s);
+        });
+        if (push) window.history.pushState({ boShell: true }, '', href);
+        if (push && !new URL(href, window.location.origin).hash) window.scrollTo({ top: 0, behavior: 'instant' });
+        window.dispatchEvent(new CustomEvent('bo-navigated'));
+        finishBar();
+      }
+
+      document.addEventListener('click', e => {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const a = e.target.closest && e.target.closest('a[href]');
+        if (!okLink(a)) return;
+        e.preventDefault();
+        cache.delete(a.href); // Toujours rafraîchir les données live de gestion au clic
+        go(a.href, true);
+      });
+      window.addEventListener('popstate', () => { cache.delete(window.location.href); go(window.location.href, false); });
+    })();
+  </script>
 </body>
 </html>
