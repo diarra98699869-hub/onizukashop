@@ -17,7 +17,7 @@
     "updated_at": "2026-09-22T18:07:00.272Z",
     "lft": 1,
     "rght": 2,
-    "tree_id": 3,
+    "tree_id": 4,
     "level": 0
   }
 },
@@ -41,6 +41,50 @@
     "rght": 2,
     "tree_id": 1,
     "level": 0
+  }
+},
+{
+  "model": "shop.category",
+  "pk": 9,
+  "fields": {
+    "name": "Réfrigérateurs & Congélateurs",
+    "slug": "refrigerateurs-congelateurs",
+    "parent": null,
+    "image": "",
+    "description": "Réfrigérateurs combinés, américains et congélateurs haute performance pour Bamako et le Mali.",
+    "icon": "",
+    "meta_title": "",
+    "meta_description": "",
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-11-27T12:18:14.682Z",
+    "updated_at": "2026-11-27T12:18:14.682Z",
+    "lft": 1,
+    "rght": 4,
+    "tree_id": 3,
+    "level": 0
+  }
+},
+{
+  "model": "shop.category",
+  "pk": 10,
+  "fields": {
+    "name": "Congélateurs Verticaux",
+    "slug": "congelateurs-verticaux",
+    "parent": 9,
+    "image": "",
+    "description": "Congélateurs armoires et verticaux à tiroirs/étagères multiples, classe tropicalisée T pour le Mali.",
+    "icon": "",
+    "meta_title": "",
+    "meta_description": "",
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-11-27T12:18:14.689Z",
+    "updated_at": "2026-11-27T12:18:14.689Z",
+    "lft": 2,
+    "rght": 3,
+    "tree_id": 3,
+    "level": 1
   }
 },
 {
@@ -123,6 +167,42 @@
     "slug": "hyundai",
     "logo": "",
     "description": "Hyundai Electronics - Climatiseurs Inverter robustes, silencieux et ultra-économes en énergie.",
+    "website": "",
+    "is_active": true
+  }
+},
+{
+  "model": "shop.brand",
+  "pk": 21,
+  "fields": {
+    "name": "Victoria",
+    "slug": "victoria",
+    "logo": "",
+    "description": "",
+    "website": "",
+    "is_active": true
+  }
+},
+{
+  "model": "shop.brand",
+  "pk": 22,
+  "fields": {
+    "name": "Étoile",
+    "slug": "etoile",
+    "logo": "",
+    "description": "",
+    "website": "",
+    "is_active": true
+  }
+},
+{
+  "model": "shop.brand",
+  "pk": 23,
+  "fields": {
+    "name": "Solstar",
+    "slug": "solstar",
+    "logo": "",
+    "description": "",
     "website": "",
     "is_active": true
   }
@@ -1656,6 +1736,350 @@
   }
 },
 {
+  "model": "shop.product",
+  "pk": 148,
+  "fields": {
+    "name": "Congélateur Vertical East Point 245 Litres - 7 Étagères Tiroirs",
+    "slug": "congelateur-vertical-east-point-245-litres-7-etageres-tiroirs",
+    "sku": "ONZ-CONG-EASTP-245L",
+    "category": 10,
+    "brand": 18,
+    "short_description": "Congélateur vertical East Point 245L avec 7 compartiments de rangement ergonomiques. Froid renforcé tropicalisé, idéal pour stocker viandes, poissons et légumes en toute sérénité à Bamako.",
+    "description": "Le **Congélateur Vertical East Point 245 Litres (7 Étagères)** est la solution idéale pour les familles et commerçants à la recherche d'une organisation parfaite et d'une congélation rapide.\n\n### Points forts :\n- **Volume utile** : 245 Litres optimisés.\n- **Organisation** : 7 compartiments / étagères spacieux facilitant le tri sans perte d'air froid à l'ouverture.\n- **Tropicalisé Climat T** : Fonctionne parfaitement même sous les fortes chaleurs de Bamako (> 43°C).\n- **Économie d'énergie** : Compresseur basse consommation silencieux et gaz écologique R600a.\n- **Sécurité** : Maintien du froid prolongé en cas de coupure de courant.\n- **Garantie** : 12 Mois avec service après-vente Onizuka Shop Bamako Dibidani.",
+    "specifications": {
+      "Marque": "East Point",
+      "Type": "Congélateur Vertical Armoire",
+      "Capacité": "245 Litres",
+      "Nombre d’étagères / tiroirs": "7 compartiments ergonomiques",
+      "Classe climatique": "T (Tropicalisé jusqu’à 43°C)",
+      "Gaz réfrigérant": "R600a Éco-énergétique",
+      "Consommation": "Basse consommation A+",
+      "Garantie": "12 Mois officiel Onizuka Shop"
+    },
+    "price": "260000",
+    "sale_price": "245000",
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T12:20:00.393Z",
+    "updated_at": "2026-11-27T12:20:00.393Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 149,
+  "fields": {
+    "name": "Congélateur Vertical Victoria 300 Litres Grande Taille - 9 Étagères",
+    "slug": "congelateur-vertical-victoria-300-litres-grande-taille-9-etageres",
+    "sku": "ONZ-CONG-VICT-300L",
+    "category": 10,
+    "brand": 21,
+    "short_description": "Grand congélateur armoire Victoria 300L avec 9 étagères transparentes grand format. Capacité XXL, congélation express et design ultra-robuste.",
+    "description": "Le **Congélateur Vertical Victoria 300 Litres (Grande Taille - 9 Étagères)** offre un volume massif pour les grandes familles et les professionnels de la restauration.\n\n### Points forts :\n- **Capacité géante** : 300 Litres réels pour stocker toutes vos provisions mensuelles.\n- **9 Étagères et tiroirs amovibles** : Visibilité instantanée de vos aliments et gain de temps maximal.\n- **Compresseur Tropicalisé Heavy-Duty** : Conçu pour supporter les variations de tension et les températures extrêmes.\n- **Finition Inox Satinée** : Design moderne et résistant aux traces.\n- **Garantie** : 12 Mois Onizuka Shop Grand Marché de Bamako.",
+    "specifications": {
+      "Marque": "Victoria",
+      "Type": "Congélateur Armoire Grande Capacité",
+      "Capacité": "300 Litres XXL",
+      "Nombre d’étagères / tiroirs": "9 grands compartiments",
+      "Classe climatique": "T (Tropicalisé spécial Bamako)",
+      "Gaz réfrigérant": "R600a",
+      "Finition": "Inox haute résistance",
+      "Garantie": "12 Mois officiel Onizuka Shop"
+    },
+    "price": "385000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T12:20:01.083Z",
+    "updated_at": "2026-11-27T12:20:01.083Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 150,
+  "fields": {
+    "name": "Congélateur Vertical LG Smart Inox - 6 Étagères Haute Précision",
+    "slug": "congelateur-vertical-lg-smart-inox-6-etageres-haute-precision",
+    "sku": "ONZ-CONG-LG-6ET",
+    "category": 10,
+    "brand": 2,
+    "short_description": "Congélateur vertical LG avec compresseur Smart Inverter durable et silencieux. 6 étagères de conservation optimale avec technologie anti-givre et froid uniforme.",
+    "description": "Bénéficiez de la fiabilité légendaire de la marque **LG** avec ce **Congélateur Vertical Inox 6 Étagères**. \n\n### Points forts :\n- **Technologie LG** : Refroidissement puissant et uniforme sur chaque niveau.\n- **6 Compartiments renforcés** : Charnières et clayettes en verre trempé/tiroirs renforcés.\n- **Compresseur Smart Silencieux** : Réduction substantielle de la facture d'électricité EDM.\n- **Finition Premium Inox** : Résistance anti-rouille et esthétique irréprochable.\n- **Garantie** : 12 Mois Onizuka Shop avec assistance express sur WhatsApp (+223 92 67 37 99).",
+    "specifications": {
+      "Marque": "LG",
+      "Type": "Congélateur Vertical Inox",
+      "Nombre d’étagères / tiroirs": "6 compartiments grande résistance",
+      "Technologie": "Smart Inverter Compresseur",
+      "Classe climatique": "T (Tropicalisé)",
+      "Finition": "Inox Anti-traces Platinum Silver",
+      "Garantie": "12 Mois officiel Onizuka Shop"
+    },
+    "price": "270000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T12:20:01.611Z",
+    "updated_at": "2026-11-27T12:20:01.611Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 151,
+  "fields": {
+    "name": "Congélateur Vertical Sharp FR-495 Grande Capacité - 10 Étagères",
+    "slug": "congelateur-vertical-sharp-fr-495-grande-capacite-10-etageres",
+    "sku": "ONZ-CONG-SHARP-FR495",
+    "category": 10,
+    "brand": 10,
+    "short_description": "Le roi des congélateurs verticaux : Sharp FR-495 avec 10 étagères ultra-spacieuses. Froid ventilé puissant, poignée ergonomique et robustesse japonaise garantie.",
+    "description": "Le **Sharp FR-495** est le modèle très haut de gamme le plus recherché au Mali. Avec ses **10 étagères indépendantes**, il offre une capacité de rangement inégalée.\n\n### Points forts :\n- **Référence officielle** : Sharp FR-495 original.\n- **10 Étagères / Tiroirs XL** : Compartimentation complète viandes, poissons, jus, glaçons et légumes.\n- **Refroidissement Express** : Congélation ultra-rapide préservant la fraîcheur et les nutriments de vos aliments.\n- **Joint antibactérien & isolation thermique renforcée** : Garde le froid intact plus de 24h sans électricité.\n- **Garantie** : 12 Mois Onizuka Shop.",
+    "specifications": {
+      "Marque": "Sharp",
+      "Modèle": "FR-495 Japan Technology",
+      "Type": "Congélateur Armoire Grande Capacité",
+      "Nombre d’étagères / tiroirs": "10 tiroirs XL indépendants",
+      "Refroidissement": "Froid Express ventilé Multi-Air Flow",
+      "Classe climatique": "T (Tropicalisé)",
+      "Isolation": "Super Isotherme anti-coupure",
+      "Garantie": "12 Mois officiel Onizuka Shop"
+    },
+    "price": "425000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T12:20:02.207Z",
+    "updated_at": "2026-11-27T12:20:02.207Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 152,
+  "fields": {
+    "name": "Congélateur Vertical Roch 212 Litres - 8 Étagères Pratiques",
+    "slug": "congelateur-vertical-roch-212-litres-8-etageres-pratiques",
+    "sku": "ONZ-CONG-ROCH-212L",
+    "category": 10,
+    "brand": 19,
+    "short_description": "Congélateur vertical Roch 212L équipé de 8 compartiments. Encombrement compact au sol pour un volume intérieur exceptionnel, idéal pour cuisine moderne.",
+    "description": "Le **Congélateur Vertical Roch 212 Litres (8 Étagères)** allie compacité extérieure et générosité intérieure.\n\n### Points forts :\n- **Volume** : 212 Litres nets.\n- **8 Compartiments** : Idéal pour un rangement facile et un accès direct sans fouiller.\n- **Basse consommation** : Classe énergétique performante pour une utilisation continue sans surcoût.\n- **Thermostat réglable** : Ajustez la puissance de froid selon vos besoins.\n- **Garantie** : 12 Mois Onizuka Shop.",
+    "specifications": {
+      "Marque": "Roch",
+      "Capacité": "212 Litres",
+      "Nombre d’étagères / tiroirs": "8 compartiments transparents",
+      "Thermostat": "Réglable multi-positions",
+      "Classe climatique": "T (Tropicalisé)",
+      "Gaz réfrigérant": "R600a",
+      "Garantie": "12 Mois officiel Onizuka Shop"
+    },
+    "price": "275000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T12:20:02.519Z",
+    "updated_at": "2026-11-27T12:20:02.519Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 153,
+  "fields": {
+    "name": "Congélateur Vertical Étoile 220 Litres - 8 Étagères",
+    "slug": "congelateur-vertical-etoile-220-litres-8-etageres",
+    "sku": "ONZ-CONG-ETOILE-220L",
+    "category": 10,
+    "brand": 22,
+    "short_description": "Congélateur vertical Étoile 220L 8 étagères. Fiable, robuste et parfaitement adapté au réseau électrique et aux conditions climatiques du Mali.",
+    "description": "Le **Congélateur Vertical Étoile 220 Litres (8 Étagères)** offre le meilleur rapport qualité/prix de sa catégorie sur le marché de Bamako.\n\n### Points forts :\n- **Capacité** : 220 Litres bien compartimentés.\n- **8 Étagères** : Tiroirs ergonomiques glissant facilement.\n- **Froid Tropicalisé** : Refroidissement continu et silencieux.\n- **Pieds réglables & porte réversible** : Installation facile dans tous les intérieurs.\n- **Garantie** : 12 Mois Onizuka Shop.",
+    "specifications": {
+      "Marque": "Étoile",
+      "Capacité": "220 Litres",
+      "Nombre d’étagères / tiroirs": "8 étagères à tiroirs",
+      "Classe climatique": "T (Tropicalisé)",
+      "Consommation": "Économique basse tension",
+      "Garantie": "12 Mois officiel Onizuka Shop"
+    },
+    "price": "260000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T12:20:02.863Z",
+    "updated_at": "2026-11-27T12:20:02.863Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 154,
+  "fields": {
+    "name": "Congélateur Vertical Solstar Inox - 8 Étagères Robuste",
+    "slug": "congelateur-vertical-solstar-inox-8-etageres-robuste",
+    "sku": "ONZ-CONG-SOLSTAR-8ET",
+    "category": 10,
+    "brand": 23,
+    "short_description": "Congélateur vertical Solstar 8 étagères avec compresseur tropicalisé et carrosserie anti-corrosion. Spécialement conçu pour une endurance maximale.",
+    "description": "Marque reconnue pour sa durabilité en Afrique de l'Ouest, **Solstar** propose ici un **Congélateur Vertical 8 Étagères** performant et robuste.\n\n### Points forts :\n- **8 Tiroirs de rangement** : Capacité optimale pour un stockage familial complet.\n- **Compresseur Tropicalisé T** : Résiste aux fortes chaleurs et variations de courant.\n- **Gaz écologique** : Respectueux de l'environnement et économe en énergie.\n- **Finition Inox brossé** : Élégant et facile à nettoyer.\n- **Garantie** : 12 Mois Onizuka Shop.",
+    "specifications": {
+      "Marque": "Solstar",
+      "Type": "Congélateur Vertical Tropicalisé",
+      "Nombre d’étagères / tiroirs": "8 tiroirs spacieux",
+      "Classe climatique": "T (Tropicalisé)",
+      "Finition": "Inox brossé anti-corrosion",
+      "Garantie": "12 Mois officiel Onizuka Shop"
+    },
+    "price": "269000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T12:20:03.637Z",
+    "updated_at": "2026-11-27T12:20:03.637Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 155,
+  "fields": {
+    "name": "Congélateur Vertical Sharp Silver Premium - 8 Étagères",
+    "slug": "congelateur-vertical-sharp-silver-premium-8-etageres",
+    "sku": "ONZ-CONG-SHARP-8ET",
+    "category": 10,
+    "brand": 10,
+    "short_description": "Congélateur vertical Sharp 8 étagères finition Silver luxe. Technologie japonaise de congélation rapide, silence de fonctionnement et économie d’énergie.",
+    "description": "Le **Congélateur Vertical Sharp Silver 8 Étagères** combine l'excellence technologique de Sharp et un design moderne raffiné.\n\n### Points forts :\n- **Qualité de fabrication Sharp** : Matériaux de premier choix et isolation haute densité.\n- **8 Compartiments ergonomiques** : Rangement clair et conservation longue durée sans givre excessif.\n- **Super Freezing** : Touche de congélation accélérée pour les arrivages de denrées fraîches.\n- **Compresseur tropicalisé certifié** : Longévité assurée dans toutes les conditions au Mali.\n- **Garantie** : 12 Mois Onizuka Shop Bamako.",
+    "specifications": {
+      "Marque": "Sharp",
+      "Type": "Congélateur Vertical Premium Silver",
+      "Nombre d’étagères / tiroirs": "8 compartiments ergonomiques",
+      "Technologie": "Japan Quality Super Freezing",
+      "Classe climatique": "T (Tropicalisé certifié)",
+      "Garantie": "12 Mois officiel Onizuka Shop"
+    },
+    "price": "325000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T12:20:04.905Z",
+    "updated_at": "2026-11-27T12:20:04.905Z"
+  }
+},
+{
   "model": "shop.productimage",
   "pk": 254,
   "fields": {
@@ -2580,58 +3004,223 @@
   }
 },
 {
-  "model": "backoffice.shopsetting",
-  "pk": 1,
+  "model": "shop.productimage",
+  "pk": 338,
   "fields": {
-    "site_name": "ONIZOUKA SHOP",
-    "company_name": "ONIZOUKA SHOP SARL",
-    "nif": "085123456M",
-    "rccm": "MA-BKO-2024-B-12345",
-    "address": "Grand Marché de Bamako, Dibidani, Bamako, Mali",
-    "phone_contact": "+223 92 67 37 99",
-    "phone_whatsapp": "+223 92 67 37 99",
-    "email_contact": "contact@onizoukashop.com",
-    "email_orders": "direction@onizoukashop.com",
-    "currency": "FCFA",
-    "default_delivery_fee": "2000",
-    "free_delivery_threshold": "500000",
-    "delivery_delay_text": "Sous 24h ouvrées",
-    "store_pickup_active": true,
-    "orange_money_number": "+223 92 67 37 99",
-    "wave_number": "+223 92 67 37 99",
-    "cash_on_delivery_active": true,
-    "default_min_stock_alert": 5,
-    "block_order_on_out_of_stock": true,
-    "email_notifications_active": true,
-    "whatsapp_notifications_active": true,
-    "send_order_confirmation_email": true,
-    "send_order_status_email": true,
-    "send_payment_reminder_email": true,
-    "send_cart_abandon_reminder_email": true,
-    "send_admin_new_order_alert": true,
-    "send_admin_low_stock_alert": true,
-    "send_admin_contact_alert": true,
-    "payment_reminder_hours": 2,
-    "cart_abandon_reminder_hours": 4,
-    "email_promo_code_reminder": "",
-    "email_sender_name": "ONIZUKA SHOP Bamako",
-    "email_reply_to": "contact@onizukashop.com",
-    "email_confirmation_subject": "Confirmation de votre commande #{order_number} - ONIZUKA SHOP",
-    "email_confirmation_intro": "Votre commande a bien été enregistrée par notre équipe commerciale au Grand Marché de Bamako (Dibidani). Elle est en cours de traitement prioritaire.",
-    "email_status_subject": "Commande #{order_number} : {status} - ONIZUKA SHOP",
-    "email_status_intro": "Le statut de votre commande chez ONIZUKA SHOP vient d'être mis à jour par notre équipe logistique à Bamako.",
-    "email_payment_reminder_subject": "Finalisez votre commande #{order_number} ({total} FCFA) - ONIZUKA SHOP",
-    "email_payment_reminder_intro": "Nous avons bien réservé vos appareils pour la commande #{order_number}. Pour déclencher l'expédition immédiate à Bamako, veuillez finaliser votre règlement Orange Money / Wave ou nous confirmer votre disponibilité.",
-    "email_cart_reminder_subject": "Vos appareils vous attendent dans votre panier - ONIZUKA SHOP Bamako",
-    "email_cart_reminder_intro": "Vous avez sélectionné des appareils dans votre panier ONIZUKA SHOP. Les stocks au Grand Marché de Bamako étant limités sur les arrivages, finalisez votre commande en 1 clic ou via WhatsApp.",
-    "email_footer_signature": "ONIZUKA SHOP • Grand Marché de Bamako, Dibidani • Tél & WhatsApp : +223 92 67 37 99",
-    "flash_sale_active": true,
-    "flash_sale_title": "Ventes Flash de la Semaine",
-    "flash_sale_subtitle": "Tarifs remisés disponibles immédiatement en stock à Bamako",
-    "flash_sale_end_date": null,
-    "meta_pixel_id": "",
-    "meta_domain_verification": "",
-    "updated_at": "2026-09-23T21:28:36.937Z"
+    "product": 148,
+    "image": "products/whatsapp_image_2026-11-27_at_11.41.44.webp",
+    "alt_text": "Congélateur Vertical East Point 245 Litres - 7 Étagères Tiroirs - Vue 1",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 339,
+  "fields": {
+    "product": 148,
+    "image": "products/whatsapp_image_2026-11-27_at_11.41.46.webp",
+    "alt_text": "Congélateur Vertical East Point 245 Litres - 7 Étagères Tiroirs - Vue 2",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 340,
+  "fields": {
+    "product": 149,
+    "image": "products/whatsapp_image_2026-11-27_at_11.44.27.webp",
+    "alt_text": "Congélateur Vertical Victoria 300 Litres Grande Taille - 9 Étagères - Vue 1",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 341,
+  "fields": {
+    "product": 149,
+    "image": "products/whatsapp_image_2026-11-27_at_11.44.27_1.webp",
+    "alt_text": "Congélateur Vertical Victoria 300 Litres Grande Taille - 9 Étagères - Vue 2",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 342,
+  "fields": {
+    "product": 149,
+    "image": "products/whatsapp_image_2026-11-27_at_11.44.29.webp",
+    "alt_text": "Congélateur Vertical Victoria 300 Litres Grande Taille - 9 Étagères - Vue 3",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 343,
+  "fields": {
+    "product": 150,
+    "image": "products/whatsapp_image_2026-11-27_at_11.44.30.webp",
+    "alt_text": "Congélateur Vertical LG Smart Inox - 6 Étagères Haute Précision - Vue 1",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 344,
+  "fields": {
+    "product": 150,
+    "image": "products/whatsapp_image_2026-11-27_at_11.44.31.webp",
+    "alt_text": "Congélateur Vertical LG Smart Inox - 6 Étagères Haute Précision - Vue 2",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 345,
+  "fields": {
+    "product": 150,
+    "image": "products/whatsapp_image_2026-11-27_at_11.44.31_1.webp",
+    "alt_text": "Congélateur Vertical LG Smart Inox - 6 Étagères Haute Précision - Vue 3",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 346,
+  "fields": {
+    "product": 151,
+    "image": "products/whatsapp_image_2026-11-27_at_11.48.18.webp",
+    "alt_text": "Congélateur Vertical Sharp FR-495 Grande Capacité - 10 Étagères - Vue 1",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 347,
+  "fields": {
+    "product": 151,
+    "image": "products/whatsapp_image_2026-11-27_at_11.48.19.webp",
+    "alt_text": "Congélateur Vertical Sharp FR-495 Grande Capacité - 10 Étagères - Vue 2",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 348,
+  "fields": {
+    "product": 152,
+    "image": "products/whatsapp_image_2026-11-27_at_11.49.26.webp",
+    "alt_text": "Congélateur Vertical Roch 212 Litres - 8 Étagères Pratiques - Vue 1",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 349,
+  "fields": {
+    "product": 152,
+    "image": "products/whatsapp_image_2026-11-27_at_11.49.26_1.webp",
+    "alt_text": "Congélateur Vertical Roch 212 Litres - 8 Étagères Pratiques - Vue 2",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 350,
+  "fields": {
+    "product": 153,
+    "image": "products/whatsapp_image_2026-11-27_at_11.51.50.webp",
+    "alt_text": "Congélateur Vertical Étoile 220 Litres - 8 Étagères - Vue 1",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 351,
+  "fields": {
+    "product": 153,
+    "image": "products/whatsapp_image_2026-11-27_at_11.51.50_1.webp",
+    "alt_text": "Congélateur Vertical Étoile 220 Litres - 8 Étagères - Vue 2",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 352,
+  "fields": {
+    "product": 154,
+    "image": "products/whatsapp_image_2026-11-27_at_11.51.51.webp",
+    "alt_text": "Congélateur Vertical Solstar Inox - 8 Étagères Robuste - Vue 1",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 353,
+  "fields": {
+    "product": 154,
+    "image": "products/whatsapp_image_2026-11-27_at_11.51.51_1.webp",
+    "alt_text": "Congélateur Vertical Solstar Inox - 8 Étagères Robuste - Vue 2",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 354,
+  "fields": {
+    "product": 154,
+    "image": "products/whatsapp_image_2026-11-27_at_11.51.51_2.webp",
+    "alt_text": "Congélateur Vertical Solstar Inox - 8 Étagères Robuste - Vue 3",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 355,
+  "fields": {
+    "product": 155,
+    "image": "products/whatsapp_image_2026-11-27_at_11.51.52.webp",
+    "alt_text": "Congélateur Vertical Sharp Silver Premium - 8 Étagères - Vue 1",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 356,
+  "fields": {
+    "product": 155,
+    "image": "products/whatsapp_image_2026-11-27_at_11.51.53.webp",
+    "alt_text": "Congélateur Vertical Sharp Silver Premium - 8 Étagères - Vue 2",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 357,
+  "fields": {
+    "product": 155,
+    "image": "products/whatsapp_image_2026-11-27_at_11.51.54.webp",
+    "alt_text": "Congélateur Vertical Sharp Silver Premium - 8 Étagères - Vue 3",
+    "is_primary": false,
+    "order": 2
   }
 }
 ]
