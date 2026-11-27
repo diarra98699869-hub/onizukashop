@@ -40,8 +40,9 @@ pip install -r requirements.txt
 echo ">>> [5/7] Application des migrations PostgreSQL..."
 python manage.py migrate --noinput
 
-echo ">>> [6/7] Chargement des données du catalogue..."
+echo ">>> [6/7] Chargement des données du catalogue et liaison des images..."
 python manage.py loaddata fixtures/catalog_data.json || echo "Note : Fixtures déjà chargées ou sautées."
+python scripts/link_production_images.py
 python manage.py setup_admin_accounts
 
 echo ">>> [7/7] Collecte des fichiers statiques (CSS, JS, images)..."
