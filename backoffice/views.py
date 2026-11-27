@@ -357,9 +357,14 @@ def order_invoice_view(request, order_id):
         Order.objects.select_related('user').prefetch_related('items__product'),
         id=order_id,
     )
+    try:
+        settings_obj = ShopSetting.get_settings()
+    except Exception:
+        settings_obj = None
+
     return render(request, 'backoffice/order_invoice.html', {
         'order': order,
-        'settings': ShopSetting.get_settings(),
+        'settings': settings_obj,
         'is_client_view': False,
     })
 

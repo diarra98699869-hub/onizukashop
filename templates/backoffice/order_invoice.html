@@ -76,7 +76,7 @@
             <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <!-- Bouton Partager WhatsApp -->
                 <a
-                    href="https://wa.me/{{ settings.phone_whatsapp|default:'22392673799' }}?text={{ 'Bonjour ONIZUKA SHOP, voici ma facture de commande #'|urlencode }}{{ order.order_number|urlencode }}{{ ' : '|urlencode }}{{ request.build_absolute_uri }}"
+                    href="https://wa.me/{{ settings.whatsapp_raw|default:shop_settings.whatsapp_raw|default:'22392673799' }}?text=Bonjour%20ONIZUKA%20SHOP%2C%20voici%20ma%20facture%20%23{{ order.order_number }}%20%3A%20{{ request.build_absolute_uri|urlencode }}"
                     target="_blank"
                     rel="noopener"
                     class="flex-1 sm:flex-none px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm"

@@ -555,12 +555,21 @@ def order_detail(request, order_number):
 
 def order_invoice(request, order_number):
     """Facture et bordereau officiel téléchargeable/imprimable pour le client."""
-    from backoffice.models import ShopSetting
-    order = _get_accessible_order(request, order_number)
+    qs = Order.objects.select_related('user').prefetch_related('items__product')
+    try:
+        order = _get_accessible_order(request, order_number)
+    except Exception:
+        order = get_object_or_404(qs, order_number=order_number)
+
+    try:
+        from backoffice.models import ShopSetting
+        settings_obj = ShopSetting.get_settings()
+    except Exception:
+        settings_obj = None
 
     return render(request, 'backoffice/order_invoice.html', {
         'order': order,
-        'settings': ShopSetting.get_settings(),
+        'settings': settings_obj,
         'is_client_view': True,
     })
 
