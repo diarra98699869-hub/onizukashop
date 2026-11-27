@@ -5,46 +5,73 @@
 <div class="max-w-[1400px] mx-auto px-2 sm:px-4 xl:px-6 pt-2 sm:pt-4 space-y-2.5 sm:space-y-4">
 
   <!-- ===================================================================== -->
-  <!-- 1. TOP MARKETPLACE HERO (COMPACT MOBILE + 3-COLONNES ALIBABA DESKTOP) -->
+  <!-- 1. TOP MARKETPLACE HERO (COMPACT MOBILE + 3-COLONNES PRO DESKTOP)     -->
   <!-- ===================================================================== -->
   <section class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
 
-    <!-- COLONNE GAUCHE DESKTOP : ARBRE DES CATÉGORIES (STYLE ALIBABA.COM) -->
-    <aside class="hidden lg:flex lg:col-span-3 bg-white rounded-2xl border border-slate-200/80 p-3 flex-col justify-between shadow-2xs">
+    <!-- COLONNE GAUCHE DESKTOP : RAYONS EN MAGASIN AVEC MINIATURES & COMPTEURS -->
+    <aside class="hidden lg:flex lg:col-span-3 bg-white rounded-2xl border border-slate-200/85 p-3.5 flex-col justify-between shadow-2xs">
       <div>
-        <div class="flex items-center justify-between px-2 pb-2 mb-1.5 border-b border-slate-100">
-          <span class="font-display text-xs font-black uppercase tracking-wider text-slate-900">Catégories</span>
-          <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">{{ total_active_products }} réf.</span>
+        <div class="flex items-center justify-between px-1.5 pb-2.5 mb-2 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-slate-950 text-amber-400 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/>
+                <rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/>
+                <rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/>
+                <rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>
+              </svg>
+            </span>
+            <span class="font-display text-xs font-black uppercase tracking-wider text-slate-900">Nos Rayons</span>
+          </div>
+          <span class="text-[10px] font-extrabold text-amber-700 bg-amber-50 border border-amber-200/70 px-2 py-0.5 rounded-full">{{ total_active_products }} réf.</span>
         </div>
-        <ul class="space-y-0.5">
-          {% for cat in root_categories|slice:":7" %}
+
+        <ul class="space-y-1">
+          {% for cat in root_categories|slice:":6" %}
           <li>
             <a
               href="{{ cat.get_absolute_url }}"
-              class="flex items-center justify-between gap-2 px-2.5 py-2 rounded-xl hover:bg-amber-50 text-slate-700 hover:text-slate-950 font-semibold text-xs transition group"
+              class="flex items-center justify-between gap-2.5 px-2 py-1.5 rounded-xl hover:bg-amber-50/70 border border-transparent hover:border-amber-200/80 text-slate-700 hover:text-slate-950 transition group"
             >
-              <span class="truncate">{{ cat.name }}</span>
-              <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 group-hover:translate-x-0.5 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-              </svg>
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="w-7 h-7 rounded-lg bg-slate-50 group-hover:bg-white border border-slate-200/80 group-hover:border-amber-300 p-0.5 flex items-center justify-center shrink-0 overflow-hidden transition">
+                  {% if cat.thumb_url %}
+                  <img src="{{ cat.thumb_url }}" alt="" class="max-w-full max-h-full object-contain" loading="lazy">
+                  {% else %}
+                  <span class="font-display font-black text-[10px] text-amber-600">{{ cat.name|slice:":1" }}</span>
+                  {% endif %}
+                </span>
+                <span class="text-xs font-bold truncate">{{ cat.short_name }}</span>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                {% if cat.active_count %}
+                <span class="text-[10px] font-bold text-slate-400 group-hover:text-amber-700 tabular-nums">{{ cat.active_count }}</span>
+                {% endif %}
+                <svg class="w-3.5 h-3.5 text-slate-300 group-hover:text-amber-600 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </div>
             </a>
           </li>
           {% endfor %}
         </ul>
       </div>
 
-      <a
-        href="{% url 'shop:catalog' %}"
-        class="mt-2 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-slate-950 hover:bg-slate-900 text-amber-400 font-extrabold text-xs transition"
-      >
-        <span>Explorer tout le stock</span>
-        <span>→</span>
-      </a>
+      <div class="pt-2.5 mt-2 border-t border-slate-100">
+        <a
+          href="{% url 'shop:catalog' %}"
+          class="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-slate-950 hover:bg-slate-900 text-amber-400 font-extrabold text-xs transition shadow-2xs"
+        >
+          <span>Explorer tout le catalogue</span>
+          <span>→</span>
+        </a>
+      </div>
     </aside>
 
     <!-- CENTRE : CARROUSEL PRODUITS DYNAMIQUE (100% PILOTÉ PAR LES PRODUITS DE LA BOUTIQUE) -->
     <div
-      class="lg:col-span-6 relative rounded-2xl bg-gradient-to-br from-[#0b0d12] via-[#131722] to-[#1c2130] text-white overflow-hidden border border-slate-800/90 shadow-md min-h-[196px] sm:min-h-[245px] lg:min-h-[290px] select-none"
+      class="group/hero lg:col-span-6 relative rounded-2xl bg-gradient-to-br from-[#0b0d12] via-[#131722] to-[#1c2130] text-white overflow-hidden border border-slate-800/90 shadow-md min-h-[200px] sm:min-h-[250px] lg:min-h-[304px] select-none"
       x-data="{
         active: 0,
         total: {{ hero_products|length|default:1 }},
@@ -75,7 +102,7 @@
       @touchstart.passive="onTouchStart($event)"
       @touchend.passive="onTouchEnd($event)"
     >
-      <div class="absolute -top-16 -right-12 w-52 h-52 rounded-full bg-amber-400/15 blur-3xl pointer-events-none"></div>
+      <div class="absolute -top-16 -right-12 w-56 h-56 rounded-full bg-amber-400/15 blur-3xl pointer-events-none"></div>
       <div class="absolute -bottom-16 -left-12 w-44 h-44 rounded-full bg-amber-500/10 blur-2xl pointer-events-none"></div>
 
       {% if hero_products %}
@@ -84,11 +111,11 @@
           x-show="active === {{ forloop.counter0 }}"
           {% if not forloop.first %}x-cloak{% endif %}
           x-transition.opacity.duration.250ms
-          class="absolute inset-0 px-3.5 pt-3.5 pb-7 sm:p-6 flex items-center justify-between gap-2.5 sm:gap-4"
+          class="absolute inset-0 px-3.5 pt-3.5 pb-8 sm:p-6 flex items-center justify-between gap-2.5 sm:gap-5"
         >
           <!-- Texte, Prix Choc & Boutons à Gauche -->
-          <div class="w-[57%] sm:w-[60%] flex flex-col justify-between h-full z-10">
-            <div class="space-y-1.5 sm:space-y-2">
+          <div class="w-[57%] sm:w-[59%] flex flex-col justify-between h-full z-10">
+            <div class="space-y-1.5 sm:space-y-2.5">
               <div class="flex items-center gap-1.5 flex-wrap">
                 <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-amber-400 text-slate-950 text-[9px] sm:text-[11px] font-black uppercase tracking-wider shadow-2xs">
                   {% if hp.is_on_sale and hp.discount_percentage %}
@@ -98,31 +125,35 @@
                   {% endif %}
                 </span>
                 {% if hp.is_eco_solar %}
-                <span class="px-1.5 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-[9px] font-extrabold">
-                  ☀ Éco / Inverter
+                <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-[9px] sm:text-[10px] font-extrabold">
+                  ☀ Éco / Solaire
                 </span>
                 {% else %}
-                <span class="px-1.5 py-0.5 rounded-md bg-white/10 text-slate-300 text-[9px] font-bold">
+                <span class="px-2 py-0.5 rounded-md bg-white/10 border border-white/10 text-slate-200 text-[9px] sm:text-[10px] font-bold">
                   ✓ Stock Bamako
                 </span>
                 {% endif %}
               </div>
 
               <a href="{{ hp.get_absolute_url }}" class="block group">
-                <h1 class="font-display text-[13px] sm:text-xl lg:text-2xl font-black text-white group-hover:text-amber-300 transition leading-[1.22] line-clamp-2">
+                <h1 class="font-display text-[13px] sm:text-xl lg:text-[22px] font-black text-white group-hover:text-amber-300 transition leading-[1.22] line-clamp-2">
                   {{ hp.name }}
                 </h1>
               </a>
 
-              <p class="hidden sm:block text-xs text-slate-300 line-clamp-1">
-                Disponible au Grand Marché de Bamako (Dibidani) • Livraison 24h
+              <p class="hidden sm:flex items-center gap-1.5 text-xs text-slate-300/95">
+                <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+                </svg>
+                <span class="truncate">Grand Marché de Bamako (Dibidani) • Garantie officielle</span>
               </p>
             </div>
 
             <!-- Prix + Boutons d'Action (Commander + WhatsApp Direct) -->
-            <div class="pt-1 sm:pt-2 space-y-2">
+            <div class="pt-1 sm:pt-2 space-y-2 sm:space-y-2.5">
               <div class="flex items-baseline gap-1.5 flex-wrap">
-                <span class="font-display text-[17px] sm:text-2xl font-black text-amber-400 tracking-tight leading-none">
+                <span class="font-display text-[17px] sm:text-2xl lg:text-[26px] font-black text-amber-400 tracking-tight leading-none">
                   {{ hp.current_price|floatformat:0|intcomma }}
                 </span>
                 <span class="text-[10px] sm:text-xs font-extrabold text-amber-300/90">FCFA</span>
@@ -133,10 +164,10 @@
                 {% endif %}
               </div>
 
-              <div class="flex items-center gap-1.5">
+              <div class="flex items-center gap-2">
                 <a
                   href="{{ hp.get_absolute_url }}"
-                  class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-extrabold text-[11px] sm:text-xs inline-flex items-center gap-1 shadow-sm transition"
+                  class="px-3.5 sm:px-4.5 py-1.5 sm:py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-extrabold text-[11px] sm:text-xs inline-flex items-center gap-1.5 shadow-sm transition"
                 >
                   <span>Commander</span>
                   <span>→</span>
@@ -145,13 +176,14 @@
                   href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text={{ 'Bonjour ONIZUKA SHOP, je souhaite commander : '|urlencode }}*{{ hp.name|urlencode }}*%20({{ hp.current_price|floatformat:0|intcomma|urlencode }}%20FCFA)%20{{ request.scheme }}://{{ request.get_host }}{{ hp.get_absolute_url }}"
                   target="_blank"
                   rel="noopener"
-                  class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white flex items-center justify-center shadow-sm transition shrink-0"
+                  class="h-7 sm:h-9 px-2.5 sm:px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-[11px] inline-flex items-center justify-center gap-1.5 shadow-sm transition shrink-0"
                   title="Commander sur WhatsApp"
                   aria-label="Commander sur WhatsApp"
                 >
-                  <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" viewBox="0 0 24 24">
+                  <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current shrink-0" viewBox="0 0 24 24">
                     <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.588-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.45 1.054 1.325 1.833.687.612 1.267.801 1.447.888.181.087.289.073.397-.051.108-.124.462-.538.585-.722.123-.184.246-.153.411-.092.166.061 1.052.496 1.233.587.181.091.303.136.347.212.043.076.043.439-.101.844z"/>
                   </svg>
+                  <span class="hidden sm:inline">WhatsApp</span>
                 </a>
               </div>
             </div>
@@ -160,7 +192,7 @@
           <!-- Photo Produit Plein Cadre à Droite -->
           <a
             href="{{ hp.get_absolute_url }}"
-            class="w-[41%] sm:w-[38%] h-[138px] sm:h-[190px] lg:h-[225px] rounded-2xl bg-white ring-2 ring-amber-400/35 p-1.5 sm:p-2.5 flex items-center justify-center shadow-xl shrink-0 overflow-hidden group"
+            class="w-[41%] sm:w-[39%] h-[142px] sm:h-[195px] lg:h-[234px] rounded-2xl bg-white ring-2 ring-amber-400/35 p-2 sm:p-3 flex items-center justify-center shadow-2xl shrink-0 overflow-hidden group"
           >
             {% if hp.primary_image %}
             <img
@@ -173,9 +205,27 @@
         </div>
         {% endfor %}
 
-        <!-- Barre inférieure dédiée aux Indicateurs Slides + Compteur (Zéro chevauchement avec le bouton) -->
+        <!-- Flèches Discrètes Desktop au Survol -->
         {% if hero_products|length > 1 %}
-        <div class="absolute bottom-2 left-3.5 right-3.5 sm:left-6 sm:right-6 z-20 flex items-center justify-between pointer-events-none">
+        <button
+          type="button"
+          @click.prevent="go(active - 1)"
+          class="hidden sm:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/45 hover:bg-amber-400 text-white hover:text-slate-950 border border-white/15 items-center justify-center opacity-0 group-hover/hero:opacity-100 transition cursor-pointer"
+          aria-label="Produit précédent"
+        >
+          <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button
+          type="button"
+          @click.prevent="go(active + 1)"
+          class="hidden sm:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/45 hover:bg-amber-400 text-white hover:text-slate-950 border border-white/15 items-center justify-center opacity-0 group-hover/hero:opacity-100 transition cursor-pointer"
+          aria-label="Produit suivant"
+        >
+          <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+
+        <!-- Barre inférieure dédiée aux Indicateurs Slides + Compteur -->
+        <div class="absolute bottom-2.5 left-3.5 right-3.5 sm:left-6 sm:right-6 z-20 flex items-center justify-between pointer-events-none">
           <div class="flex items-center gap-1.5 pointer-events-auto">
             {% for hp in hero_products %}
             <button
@@ -187,7 +237,7 @@
             ></button>
             {% endfor %}
           </div>
-          <span class="text-[9px] font-mono font-bold text-slate-400 bg-black/35 px-1.5 py-0.2 rounded-full">
+          <span class="text-[10px] font-mono font-bold text-slate-300 bg-black/45 border border-white/10 px-2 py-0.5 rounded-full">
             <span x-text="active + 1">1</span>/{{ hero_products|length }}
           </span>
         </div>
@@ -195,52 +245,104 @@
       {% else %}
         <div class="p-6 flex flex-col justify-center h-full">
           <span class="text-xs font-bold text-amber-400 uppercase">Onizouka Shop Bamako</span>
-          <h1 class="font-display text-xl sm:text-2xl font-black text-white mt-1">Électroménager, Meubles &amp; Décoration</h1>
+          <h1 class="font-display text-xl sm:text-2xl font-black text-white mt-1">Électroménager, Climatisation &amp; Froid</h1>
           <a href="{% url 'shop:catalog' %}" class="mt-3 inline-block w-fit px-4 py-2 rounded-full bg-amber-400 text-slate-950 font-extrabold text-xs">Voir le catalogue</a>
         </div>
       {% endif %}
     </div>
 
-    <!-- COLONNE DROITE DESKTOP : COMMANDE RAPIDE WHATSAPP & MAGASIN DABANANI -->
-    <div class="hidden lg:flex lg:col-span-3 bg-white rounded-2xl border border-slate-200/80 p-4 flex-col justify-between shadow-2xs">
+    <!-- COLONNE DROITE DESKTOP : SHOWROOM BAMAKO, LOGOS PAIEMENT OFFICIELS & ACHAT DIRECT -->
+    <div class="hidden lg:flex lg:col-span-3 bg-white rounded-2xl border border-slate-200/85 p-3.5 flex-col justify-between shadow-2xs">
       <div class="space-y-2.5">
-        <div class="flex items-center gap-2.5">
-          <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 font-display font-black text-base flex items-center justify-center shrink-0">O</div>
-          <div>
-            <p class="font-display text-sm font-black text-slate-900 leading-tight">Achat Rapide Bamako</p>
-            <p class="text-[11px] text-emerald-600 font-bold">Stock réel en magasin</p>
+        <!-- En-tête Boutique Vérifiée -->
+        <div class="flex items-center gap-2.5 pb-2.5 border-b border-slate-100">
+          <div class="w-10 h-10 rounded-xl bg-slate-950 border border-amber-400/40 text-amber-400 flex items-center justify-center shrink-0 shadow-xs">
+            <svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <p class="font-display text-sm font-black text-slate-950 leading-tight truncate">Achat Direct Bamako</p>
+            <p class="text-[11px] text-emerald-600 font-bold flex items-center gap-1.5 mt-0.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+              <span class="truncate">Showroom Dibidani • Stock réel</span>
+            </p>
           </div>
         </div>
 
-        <div class="space-y-1.5 pt-1 text-xs text-slate-600">
-          <div class="flex items-center gap-2 p-2 rounded-xl bg-slate-50">
-            <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
-            <span class="font-semibold text-slate-800">Livraison 24h à domicile</span>
+        <!-- Garanties Express -->
+        <div class="space-y-1.5 text-xs">
+          <div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl bg-slate-50/90 border border-slate-100">
+            <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/>
+              </svg>
+            </span>
+            <div class="leading-tight min-w-0">
+              <p class="font-bold text-slate-900 text-[11px]">Livraison Express 24h</p>
+              <p class="text-[10px] text-slate-500 truncate">À domicile ou retrait en 15 min</p>
+            </div>
           </div>
-          <div class="flex items-center gap-2 p-2 rounded-xl bg-slate-50">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
-            <span class="font-semibold text-slate-800">Paiement à la réception</span>
+
+          <div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl bg-slate-50/90 border border-slate-100">
+            <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </span>
+            <div class="leading-tight min-w-0">
+              <p class="font-bold text-slate-900 text-[11px]">Paiement à la réception</p>
+              <p class="text-[10px] text-slate-500 truncate">Vérifiez votre appareil à l'arrivée</p>
+            </div>
           </div>
-          <div class="flex items-center gap-2 p-2 rounded-xl bg-slate-50">
-            <span class="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>
-            <span class="font-semibold text-slate-800">Orange Money &amp; Wave</span>
+        </div>
+
+        <!-- Logos Officiels des Modes de Paiement -->
+        <div class="pt-0.5">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Paiements acceptés</span>
+            <span class="text-[9px] font-bold text-slate-400">100% sécurisé</span>
+          </div>
+          <div class="grid grid-cols-4 gap-1.5">
+            <div class="h-10 rounded-xl bg-white border border-slate-200/90 hover:border-orange-400 p-1 flex items-center justify-center shadow-2xs transition" title="Orange Money Mali">
+              <img src="{% static 'images/payments/orange_money.png' %}" alt="Orange Money" class="max-h-7 w-auto object-contain" loading="lazy">
+            </div>
+            <div class="h-10 rounded-xl bg-[#1DC3F4] border border-sky-400/60 hover:brightness-105 p-1 flex items-center justify-center shadow-2xs overflow-hidden transition" title="Wave Mobile Money">
+              <img src="{% static 'images/payments/wave_logo.png' %}" alt="Wave" class="h-8 w-8 object-contain" loading="lazy">
+            </div>
+            <div class="h-10 rounded-xl bg-white border border-slate-200/90 hover:border-orange-500 p-1 flex items-center justify-center shadow-2xs transition" title="Moov Money Mali">
+              <img src="{% static 'images/payments/moov_money.png' %}" alt="Moov Money" class="max-h-7 w-auto object-contain" loading="lazy">
+            </div>
+            <div class="h-10 rounded-xl bg-emerald-50/90 border border-emerald-200/90 text-emerald-800 px-1 flex flex-col items-center justify-center leading-none shadow-2xs" title="Paiement en espèces à la livraison">
+              <svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"/>
+              </svg>
+              <span class="text-[9px] font-extrabold mt-0.5">Cash</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="space-y-2 pt-3 border-t border-slate-100">
+      <!-- Boutons d'Action Rapide -->
+      <div class="space-y-1.5 pt-2.5 border-t border-slate-100">
         <a
           href="https://wa.me/{{ shop_settings.whatsapp_raw|default:'22392673799' }}?text=Bonjour%20Onizouka%20Shop,%20je%20souhaite%20commander%20ou%20demander%20un%20prix"
           target="_blank"
           rel="noopener"
           class="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition shadow-xs"
         >
+          <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.588-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.357.101.174.45 1.054 1.325 1.833.687.612 1.267.801 1.447.888.181.087.289.073.397-.051.108-.124.462-.538.585-.722.123-.184.246-.153.411-.092.166.061 1.052.496 1.233.587.181.091.303.136.347.212.043.076.043.439-.101.844z"/>
+          </svg>
           <span>Commander sur WhatsApp</span>
         </a>
         <a
           href="{% url 'orders:cart' %}"
-          class="w-full py-2 px-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs flex items-center justify-center transition"
+          class="w-full py-2 px-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-1.5 transition"
         >
+          <svg class="w-3.5 h-3.5 stroke-[2.3] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/>
+          </svg>
           <span>Voir mon panier</span>
         </a>
       </div>
@@ -248,39 +350,71 @@
 
   </section>
 
-  <!-- ===================================================================== -->
-  <!-- 2. MATRICE D'ICÔNES RAYONS (5 COLONNES MOBILE / GRILLE ALIBABA APP)   -->
-  <!-- ===================================================================== -->
-  <section class="bg-white rounded-2xl border border-slate-200/80 p-2.5 sm:p-4 shadow-2xs">
-    <div class="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 gap-x-1.5 gap-y-2.5 sm:gap-3">
+  <!-- BARRE COMPACTE RÉASSURANCE & LOGOS PAIEMENT SUR MOBILE / TABLETTE -->
+  <div class="lg:hidden bg-white rounded-2xl border border-slate-200/85 px-3 py-2 flex items-center justify-between gap-2 shadow-2xs">
+    <div class="flex items-center gap-1.5 min-w-0">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+      <span class="text-[11px] font-bold text-slate-800 truncate">Livraison 24h Bamako • Cash livraison</span>
+    </div>
+    <div class="flex items-center gap-1 shrink-0">
+      <span class="h-6 px-1 rounded-md bg-white border border-slate-200 flex items-center justify-center" title="Orange Money">
+        <img src="{% static 'images/payments/orange_money.png' %}" alt="Orange Money" class="h-4.5 w-auto object-contain" loading="lazy">
+      </span>
+      <span class="h-6 w-7 rounded-md bg-[#1DC3F4] flex items-center justify-center overflow-hidden" title="Wave">
+        <img src="{% static 'images/payments/wave_logo.png' %}" alt="Wave" class="h-5 w-5 object-contain" loading="lazy">
+      </span>
+      <span class="h-6 px-1 rounded-md bg-white border border-slate-200 flex items-center justify-center" title="Moov Money">
+        <img src="{% static 'images/payments/moov_money.png' %}" alt="Moov Money" class="h-4.5 w-auto object-contain" loading="lazy">
+      </span>
+    </div>
+  </div>
 
-      {% for cat in root_categories|slice:":6" %}
+  <!-- ===================================================================== -->
+  <!-- 2. MATRICE D'ICÔNES RAYONS (GRILLE SYMÉTRIQUE 4x2 MOBILE / 8 DESKTOP) -->
+  <!-- ===================================================================== -->
+  <section class="bg-white rounded-2xl border border-slate-200/85 p-3 sm:p-4 shadow-2xs">
+    <div class="grid grid-cols-4 sm:grid-cols-8 gap-x-2 gap-y-3 sm:gap-3">
+
+      {% for cat in root_categories|slice:":5" %}
       <a
         href="{{ cat.get_absolute_url }}"
         class="flex flex-col items-center text-center group active:scale-95 transition select-none"
       >
-        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#f6f7f9] group-hover:bg-amber-50 border border-slate-200/70 group-hover:border-amber-300 p-1.5 flex items-center justify-center overflow-hidden transition">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white ring-1 ring-slate-200/90 group-hover:ring-2 group-hover:ring-amber-400 shadow-2xs group-hover:shadow-sm p-1.5 flex items-center justify-center overflow-hidden transition">
           {% if cat.thumb_url %}
-          <img src="{{ cat.thumb_url }}" alt="{{ cat.short_name }}" class="max-w-full max-h-full object-contain" loading="lazy">
+          <img src="{{ cat.thumb_url }}" alt="{{ cat.short_name }}" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform" loading="lazy">
           {% else %}
           <span class="font-display font-black text-sm text-amber-600">{{ cat.name|slice:":1" }}</span>
           {% endif %}
         </div>
-        <span class="mt-1 text-[10px] sm:text-xs font-bold text-slate-800 group-hover:text-amber-600 leading-tight line-clamp-1 w-full">
+        <span class="mt-1.5 text-[10px] sm:text-xs font-bold text-slate-800 group-hover:text-amber-600 leading-tight line-clamp-1 w-full">
           {{ cat.short_name }}
         </span>
       </a>
       {% endfor %}
+
+      <!-- Tuile Nouveaux Arrivages -->
+      <a
+        href="{% url 'shop:catalog' %}?tri=nouveautes"
+        class="flex flex-col items-center text-center group active:scale-95 transition select-none"
+      >
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-950 ring-1 ring-slate-800 group-hover:ring-amber-400 flex items-center justify-center text-amber-400 shadow-2xs transition">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/>
+          </svg>
+        </div>
+        <span class="mt-1.5 text-[10px] sm:text-xs font-extrabold text-slate-800 group-hover:text-amber-600 leading-tight line-clamp-1">Nouveautés</span>
+      </a>
 
       <!-- Tuile Offres Flash -->
       <a
         href="{% url 'shop:catalog' %}?en_promo=true"
         class="flex flex-col items-center text-center group active:scale-95 transition select-none"
       >
-        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-rose-50 border border-rose-200/80 flex items-center justify-center text-rose-600 font-display font-black text-sm sm:text-base">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-rose-50 ring-1 ring-rose-200 group-hover:bg-rose-600 group-hover:text-white flex items-center justify-center text-rose-600 font-display font-black text-sm sm:text-base shadow-2xs transition">
           -%
         </div>
-        <span class="mt-1 text-[10px] sm:text-xs font-extrabold text-rose-600 leading-tight line-clamp-1">Promos</span>
+        <span class="mt-1.5 text-[10px] sm:text-xs font-extrabold text-rose-600 leading-tight line-clamp-1">Promos</span>
       </a>
 
       <!-- Tuile Tout le Stock -->
@@ -288,7 +422,7 @@
         href="{% url 'shop:catalog' %}"
         class="flex flex-col items-center text-center group active:scale-95 transition select-none"
       >
-        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-amber-400 border border-amber-500/40 flex items-center justify-center text-slate-950">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-amber-400 group-hover:bg-amber-300 ring-1 ring-amber-500/40 flex items-center justify-center text-slate-950 shadow-2xs transition">
           <svg class="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/>
             <rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/>
@@ -296,7 +430,7 @@
             <rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>
           </svg>
         </div>
-        <span class="mt-1 text-[10px] sm:text-xs font-extrabold text-slate-900 leading-tight line-clamp-1">Tout ({{ total_active_products }})</span>
+        <span class="mt-1.5 text-[10px] sm:text-xs font-extrabold text-slate-900 leading-tight line-clamp-1">Tout ({{ total_active_products }})</span>
       </a>
 
     </div>
@@ -346,12 +480,16 @@
       {% for sp in sale_products|slice:":6" %}
       <a
         href="{{ sp.get_absolute_url }}"
-        class="w-[126px] sm:w-[155px] lg:w-auto shrink-0 lg:shrink rounded-xl border border-slate-100 hover:border-amber-300 bg-[#f9fafb] p-2 flex flex-col justify-between group transition"
+        class="w-[132px] sm:w-[160px] lg:w-auto shrink-0 lg:shrink rounded-xl border border-slate-200/80 hover:border-amber-400 bg-[#f9fafb] hover:bg-white p-2 flex flex-col justify-between group transition shadow-2xs hover:shadow-sm"
       >
-        <div class="relative aspect-square rounded-lg bg-white p-1.5 flex items-center justify-center overflow-hidden mb-1.5">
+        <div class="relative aspect-square rounded-lg bg-white border border-slate-100 p-1.5 flex items-center justify-center overflow-hidden mb-1.5">
           {% if sp.is_on_sale and sp.discount_percentage %}
-          <span class="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-rose-600 text-white text-[9px] font-black leading-none">
+          <span class="absolute top-1 left-1 z-10 px-1.5 py-0.5 rounded bg-rose-600 text-white text-[9px] font-black leading-none shadow-2xs">
             -{{ sp.discount_percentage }}%
+          </span>
+          {% elif sp.brand %}
+          <span class="absolute top-1 left-1 z-10 px-1.5 py-0.5 rounded bg-slate-900/85 text-amber-300 text-[8px] font-extrabold uppercase leading-none">
+            {{ sp.brand.name }}
           </span>
           {% endif %}
           {% if sp.primary_image %}
@@ -364,13 +502,17 @@
           {% endif %}
         </div>
         <div>
-          <p class="text-[11px] font-medium text-slate-700 line-clamp-1">{{ sp.name }}</p>
-          <p class="font-display text-xs sm:text-sm font-black text-rose-600 mt-0.5 whitespace-nowrap">
-            {{ sp.current_price|floatformat:0|intcomma }} <span class="text-[9px]">FCFA</span>
+          <p class="text-[11px] font-semibold text-slate-800 group-hover:text-amber-700 line-clamp-1 transition">{{ sp.name }}</p>
+          <p class="font-display text-xs sm:text-sm font-black {% if sp.is_on_sale %}text-rose-600{% else %}text-slate-950{% endif %} mt-0.5 whitespace-nowrap">
+            {{ sp.current_price|floatformat:0|intcomma }} <span class="text-[9px] font-bold text-slate-500">FCFA</span>
           </p>
           {% if sp.is_on_sale %}
-          <p class="text-[10px] text-slate-400 line-through leading-none">
-            {{ sp.price|floatformat:0|intcomma }}
+          <p class="text-[10px] text-slate-400 line-through leading-none mt-0.5">
+            {{ sp.price|floatformat:0|intcomma }} F
+          </p>
+          {% else %}
+          <p class="text-[10px] text-emerald-600 font-semibold leading-none mt-0.5">
+            ✓ En stock Bamako
           </p>
           {% endif %}
         </div>

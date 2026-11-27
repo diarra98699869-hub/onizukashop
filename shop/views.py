@@ -203,54 +203,73 @@ def home(request):
             'append_mode': append_mode,
         })
 
-    # Produits phares pour le Slider Hero compact (sélection diversifiée : 1 produit par marque majeure)
+    # Produits phares pour le Slider Hero compact (1 produit vedette par famille/rayon pour un panaché pro)
     hero_candidates = list(Product.objects.filter(
         in_stock_q, price__gt=0, images__isnull=False
-    ).select_related('brand', 'category').prefetch_related('images').distinct().order_by('-is_featured', '-created_at')[:30])
+    ).select_related('brand', 'category').prefetch_related('images').distinct().order_by('-is_featured', '-created_at')[:60])
     hero_products = []
-    seen_brands = set()
+    seen_families = set()
     for hp in hero_candidates:
-        b_key = hp.brand_id or hp.name[:10]
-        if b_key not in seen_brands:
-            seen_brands.add(b_key)
+        fam_key = hp.category_id or hp.brand_id
+        if fam_key not in seen_families:
+            seen_families.add(fam_key)
             hero_products.append(hp)
         if len(hero_products) >= 5:
             break
     if len(hero_products) < 5:
+        seen_brands = {hp.brand_id for hp in hero_products if hp.brand_id}
         for hp in hero_candidates:
-            if hp not in hero_products:
+            if hp not in hero_products and (hp.brand_id not in seen_brands or len(hero_products) < 5):
+                seen_brands.add(hp.brand_id)
                 hero_products.append(hp)
             if len(hero_products) >= 5:
                 break
 
-    # Offres Flash / SuperDeals (produits remisés, complétés par les vedettes si besoin)
+    # Offres Flash / SuperDeals (produits remisés en priorité, complétés par un panaché multi-rayons)
     sale_products = list(Product.objects.filter(
         in_stock_q, sale_price__isnull=False
     ).select_related('brand', 'category').prefetch_related('images').order_by('-created_at')[:10])
 
     featured_products = list(Product.objects.filter(
         in_stock_q, is_featured=True
-    ).select_related('brand', 'category').prefetch_related('images').order_by('-created_at')[:8])
+    ).select_related('brand', 'category').prefetch_related('images').order_by('-created_at')[:12])
 
     new_products = list(Product.objects.filter(
         in_stock_q
-    ).select_related('brand', 'category').prefetch_related('images').order_by('-created_at')[:6])
+    ).select_related('brand', 'category').prefetch_related('images').order_by('-created_at')[:10])
+
+    # Pool diversifié (1 par catégorie à tour de rôle) pour éviter d'aligner 5 produits identiques
+    diverse_pool = []
+    pool_by_cat = defaultdict(list)
+    for cand in hero_candidates:
+        pool_by_cat[cand.category_id].append(cand)
+    for group in zip_longest(*pool_by_cat.values()):
+        for item in group:
+            if item is not None:
+                diverse_pool.append(item)
 
     def fill_up_to(items, target):
         if len(items) >= target:
             return items[:target]
         seen = {p.id for p in items}
-        extras = list(Product.objects.filter(in_stock_q).exclude(id__in=seen).select_related('brand', 'category').prefetch_related('images')[:target - len(items)])
+        extras = [p for p in diverse_pool if p.id not in seen]
+        if len(items) + len(extras) < target:
+            more = list(Product.objects.filter(in_stock_q).exclude(
+                id__in=seen | {p.id for p in extras}
+            ).select_related('brand', 'category').prefetch_related('images')[:target])
+            extras.extend(more)
         return (items + extras)[:target]
 
-    sale_products = fill_up_to(sale_products, 8)
-    featured_products = fill_up_to(featured_products, 6)
-    new_products = fill_up_to(new_products, 6)
+    sale_products = fill_up_to(sale_products, 6)
+    featured_products = fill_up_to(featured_products[:3], 6)
+    new_products = fill_up_to(new_products[:3], 6)
 
-    # Catégories actives réelles pour les onglets du mur d'accueil
+    # Catégories actives réelles pour la colonne latérale et les onglets (avec compteur produits exact)
     root_categories = list(Category.objects.filter(
         is_active=True, products__is_active=True
-    ).distinct().order_by('order', 'name'))
+    ).annotate(
+        active_count=Count('products', filter=Q(products__is_active=True), distinct=True)
+    ).order_by('order', 'name'))
 
     # Associer une image représentative et le compteur à chaque catégorie en 1 passe légère
     cat_ids = [c.id for c in root_categories]
