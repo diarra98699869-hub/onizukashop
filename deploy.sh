@@ -1,17 +1,17 @@
 #!/bin/bash
 # ==============================================================================
-# Script de Déploiement Automatique 1-Clic pour ONIZOUKA SHOP sur o2switch
-# Domaine : onizouka.danayaplus.com
+# Script de Déploiement Automatique 1-Clic pour ONIZUKA SHOP sur o2switch
+# Domaine : onizukashop.com
 # ==============================================================================
 
 set -e
 
 echo "=========================================================="
-echo "    DÉPLOIEMENT ONIZOUKA SHOP (o2switch / cPanel)"
+echo "    DÉPLOIEMENT ONIZUKA SHOP (o2switch / cPanel)"
 echo "=========================================================="
 
-APP_DIR="/home/vuxe8870/repositories/onizukashop"
-VENV_DIR="/home/vuxe8870/virtualenv/repositories/onizukashop/3.12"
+APP_DIR="/home/sc1vuxe8870/repositories/onizukashop"
+VENV_DIR="/home/sc1vuxe8870/virtualenv/repositories/onizukashop/3.12"
 
 cd "$APP_DIR" || exit 1
 
@@ -24,8 +24,14 @@ if [ ! -f .env ]; then
     echo "Fichier .env initialisé depuis .env.production."
 fi
 
-echo ">>> [3/7] Activation de l'environnement virtuel Python 3.12..."
-source "$VENV_DIR/bin/activate"
+echo ">>> [3/7] Activation de l'environnement virtuel Python..."
+if [ -d "$VENV_DIR" ]; then
+    source "$VENV_DIR/bin/activate"
+elif [ -d "/home/sc1vuxe8870/virtualenv/repositories/onizukashop/3.11" ]; then
+    source "/home/sc1vuxe8870/virtualenv/repositories/onizukashop/3.11/bin/activate"
+elif [ -f "../virtualenv/bin/activate" ]; then
+    source "../virtualenv/bin/activate"
+fi
 
 echo ">>> [4/7] Installation des dépendances Python..."
 pip install --upgrade pip
@@ -34,7 +40,7 @@ pip install -r requirements.txt
 echo ">>> [5/7] Application des migrations PostgreSQL..."
 python manage.py migrate --noinput
 
-echo ">>> [6/7] Chargement des données de démonstration..."
+echo ">>> [6/7] Chargement des données du catalogue..."
 python manage.py loaddata fixtures/demo_data.json || echo "Note : Fixtures déjà chargées ou sautées."
 
 echo ">>> [7/7] Collecte des fichiers statiques (CSS, JS, images)..."
@@ -46,6 +52,6 @@ touch tmp/restart.txt
 
 echo "=========================================================="
 echo "    DÉPLOIEMENT TERMINÉ AVEC SUCCÈS !"
-echo "    Boutique : https://onizouka.danayaplus.com"
-echo "    ERP Direction : https://onizouka.danayaplus.com/gestion/"
+echo "    Boutique : https://onizukashop.com"
+echo "    ERP Direction : https://onizukashop.com/gestion/"
 echo "=========================================================="
