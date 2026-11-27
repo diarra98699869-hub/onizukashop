@@ -21,6 +21,7 @@ from shop.models import Product, Category, Brand, ProductImage
 from inventory.models import StockMovement, Supplier
 from accounts.models import UserProfile
 from orders.emails import send_order_status_update_email
+from .models import ShopSetting
 from .forms import ProductForm, StockSupplyForm, OrderUpdateForm
 
 

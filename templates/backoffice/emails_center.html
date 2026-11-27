@@ -414,7 +414,7 @@
               <input
                 type="email"
                 name="delivery_email"
-                value="{{ ord.delivery_email|default:ord.user.email }}"
+                value="{% if ord.delivery_email %}{{ ord.delivery_email }}{% elif ord.user %}{{ ord.user.email }}{% endif %}"
                 placeholder="Email du client..."
                 class="px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-mono w-44 sm:w-52"
               >
@@ -487,7 +487,7 @@
               <input
                 type="email"
                 name="guest_email"
-                value="{{ c_obj.guest_email|default:c_obj.user.email }}"
+                value="{% if c_obj.guest_email %}{{ c_obj.guest_email }}{% elif c_obj.user %}{{ c_obj.user.email }}{% endif %}"
                 placeholder="Email pour relancer..."
                 class="px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-mono w-44 sm:w-52"
               >

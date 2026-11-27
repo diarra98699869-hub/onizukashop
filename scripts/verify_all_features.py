@@ -19,6 +19,7 @@ from django.test import Client
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from shop.models import Product, Category, Brand
+from orders.models import Order
 from shop.video_utils import (
     find_ffmpeg_binary,
     process_uploaded_product_video,
@@ -208,6 +209,21 @@ if staff_user:
     ]
     if prod:
         bo_routes.append((f'/gestion/produits/{prod.id}/modifier/', 200, f'Edition Produit #{prod.id}'))
+
+    # Test Facture PDF & Bon de livraison officiel (Direction & Client)
+    test_order = Order.objects.filter(order_number='ONZ-VERIF-TEST').first()
+    if not test_order:
+        test_order = Order.objects.create(
+            order_number='ONZ-VERIF-TEST',
+            delivery_name='Client Test Direction',
+            delivery_phone='+223 92 67 37 99',
+            delivery_address='Grand Marché de Bamako, Dibidani',
+            delivery_district='Grand Marché',
+            subtotal=125000,
+            total=125000,
+        )
+    bo_routes.append((f'/gestion/commandes/{test_order.id}/facture/', 200, f'Facture PDF Direction #{test_order.order_number}'))
+    bo_routes.append((f'/panier/mes-commandes/{test_order.order_number}/facture/', 200, f'Facture PDF Client #{test_order.order_number}'))
 
     for url, expected, label in bo_routes:
         res = c.get(url)
