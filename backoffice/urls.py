@@ -60,6 +60,7 @@ urlpatterns = [
     path('utilisateurs/', views.users_view, name='users'),
     path('utilisateurs/nouveau/', views.user_create_view, name='user_create'),
     path('utilisateurs/<int:user_id>/modifier-role/', views.user_edit_role_view, name='user_edit_role'),
+    path('utilisateurs/<int:user_id>/supprimer/', views.user_delete_view, name='user_delete'),
     path('utilisateurs/<int:user_id>/toggle-status/', views.user_toggle_status_view, name='user_toggle_status'),
     path('utilisateurs/<int:user_id>/impersonate/', views.user_impersonate_view, name='user_impersonate'),
     path('quitter-impersonation/', views.stop_impersonate_view, name='stop_impersonate'),

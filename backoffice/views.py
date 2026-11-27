@@ -1684,9 +1684,10 @@ def user_toggle_status_view(request, user_id):
 @staff_required
 @require_POST
 def user_edit_role_view(request, user_id):
-    """Modifier le rôle et les informations de contact d'un utilisateur par la Direction."""
+    """Modifier le rôle, le login, le mot de passe et les coordonnées d'un utilisateur par la Direction."""
     from .forms import UserEditRoleForm
     from accounts.models import Profile
+    from django.contrib.auth import update_session_auth_hash
 
     user_target = get_object_or_404(User, id=user_id)
 
@@ -1695,8 +1696,10 @@ def user_edit_role_view(request, user_id):
         messages.error(request, "Action non autorisée sur ce compte super-administrateur.")
         return redirect('backoffice:users')
 
-    form = UserEditRoleForm(request.POST, is_superuser=request.user.is_superuser)
+    form = UserEditRoleForm(request.POST, is_superuser=request.user.is_superuser, target_user=user_target)
     if form.is_valid():
+        username = form.cleaned_data['username']
+        password = form.cleaned_data.get('password')
         first_name = form.cleaned_data.get('first_name', '')
         last_name = form.cleaned_data.get('last_name', '')
         email = form.cleaned_data.get('email', '')
@@ -1708,9 +1711,15 @@ def user_edit_role_view(request, user_id):
             messages.error(request, "Vous ne pouvez pas révoquer vos propres droits d'administrateur.")
             return redirect('backoffice:users')
 
+        user_target.username = username
         user_target.first_name = first_name
         user_target.last_name = last_name
         user_target.email = email
+
+        password_changed = False
+        if password and password.strip():
+            user_target.set_password(password.strip())
+            password_changed = True
 
         if role == 'direction' and request.user.is_superuser:
             user_target.is_staff = True
@@ -1724,6 +1733,10 @@ def user_edit_role_view(request, user_id):
 
         user_target.save()
 
+        # Si l'admin modifie son propre mot de passe, maintenir sa session active
+        if password_changed and user_target.id == request.user.id:
+            update_session_auth_hash(request, user_target)
+
         profile, _ = Profile.objects.get_or_create(user=user_target)
         if phone is not None:
             profile.phone = phone
@@ -1732,10 +1745,36 @@ def user_edit_role_view(request, user_id):
         role_display = "Gestionnaire Direction" if user_target.is_staff else "Client Acheteur"
         if user_target.is_superuser:
             role_display = "Super-Administrateur"
-        messages.success(request, f"Le compte de {user_target.username} a été mis à jour avec succès (Rôle : {role_display}).")
+        pass_msg = " (mot de passe mis à jour)" if password_changed else ""
+        messages.success(request, f"Le compte @{user_target.username} a été mis à jour avec succès{pass_msg} (Rôle : {role_display}).")
     else:
-        messages.error(request, "Erreur lors de la mise à jour du rôle utilisateur.")
+        err_list = [f"{field}: {', '.join(errs)}" for field, errs in form.errors.items()]
+        messages.error(request, f"Erreur de validation : {' | '.join(err_list)}")
 
+    return redirect('backoffice:users')
+
+
+@staff_required
+@require_POST
+def user_delete_view(request, user_id):
+    """Supprimer définitivement un compte utilisateur (client ou staff)."""
+    user_target = get_object_or_404(User, id=user_id)
+
+    # Protection superadmin : un staff ordinaire ne peut pas supprimer un superadmin
+    if user_target.is_superuser and not request.user.is_superuser:
+        messages.error(request, "Action non autorisée sur ce compte super-administrateur.")
+        return redirect('backoffice:users')
+
+    # Empêcher l'administrateur connecté de se supprimer lui-même
+    if user_target.id == request.user.id:
+        messages.error(request, "Impossible de supprimer votre propre compte d'administrateur en cours d'utilisation.")
+        return redirect('backoffice:users')
+
+    target_name = user_target.get_full_name() or user_target.username
+    target_username = user_target.username
+    user_target.delete()
+
+    messages.success(request, f"Le compte « {target_name} » (@{target_username}) a été supprimé définitivement du système.")
     return redirect('backoffice:users')
 
 

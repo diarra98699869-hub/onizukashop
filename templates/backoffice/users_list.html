@@ -8,10 +8,16 @@
   x-data="{
     createModalOpen: false,
     editModalOpen: false,
-    editUser: { id: '', username: '', first_name: '', last_name: '', email: '', phone: '', role: 'client' },
+    deleteModalOpen: false,
+    editUser: { id: '', username: '', first_name: '', last_name: '', email: '', phone: '', role: 'client', password: '' },
+    deleteUser: { id: '', username: '', name: '' },
     openEditModal(id, username, first_name, last_name, email, phone, role) {
-      this.editUser = { id, username, first_name, last_name, email, phone, role };
+      this.editUser = { id, username, first_name, last_name, email, phone, role, password: '' };
       this.editModalOpen = true;
+    },
+    openDeleteModal(id, username, name) {
+      this.deleteUser = { id, username, name };
+      this.deleteModalOpen = true;
     }
   }"
 >
@@ -27,7 +33,7 @@
       @click="createModalOpen = true"
       class="px-3.5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs inline-flex items-center gap-1 cursor-pointer shrink-0 active:scale-95 transition"
     >
-      <span>+ Compte</span>
+      <span>+ Nouveau compte</span>
     </button>
   </div>
 
@@ -63,11 +69,16 @@
       <div class="flex items-start justify-between gap-2">
         <div class="min-w-0">
           <p class="text-xs font-bold text-slate-950 truncate">{{ u.get_full_name|default:u.username }}</p>
-          <p class="text-[11px] font-mono text-slate-400">@{{ u.username }}</p>
+          <p class="text-[11px] font-mono text-amber-700 font-bold">@{{ u.username }}</p>
         </div>
         <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold {% if u.is_superuser or u.is_staff %}bg-amber-100 text-amber-900{% else %}bg-slate-100 text-slate-700{% endif %}">
           {% if u.is_superuser %}Admin IT{% elif u.is_staff %}Gestionnaire{% else %}Client{% endif %}
         </span>
+      </div>
+
+      <div class="text-[11px] text-slate-500 space-y-0.5">
+        {% if u.email %}<p class="truncate">{{ u.email }}</p>{% endif %}
+        {% if u.profile.phone %}<p class="font-mono text-slate-600">{{ u.profile.phone }}</p>{% endif %}
       </div>
 
       <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1.5">
@@ -75,22 +86,30 @@
           {% if u.is_active %}● Actif{% else %}● Suspendu{% endif %}
         </span>
 
-        <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1.5 flex-wrap justify-end">
           {% if request.user.is_superuser or not u.is_superuser %}
           <button
             type="button"
             @click="openEditModal('{{ u.id }}', '{{ u.username|escapejs }}', '{{ u.first_name|escapejs }}', '{{ u.last_name|escapejs }}', '{{ u.email|escapejs }}', '{{ u.profile.phone|default:''|escapejs }}', '{% if u.is_superuser %}direction{% elif u.is_staff %}gestionnaire{% else %}client{% endif %}')"
-            class="px-3 py-1.5 rounded-xl bg-amber-400 text-slate-950 text-[11px] font-extrabold"
-          >Rôle</button>
+            class="px-2.5 py-1.5 rounded-xl bg-amber-400 text-slate-950 text-[11px] font-extrabold cursor-pointer"
+          >Modifier</button>
           {% endif %}
 
           {% if u.id != request.user.id %}
           <form method="POST" action="{% url 'backoffice:user_toggle_status' u.id %}" class="inline">
             {% csrf_token %}
-            <button type="submit" class="px-2.5 py-1.5 rounded-xl text-[11px] font-bold {% if u.is_active %}bg-rose-50 text-rose-700{% else %}bg-emerald-50 text-emerald-700{% endif %}">
+            <button type="submit" class="px-2.5 py-1.5 rounded-xl text-[11px] font-bold cursor-pointer {% if u.is_active %}bg-slate-100 text-slate-700{% else %}bg-emerald-50 text-emerald-700{% endif %}">
               {% if u.is_active %}Bloquer{% else %}Activer{% endif %}
             </button>
           </form>
+
+          {% if request.user.is_superuser or not u.is_superuser %}
+          <button
+            type="button"
+            @click="openDeleteModal('{{ u.id }}', '{{ u.username|escapejs }}', '{{ u.get_full_name|default:u.username|escapejs }}')"
+            class="px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold cursor-pointer"
+          >Supprimer</button>
+          {% endif %}
           {% endif %}
         </div>
       </div>
@@ -117,14 +136,19 @@
         <tr class="hover:bg-slate-50/70">
           <td class="py-2.5 px-4">
             <p class="font-bold text-slate-900">{{ u.get_full_name|default:u.username }}</p>
-            <p class="text-[10px] font-mono text-slate-400">@{{ u.username }}</p>
+            <p class="text-[11px] font-mono font-bold text-amber-700">@{{ u.username }}</p>
           </td>
           <td class="py-2.5 px-4">
             <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold {% if u.is_superuser or u.is_staff %}bg-amber-100 text-amber-900{% else %}bg-slate-100 text-slate-700{% endif %}">
               {% if u.is_superuser %}Superadmin IT{% elif u.is_staff %}Gestionnaire{% else %}Client{% endif %}
             </span>
           </td>
-          <td class="py-2.5 px-4 text-slate-600">{{ u.email|default:"—" }} {% if u.profile.phone %}• {{ u.profile.phone }}{% endif %}</td>
+          <td class="py-2.5 px-4 text-slate-600">
+            <div class="space-y-0.5">
+              <p>{{ u.email|default:"—" }}</p>
+              {% if u.profile.phone %}<p class="font-mono text-slate-500 text-[11px]">{{ u.profile.phone }}</p>{% endif %}
+            </div>
+          </td>
           <td class="py-2.5 px-4 font-bold {% if u.is_active %}text-emerald-600{% else %}text-rose-600{% endif %}">
             {% if u.is_active %}Actif{% else %}Suspendu{% endif %}
           </td>
@@ -150,10 +174,18 @@
             {% if u.id != request.user.id %}
             <form method="POST" action="{% url 'backoffice:user_toggle_status' u.id %}" class="inline">
               {% csrf_token %}
-              <button type="submit" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold cursor-pointer {% if u.is_active %}bg-rose-50 text-rose-700{% else %}bg-emerald-50 text-emerald-700{% endif %}">
+              <button type="submit" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold cursor-pointer {% if u.is_active %}bg-slate-100 text-slate-700 hover:bg-slate-200{% else %}bg-emerald-50 text-emerald-700 hover:bg-emerald-100{% endif %}">
                 {% if u.is_active %}Suspendre{% else %}Activer{% endif %}
               </button>
             </form>
+            {% if request.user.is_superuser or not u.is_superuser %}
+            <button
+              type="button"
+              @click="openDeleteModal('{{ u.id }}', '{{ u.username|escapejs }}', '{{ u.get_full_name|default:u.username|escapejs }}')"
+              class="px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-[11px] cursor-pointer"
+              title="Supprimer ce compte"
+            >Supprimer</button>
+            {% endif %}
             {% endif %}
           </td>
         </tr>
@@ -164,14 +196,14 @@
 
   </div><!-- /#bo-live-results -->
 
-  <!-- BOTTOM SHEET CRÉATION COMPTE -->
+  <!-- BOTTOM SHEET / MODAL CRÉATION COMPTE -->
   <div x-show="createModalOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
     <div x-show="createModalOpen" x-transition.opacity class="fixed inset-0 bg-black/60 backdrop-blur-xs" @click="createModalOpen = false"></div>
     <div class="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="relative w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-2xl p-4 sm:p-5 pb-safe-bottom shadow-2xl z-10 space-y-3" @click.stop>
         <div class="flex items-center justify-between pb-2 border-b border-slate-100">
           <h3 class="font-heading font-black text-base text-slate-950">Nouveau compte</h3>
-          <button type="button" @click="createModalOpen = false" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center">✕</button>
+          <button type="button" @click="createModalOpen = false" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center cursor-pointer">✕</button>
         </div>
         <form method="POST" action="{% url 'backoffice:user_create' %}" class="space-y-2.5 text-xs">
           {% csrf_token %}
@@ -180,13 +212,13 @@
             <div><label class="block font-bold mb-1">Nom</label>{{ create_form.last_name }}</div>
           </div>
           <div class="grid grid-cols-2 gap-2.5">
-            <div><label class="block font-bold mb-1">Identifiant *</label>{{ create_form.username }}</div>
+            <div><label class="block font-bold mb-1">Identifiant (Login) *</label>{{ create_form.username }}</div>
             <div><label class="block font-bold mb-1">Téléphone</label>{{ create_form.phone }}</div>
           </div>
           <div><label class="block font-bold mb-1">Email *</label>{{ create_form.email }}</div>
           <div><label class="block font-bold mb-1">Rôle *</label>{{ create_form.role }}</div>
           <div><label class="block font-bold mb-1">Mot de passe *</label>{{ create_form.password }}</div>
-          <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-sm cursor-pointer">
+          <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-sm cursor-pointer shadow-sm transition active:scale-98">
             Créer le compte
           </button>
         </form>
@@ -194,33 +226,98 @@
     </div>
   </div>
 
-  <!-- BOTTOM SHEET MODIFICATION RÔLE -->
+  <!-- BOTTOM SHEET / MODAL MODIFICATION (LOGIN + MDP + INFOS + RÔLE) -->
   <div x-show="editModalOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
     <div x-show="editModalOpen" x-transition.opacity class="fixed inset-0 bg-black/60 backdrop-blur-xs" @click="editModalOpen = false"></div>
     <div class="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="relative w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-2xl p-4 sm:p-5 pb-safe-bottom shadow-2xl z-10 space-y-3" @click.stop>
         <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-          <h3 class="font-heading font-black text-base text-slate-950">Modifier <span class="text-amber-600 font-mono" x-text="'@' + editUser.username"></span></h3>
-          <button type="button" @click="editModalOpen = false" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center">✕</button>
+          <div>
+            <h3 class="font-heading font-black text-base text-slate-950">Modifier l'utilisateur</h3>
+            <p class="text-xs text-slate-500">Compte actuel : <span class="text-amber-700 font-mono font-bold" x-text="'@' + editUser.username"></span></p>
+          </div>
+          <button type="button" @click="editModalOpen = false" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center cursor-pointer">✕</button>
         </div>
         <form method="POST" :action="'/gestion/utilisateurs/' + editUser.id + '/modifier-role/'" class="space-y-2.5 text-xs">
           {% csrf_token %}
-          <div class="grid grid-cols-2 gap-2.5">
-            <div><label class="block font-bold mb-1">Prénom</label><input type="text" name="first_name" x-model="editUser.first_name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm"></div>
-            <div><label class="block font-bold mb-1">Nom</label><input type="text" name="last_name" x-model="editUser.last_name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm"></div>
+          
+          <!-- IDENTIFIANT ET MOT DE PASSE -->
+          <div class="p-3 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-2">
+            <div>
+              <label class="block font-bold mb-1 text-slate-800">Identifiant de connexion (Login) *</label>
+              <input
+                type="text"
+                name="username"
+                required
+                x-model="editUser.username"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white font-mono font-bold text-slate-900 text-base sm:text-xs focus:outline-none focus:border-amber-500"
+              >
+            </div>
+            <div>
+              <label class="block font-bold mb-1 text-slate-800">Nouveau mot de passe <span class="text-slate-400 font-normal text-[11px]">(laisser vide si inchangé)</span></label>
+              <input
+                type="text"
+                name="password"
+                x-model="editUser.password"
+                placeholder="Laisser vide pour ne pas modifier"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white font-mono text-slate-900 text-base sm:text-xs placeholder:font-sans placeholder:text-slate-400 focus:outline-none focus:border-amber-500"
+              >
+            </div>
           </div>
-          <div><label class="block font-bold mb-1">Email *</label><input type="email" name="email" required x-model="editUser.email" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm"></div>
-          <div><label class="block font-bold mb-1">Téléphone</label><input type="tel" name="phone" x-model="editUser.phone" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm font-mono"></div>
+
+          <!-- COORDONNÉES PERSONNELLES -->
+          <div class="grid grid-cols-2 gap-2.5">
+            <div><label class="block font-bold mb-1">Prénom</label><input type="text" name="first_name" x-model="editUser.first_name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-xs focus:outline-none focus:border-amber-500"></div>
+            <div><label class="block font-bold mb-1">Nom</label><input type="text" name="last_name" x-model="editUser.last_name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-xs focus:outline-none focus:border-amber-500"></div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div><label class="block font-bold mb-1">Email *</label><input type="email" name="email" required x-model="editUser.email" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-xs focus:outline-none focus:border-amber-500"></div>
+            <div><label class="block font-bold mb-1">Téléphone</label><input type="tel" name="phone" x-model="editUser.phone" placeholder="+223 ..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-xs font-mono focus:outline-none focus:border-amber-500"></div>
+          </div>
+
           <div>
-            <label class="block font-bold mb-1">Accès</label>
-            <select name="role" x-model="editUser.role" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-base sm:text-sm font-medium">
-              <option value="client">Client (Boutique uniquement)</option>
-              <option value="gestionnaire">Gestionnaire (Accès /gestion/)</option>
-              {% if request.user.is_superuser %}<option value="direction">Superadmin IT</option>{% endif %}
+            <label class="block font-bold mb-1">Rôle attribué</label>
+            <select name="role" x-model="editUser.role" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-base sm:text-xs font-medium focus:outline-none focus:border-amber-500">
+              <option value="client">Client (Accès Boutique uniquement)</option>
+              <option value="gestionnaire">Gestionnaire (Accès Backoffice /gestion/)</option>
+              {% if request.user.is_superuser %}<option value="direction">Superadmin IT (Contrôle Total)</option>{% endif %}
             </select>
           </div>
-          <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-sm cursor-pointer">
-            Enregistrer
+
+          <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-sm cursor-pointer shadow-sm transition active:scale-98">
+            Enregistrer les modifications
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL SUPPRESSION UTILISATEUR -->
+  <div x-show="deleteModalOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
+    <div x-show="deleteModalOpen" x-transition.opacity class="fixed inset-0 bg-black/60 backdrop-blur-xs" @click="deleteModalOpen = false"></div>
+    <div class="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="relative w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-2xl p-5 pb-safe-bottom shadow-2xl z-10 space-y-4" @click.stop>
+        <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        </div>
+        <div class="text-center space-y-1">
+          <h3 class="font-heading font-black text-base text-slate-950">Supprimer cet utilisateur ?</h3>
+          <p class="text-xs text-slate-500">
+            Êtes-vous sûr de vouloir supprimer définitivement le compte de <strong class="text-slate-800" x-text="deleteUser.name"></strong> (<span class="font-mono text-amber-700 font-bold" x-text="'@' + deleteUser.username"></span>) ?
+          </p>
+          <div class="mt-2 p-2.5 rounded-xl bg-amber-50 text-amber-900 text-[11px] text-left space-y-1">
+            <p class="font-bold">Information de sécurité :</p>
+            <p>Cette action est irréversible. Le profil, le panier et les adresses seront supprimés. Les commandes déjà passées sont préservées pour la comptabilité.</p>
+          </div>
+        </div>
+        <form method="POST" :action="'/gestion/utilisateurs/' + deleteUser.id + '/supprimer/'" class="space-y-2">
+          {% csrf_token %}
+          <button type="submit" class="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm cursor-pointer shadow-sm transition active:scale-98">
+            Oui, supprimer définitivement
+          </button>
+          <button type="button" @click="deleteModalOpen = false" class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs cursor-pointer transition">
+            Annuler
           </button>
         </form>
       </div>

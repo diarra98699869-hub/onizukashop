@@ -335,7 +335,7 @@ class UserCreateForm(forms.Form):
 
 
 class UserEditRoleForm(forms.Form):
-    """Modification du rôle et des permissions d'un utilisateur par la Direction."""
+    """Modification du rôle, du login, du mot de passe et des coordonnées d'un utilisateur par la Direction."""
     ROLE_CHOICES_STAFF = [
         ('gestionnaire', 'Gestionnaire Direction (Accès Backoffice ERP)'),
         ('client', 'Client Acheteur Standard (Accès Boutique uniquement)'),
@@ -346,12 +346,34 @@ class UserEditRoleForm(forms.Form):
         ('client', 'Client Acheteur Standard (Accès Boutique uniquement)'),
     ]
 
+    username = forms.CharField(
+        label="Identifiant de connexion (Login)",
+        max_length=150,
+        widget=forms.TextInput(attrs={'class': INPUT_CLS + ' font-mono'})
+    )
+    password = forms.CharField(
+        label="Nouveau mot de passe",
+        max_length=128,
+        required=False,
+        widget=forms.TextInput(attrs={'class': INPUT_CLS + ' font-mono', 'placeholder': 'Laisser vide pour ne pas modifier'})
+    )
     first_name = forms.CharField(label="Prénom", max_length=150, required=False, widget=forms.TextInput(attrs={'class': INPUT_CLS}))
     last_name = forms.CharField(label="Nom de famille", max_length=150, required=False, widget=forms.TextInput(attrs={'class': INPUT_CLS}))
     email = forms.EmailField(label="Adresse Email", widget=forms.EmailInput(attrs={'class': INPUT_CLS}))
     phone = forms.CharField(label="Téléphone Mali", max_length=50, required=False, widget=forms.TextInput(attrs={'class': INPUT_CLS + ' font-mono', 'placeholder': '+223 ...', 'inputmode': 'tel'}))
     role = forms.ChoiceField(label="Rôle attribué", choices=ROLE_CHOICES_STAFF, widget=forms.Select(attrs={'class': SELECT_CLS}))
 
-    def __init__(self, *args, is_superuser=False, **kwargs):
+    def __init__(self, *args, is_superuser=False, target_user=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.target_user = target_user
         self.fields['role'].choices = self.ROLE_CHOICES_SUPERUSER if is_superuser else self.ROLE_CHOICES_STAFF
+
+    def clean_username(self):
+        username = self.cleaned_data['username'].strip()
+        from django.contrib.auth.models import User
+        qs = User.objects.filter(username=username)
+        if self.target_user:
+            qs = qs.exclude(id=self.target_user.id)
+        if qs.exists():
+            raise forms.ValidationError(f"L'identifiant « {username} » est déjà utilisé par un autre compte.")
+        return username
