@@ -163,7 +163,7 @@
                         <p>Date : <span class="font-bold text-slate-900">{{ order.created_at|date:"d F Y à H:i" }}</span></p>
                         <p class="flex items-center gap-1.5 sm:justify-end">Paiement :
                             {% if order.payment_method == 'orange_money' %}<img src="{% static 'images/payments/orange_money.png' %}" alt="" class="h-5 w-auto object-contain">
-                            {% elif order.payment_method == 'wave' %}<img src="{% static 'images/payments/wave.png' %}" alt="" class="h-5 w-5 rounded object-contain bg-[#1DC3F4]">
+                            {% elif order.payment_method == 'wave' %}<img src="{% static 'images/payments/wave_logo.png' %}" alt="" class="h-5 w-5 rounded object-contain bg-[#1DC3F4]">
                             {% elif order.payment_method == 'moov_money' %}<img src="{% static 'images/payments/moov_money.png' %}" alt="" class="h-5 w-auto object-contain">{% endif %}
                             <span class="font-bold text-slate-900">{{ order.get_payment_method_display }}</span></p>
                     </div>
