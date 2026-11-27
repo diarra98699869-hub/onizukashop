@@ -144,10 +144,12 @@ CROPS_CONFIG = {
 def process_images():
     print("=== ÉTAPE 1 : Recadrage chirurgical et conversion WebP ===")
     for target_name, cfg in CROPS_CONFIG.items():
-        src_path = UPLOADED_DIR / cfg['source']
         dest_path = cfg['dest_dir'] / target_name
+        if dest_path.exists():
+            print(f"ℹ️ Image WebP déjà prête : {dest_path.name}")
+            continue
+        src_path = UPLOADED_DIR / cfg['source']
         if not src_path.exists():
-            print(f"⚠️ Source absente: {src_path.name}")
             continue
         try:
             with Image.open(src_path) as img:
