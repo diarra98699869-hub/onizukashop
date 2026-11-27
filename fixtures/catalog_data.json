@@ -208,6 +208,18 @@
   }
 },
 {
+  "model": "shop.brand",
+  "pk": 24,
+  "fields": {
+    "name": "Bona",
+    "slug": "bona",
+    "logo": "",
+    "description": "",
+    "website": "",
+    "is_active": true
+  }
+},
+{
   "model": "shop.product",
   "pk": 113,
   "fields": {
@@ -1776,7 +1788,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:00.393Z",
-    "updated_at": "2026-11-27T14:21:06.245Z"
+    "updated_at": "2026-11-27T14:36:05.063Z"
   }
 },
 {
@@ -1820,7 +1832,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:01.083Z",
-    "updated_at": "2026-11-27T14:21:06.875Z"
+    "updated_at": "2026-11-27T14:36:06.332Z"
   }
 },
 {
@@ -1863,7 +1875,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:01.611Z",
-    "updated_at": "2026-11-27T14:21:07.334Z"
+    "updated_at": "2026-11-27T14:36:07.344Z"
   }
 },
 {
@@ -1907,7 +1919,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:02.207Z",
-    "updated_at": "2026-11-27T14:21:08.521Z"
+    "updated_at": "2026-11-27T14:36:08.434Z"
   }
 },
 {
@@ -1950,7 +1962,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:02.519Z",
-    "updated_at": "2026-11-27T14:21:09.505Z"
+    "updated_at": "2026-11-27T14:36:08.977Z"
   }
 },
 {
@@ -1992,7 +2004,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:02.863Z",
-    "updated_at": "2026-11-27T14:21:10.189Z"
+    "updated_at": "2026-11-27T14:36:09.499Z"
   }
 },
 {
@@ -2034,7 +2046,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:03.637Z",
-    "updated_at": "2026-11-27T14:21:15.800Z"
+    "updated_at": "2026-11-27T14:36:12.761Z"
   }
 },
 {
@@ -2077,7 +2089,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:04.905Z",
-    "updated_at": "2026-11-27T14:21:17.184Z"
+    "updated_at": "2026-11-27T14:36:13.672Z"
   }
 },
 {
@@ -2122,7 +2134,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T14:21:19.415Z",
-    "updated_at": "2026-11-27T14:21:19.415Z"
+    "updated_at": "2026-11-27T14:36:15.476Z"
   }
 },
 {
@@ -2167,7 +2179,55 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T14:21:19.856Z",
-    "updated_at": "2026-11-27T14:21:19.856Z"
+    "updated_at": "2026-11-27T14:36:16.121Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 158,
+  "fields": {
+    "name": "Congélateur Vertical Bona 10 Étagères Solaire Direct DC 24V",
+    "slug": "congelateur-vertical-bona-10-etageres-solaire-direct-dc-24v",
+    "sku": "ONZ-CONG-BONA-10ET-DC",
+    "category": 10,
+    "brand": 24,
+    "short_description": "Congélateur vertical Bona 10 étagères 100% Solaire Direct DC 24V. Zéro facture d’électricité, 10 compartiments XL et bandeau LED intérieur intense.",
+    "description": "Le Congélateur Vertical Bona 10 Étagères Solaire Direct DC 24V (Modèle BD-198) est la solution ultime pour conserver toutes vos denrées à zéro franc d'électricité, sans craindre les délestages à Bamako et partout au Mali.\n\nDoté d'un compresseur solaire direct 24 Volts basse consommation (179W), il se raccorde facilement à vos batteries solaires sans avoir besoin d'onduleur ou de convertisseur. Ses 10 grands compartiments permettent une organisation sans égale pour séparer viandes, poissons, sachets d'eau et légumes. Équipé d'un bandeau lumineux LED intérieur moderne pour un confort d'utilisation optimal jour et nuit. Appareil tropicalisé, robuste et garanti 12 mois par Onizuka Shop.",
+    "specifications": {
+      "Marque": "Bona",
+      "Modèle": "BD-198 Solar DC",
+      "Type": "Congélateur Vertical 100% Solaire Autonome",
+      "Alimentation": "Solaire Direct DC 24 Volts (Batterie / Panneaux)",
+      "Puissance absorbée": "179 Watts",
+      "Capacité de congélation": "50 kg / 24 heures",
+      "Nombre d’étagères / tiroirs": "10 étagères compartimentées",
+      "Éclairage intérieur": "Bandeau LED blanc intense intégré",
+      "Gaz réfrigérant": "R134a (215g)",
+      "Poids net": "47 kg",
+      "Accessoires inclus": "Câbles de connexion batterie avec pinces crocodiles",
+      "Garantie": "12 Mois officiel Onizuka Shop"
+    },
+    "price": "315000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": true,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T14:36:16.678Z",
+    "updated_at": "2026-11-27T14:36:16.678Z"
   }
 },
 {
@@ -3096,10 +3156,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 398,
+  "pk": 423,
   "fields": {
     "product": 148,
-    "image": "products/whatsapp_image_2026-11-27_at_11_RgB3HIh.41.44.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_OXal6d4.41.44.webp",
     "alt_text": "Congélateur Vertical East Point 245 Litres - 7 Étagères Tiroirs - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3107,10 +3167,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 399,
+  "pk": 424,
   "fields": {
     "product": 148,
-    "image": "products/whatsapp_image_2026-11-27_at_11_4aFfDJU.41.46.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_LlCk4Is.41.46.webp",
     "alt_text": "Congélateur Vertical East Point 245 Litres - 7 Étagères Tiroirs - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3118,10 +3178,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 400,
+  "pk": 425,
   "fields": {
     "product": 149,
-    "image": "products/whatsapp_image_2026-11-27_at_11_om2xdzd.44.29.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_GQuy92I.44.29.webp",
     "alt_text": "Congélateur Vertical Victoria 300 Litres Grande Taille - 9 Étagères - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3129,10 +3189,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 401,
+  "pk": 426,
   "fields": {
     "product": 149,
-    "image": "products/whatsapp_image_2026-11-27_at_11_tUM1Jyh.44.27_1.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_YlPWn1c.44.27_1.webp",
     "alt_text": "Congélateur Vertical Victoria 300 Litres Grande Taille - 9 Étagères - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3140,10 +3200,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 402,
+  "pk": 427,
   "fields": {
     "product": 149,
-    "image": "products/whatsapp_image_2026-11-27_at_11_57zKVH3.44.27.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_kkzQkC5.44.27.webp",
     "alt_text": "Congélateur Vertical Victoria 300 Litres Grande Taille - 9 Étagères - Vue 3",
     "is_primary": false,
     "order": 2
@@ -3151,10 +3211,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 403,
+  "pk": 428,
   "fields": {
     "product": 150,
-    "image": "products/whatsapp_image_2026-11-27_at_11_5WvcYix.44.31.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_3p325QH.44.31.webp",
     "alt_text": "Congélateur Vertical LG Smart Inox - 6 Étagères Haute Précision - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3162,10 +3222,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 404,
+  "pk": 429,
   "fields": {
     "product": 150,
-    "image": "products/whatsapp_image_2026-11-27_at_11_99Y9gP9.44.30.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_vrKzHZv.44.30.webp",
     "alt_text": "Congélateur Vertical LG Smart Inox - 6 Étagères Haute Précision - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3173,10 +3233,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 405,
+  "pk": 430,
   "fields": {
     "product": 150,
-    "image": "products/whatsapp_image_2026-11-27_at_11_c9ne9wr.44.31_1.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_5p2E08s.44.31_1.webp",
     "alt_text": "Congélateur Vertical LG Smart Inox - 6 Étagères Haute Précision - Vue 3",
     "is_primary": false,
     "order": 2
@@ -3184,10 +3244,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 406,
+  "pk": 431,
   "fields": {
     "product": 151,
-    "image": "products/whatsapp_image_2026-11-27_at_11_HSLYZXO.48.18.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_t5bAfj4.48.18.webp",
     "alt_text": "Congélateur Vertical Sharp FR-495 Grande Capacité - 10 Étagères - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3195,10 +3255,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 407,
+  "pk": 432,
   "fields": {
     "product": 151,
-    "image": "products/whatsapp_image_2026-11-27_at_11_FDRbRoy.48.19.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_yCDCHqr.48.19.webp",
     "alt_text": "Congélateur Vertical Sharp FR-495 Grande Capacité - 10 Étagères - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3206,10 +3266,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 408,
+  "pk": 433,
   "fields": {
     "product": 152,
-    "image": "products/whatsapp_image_2026-11-27_at_11_IVjx9k9.49.26.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_MjwSRgN.49.26.webp",
     "alt_text": "Congélateur Vertical Roch 212 Litres - 8 Étagères Pratiques - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3217,10 +3277,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 409,
+  "pk": 434,
   "fields": {
     "product": 152,
-    "image": "products/whatsapp_image_2026-11-27_at_11_n5p3n5w.49.26_1.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_ZK8RAco.49.26_1.webp",
     "alt_text": "Congélateur Vertical Roch 212 Litres - 8 Étagères Pratiques - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3228,10 +3288,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 410,
+  "pk": 435,
   "fields": {
     "product": 153,
-    "image": "products/whatsapp_image_2026-11-27_at_11_TV0lCiC.51.50.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_vH2AvDX.51.50.webp",
     "alt_text": "Congélateur Vertical Étoile 220 Litres - 8 Étagères - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3239,10 +3299,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 411,
+  "pk": 436,
   "fields": {
     "product": 153,
-    "image": "products/whatsapp_image_2026-11-27_at_11_fBEUJPl.51.50_1.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_Jq5bBxL.51.50_1.webp",
     "alt_text": "Congélateur Vertical Étoile 220 Litres - 8 Étagères - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3250,10 +3310,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 412,
+  "pk": 437,
   "fields": {
     "product": 153,
-    "image": "products/whatsapp_image_2026-11-27_at_11_iIGlZz3.51.51.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_1JH3oHn.51.51.webp",
     "alt_text": "Congélateur Vertical Étoile 220 Litres - 8 Étagères - Vue 3",
     "is_primary": false,
     "order": 2
@@ -3261,10 +3321,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 413,
+  "pk": 438,
   "fields": {
     "product": 153,
-    "image": "products/whatsapp_image_2026-11-27_at_11_11WuxpX.51.51_1.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_tJpTIcD.51.51_1.webp",
     "alt_text": "Congélateur Vertical Étoile 220 Litres - 8 Étagères - Vue 4",
     "is_primary": false,
     "order": 3
@@ -3272,10 +3332,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 414,
+  "pk": 439,
   "fields": {
     "product": 154,
-    "image": "products/whatsapp_image_2026-11-27_at_11_uoiwTbA.51.51_2.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_WRwd6rx.51.51_2.webp",
     "alt_text": "Congélateur Vertical Solstar Inox - 8 Étagères Robuste - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3283,10 +3343,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 415,
+  "pk": 440,
   "fields": {
     "product": 154,
-    "image": "products/whatsapp_image_2026-11-27_at_11_sQ4v4uk.51.52.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_NFxmiAD.51.52.webp",
     "alt_text": "Congélateur Vertical Solstar Inox - 8 Étagères Robuste - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3294,10 +3354,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 416,
+  "pk": 441,
   "fields": {
     "product": 155,
-    "image": "products/sharp_fr195x_8et_face.webp",
+    "image": "products/sharp_fr195x_8et_face_TtOts32.webp",
     "alt_text": "Congélateur Vertical Sharp Silver Premium - 8 Étagères - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3305,10 +3365,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 417,
+  "pk": 442,
   "fields": {
     "product": 155,
-    "image": "products/sharp_fr195x_8et_interieur.webp",
+    "image": "products/sharp_fr195x_8et_interieur_nRt7P2L.webp",
     "alt_text": "Congélateur Vertical Sharp Silver Premium - 8 Étagères - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3316,10 +3376,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 418,
+  "pk": 443,
   "fields": {
     "product": 155,
-    "image": "products/whatsapp_image_2026-11-27_at_11_MH2YVoY.51.53.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_QEVP00P.51.53.webp",
     "alt_text": "Congélateur Vertical Sharp Silver Premium - 8 Étagères - Vue 3",
     "is_primary": false,
     "order": 2
@@ -3327,10 +3387,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 419,
+  "pk": 444,
   "fields": {
     "product": 156,
-    "image": "products/fizzen_220l_ac_face.webp",
+    "image": "products/fizzen_220l_ac_face_I8jVTsd.webp",
     "alt_text": "Congélateur Vertical Fizzen 220 Litres - 7 Étagères AC - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3338,10 +3398,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 420,
+  "pk": 445,
   "fields": {
     "product": 156,
-    "image": "products/fizzen_220l_ac_interieur.webp",
+    "image": "products/fizzen_220l_ac_interieur_t3eaSHh.webp",
     "alt_text": "Congélateur Vertical Fizzen 220 Litres - 7 Étagères AC - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3349,10 +3409,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 421,
+  "pk": 446,
   "fields": {
     "product": 157,
-    "image": "products/fizzen_220l_solaire_dc_face.webp",
+    "image": "products/fizzen_220l_solaire_dc_face_cxCxwdH.webp",
     "alt_text": "Congélateur Vertical Fizzen 220 Litres Solaire Direct 24V - 7 Étagères DC - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3360,13 +3420,68 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 422,
+  "pk": 447,
   "fields": {
     "product": 157,
-    "image": "products/fizzen_220l_solaire_dc_interieur.webp",
+    "image": "products/fizzen_220l_solaire_dc_interieur_X8Hx5W6.webp",
     "alt_text": "Congélateur Vertical Fizzen 220 Litres Solaire Direct 24V - 7 Étagères DC - Vue 2",
     "is_primary": false,
     "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 448,
+  "fields": {
+    "product": 158,
+    "image": "products/bona_solaire_10et_face.webp",
+    "alt_text": "Congélateur Vertical Bona 10 Étagères Solaire Direct DC 24V - Vue 1",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 449,
+  "fields": {
+    "product": 158,
+    "image": "products/bona_solaire_10et_interieur_led.webp",
+    "alt_text": "Congélateur Vertical Bona 10 Étagères Solaire Direct DC 24V - Vue 2",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 450,
+  "fields": {
+    "product": 158,
+    "image": "products/bona_solaire_10et_interieur.webp",
+    "alt_text": "Congélateur Vertical Bona 10 Étagères Solaire Direct DC 24V - Vue 3",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 451,
+  "fields": {
+    "product": 158,
+    "image": "products/bona_solaire_10et_atelier.webp",
+    "alt_text": "Congélateur Vertical Bona 10 Étagères Solaire Direct DC 24V - Vue 4",
+    "is_primary": false,
+    "order": 3
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 452,
+  "fields": {
+    "product": 158,
+    "image": "products/bona_solaire_10et_plaque.webp",
+    "alt_text": "Congélateur Vertical Bona 10 Étagères Solaire Direct DC 24V - Vue 5",
+    "is_primary": false,
+    "order": 4
   }
 }
 ]

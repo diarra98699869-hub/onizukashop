@@ -39,6 +39,7 @@ brands_data = {
     'Étoile': 'etoile',
     'Solstar': 'solstar',
     'Fizzen': 'fizzen',
+    'Bona': 'bona',
 }
 
 brands = {}
@@ -285,6 +286,37 @@ pack_products = [
         'images': [
             'fizzen_220l_solaire_dc_face.jpg',
             'fizzen_220l_solaire_dc_interieur.jpg'
+        ]
+    },
+    {
+        'brand': 'Bona',
+        'name': 'Congélateur Vertical Bona 10 Étagères Solaire Direct DC 24V',
+        'sku': 'ONZ-CONG-BONA-10ET-DC',
+        'price': 315000,
+        'sale_price': None,
+        'is_eco_solar': True,
+        'short_description': 'Congélateur vertical Bona 10 étagères 100% Solaire Direct DC 24V. Zéro facture d’électricité, 10 compartiments XL et bandeau LED intérieur intense.',
+        'description': "Le Congélateur Vertical Bona 10 Étagères Solaire Direct DC 24V (Modèle BD-198) est la solution ultime pour conserver toutes vos denrées à zéro franc d'électricité, sans craindre les délestages à Bamako et partout au Mali.\n\nDoté d'un compresseur solaire direct 24 Volts basse consommation (179W), il se raccorde facilement à vos batteries solaires sans avoir besoin d'onduleur ou de convertisseur. Ses 10 grands compartiments permettent une organisation sans égale pour séparer viandes, poissons, sachets d'eau et légumes. Équipé d'un bandeau lumineux LED intérieur moderne pour un confort d'utilisation optimal jour et nuit. Appareil tropicalisé, robuste et garanti 12 mois par Onizuka Shop.",
+        'specs': {
+            'Marque': 'Bona',
+            'Modèle': 'BD-198 Solar DC',
+            'Type': 'Congélateur Vertical 100% Solaire Autonome',
+            'Alimentation': 'Solaire Direct DC 24 Volts (Batterie / Panneaux)',
+            'Puissance absorbée': '179 Watts',
+            'Capacité de congélation': '50 kg / 24 heures',
+            'Nombre d’étagères / tiroirs': '10 étagères compartimentées',
+            'Éclairage intérieur': 'Bandeau LED blanc intense intégré',
+            'Gaz réfrigérant': 'R134a (215g)',
+            'Poids net': '47 kg',
+            'Accessoires inclus': 'Câbles de connexion batterie avec pinces crocodiles',
+            'Garantie': '12 Mois officiel Onizuka Shop'
+        },
+        'images': [
+            'bona_solaire_10et_face.jpg',
+            'bona_solaire_10et_interieur_led.jpg',
+            'bona_solaire_10et_interieur.jpg',
+            'bona_solaire_10et_atelier.jpg',
+            'bona_solaire_10et_plaque.jpg'
         ]
     }
 ]
