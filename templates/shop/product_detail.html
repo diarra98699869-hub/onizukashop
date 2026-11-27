@@ -447,7 +447,12 @@
           </div>
           <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs">
             <p class="font-bold text-slate-900">Paiement flexible</p>
-            <p class="text-[11px] text-slate-500">Livraison, Orange Money, Wave</p>
+            <div class="flex items-center gap-1 mt-1">
+              <img src="{% static 'images/payments/orange_money.png' %}" alt="Orange Money" title="Orange Money" class="h-6 w-8 object-contain bg-white rounded border border-slate-200 p-0.5">
+              <img src="{% static 'images/payments/wave.png' %}" alt="Wave" title="Wave" class="h-6 w-8 object-contain bg-[#1DC3F4] rounded">
+              <img src="{% static 'images/payments/moov_money.png' %}" alt="Moov Money" title="Moov Money" class="h-6 w-8 object-contain bg-white rounded border border-slate-200 p-0.5">
+              <span class="text-[10px] text-slate-500 ml-0.5">+ Cash</span>
+            </div>
           </div>
           <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs">
             <p class="font-bold text-slate-900">{% if product.is_eco_solar %}☀ Éco / Solaire{% else %}Qualité garantie{% endif %}</p>

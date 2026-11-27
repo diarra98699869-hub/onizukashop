@@ -223,7 +223,9 @@
                   <p class="text-[11px] text-slate-500">Transfert mobile instantané vers notre compte marchand</p>
                 </div>
               </div>
-              <span class="px-2.5 py-1 rounded-lg bg-orange-500 text-white font-black text-[10px] shrink-0">ORANGE</span>
+              <div class="h-9 px-2 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-2xs">
+                <img src="{% static 'images/payments/orange_money.png' %}" alt="Orange Money" class="h-6 w-auto object-contain">
+              </div>
             </label>
 
             <!-- 3. Wave -->
@@ -236,14 +238,34 @@
                 <input type="radio" name="payment_method" value="wave" x-model="method" class="text-sky-500 focus:ring-sky-500 shrink-0">
                 <div class="min-w-0">
                   <p class="font-bold text-slate-900 text-xs sm:text-sm">Wave Mobile Money</p>
-                  <p class="text-[11px] text-slate-500">Transfert rapide au Mali</p>
+                  <p class="text-[11px] text-slate-500">Transfert rapide sans frais au Mali</p>
                 </div>
               </div>
-              <span class="px-2.5 py-1 rounded-lg bg-[#1DC3F4] text-white font-black text-[10px] shrink-0">WAVE</span>
+              <div class="h-9 w-9 rounded-lg overflow-hidden bg-[#1DC3F4] flex items-center justify-center shrink-0 shadow-2xs">
+                <img src="{% static 'images/payments/wave.png' %}" alt="Wave" class="h-7 w-7 object-contain">
+              </div>
+            </label>
+
+            <!-- 4. Moov Money -->
+            <label
+              @click="method = 'moov_money'"
+              class="flex items-center justify-between p-3 sm:p-3.5 rounded-xl border-2 cursor-pointer transition gap-2.5"
+              :class="method === 'moov_money' ? 'border-orange-500 bg-orange-50/40' : 'border-slate-200/80 hover:border-slate-300'"
+            >
+              <div class="flex items-center gap-2.5 min-w-0">
+                <input type="radio" name="payment_method" value="moov_money" x-model="method" class="text-orange-500 focus:ring-orange-500 shrink-0">
+                <div class="min-w-0">
+                  <p class="font-bold text-slate-900 text-xs sm:text-sm">Moov Money Mali</p>
+                  <p class="text-[11px] text-slate-500">Transfert sécurisé via réseau Moov Africa</p>
+                </div>
+              </div>
+              <div class="h-9 px-2 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-2xs">
+                <img src="{% static 'images/payments/moov_money.png' %}" alt="Moov Money" class="h-6 w-auto object-contain">
+              </div>
             </label>
 
             <!-- Instructions Mobile Money -->
-            <div x-show="method === 'orange_money' || method === 'wave'" x-cloak class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 space-y-2 text-xs">
+            <div x-show="method === 'orange_money' || method === 'wave' || method === 'moov_money'" x-cloak class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 space-y-2 text-xs">
               <div class="flex flex-wrap items-center justify-between gap-1.5">
                 <span class="font-bold text-amber-950">Numéro officiel Onizouka Shop :</span>
                 <span class="font-mono font-black text-slate-950 bg-white px-2.5 py-1 rounded-lg border border-amber-300">
@@ -256,7 +278,7 @@
               <input
                 type="text"
                 name="payment_reference"
-                placeholder="Référence SMS Orange Money / Wave (optionnel)"
+                placeholder="Référence SMS Orange Money / Wave / Moov (optionnel)"
                 class="w-full px-3 py-2 rounded-xl border border-amber-300 bg-white text-base sm:text-xs font-mono focus:outline-none focus:border-amber-500"
               >
             </div>

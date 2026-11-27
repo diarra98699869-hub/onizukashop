@@ -152,7 +152,7 @@
             <span class="text-slate-500">Réf. SMS fournie :</span>
             <span class="font-mono font-bold text-amber-700 block">{{ order.payment_reference }}</span>
           </div>
-          {% elif order.payment_method == 'orange_money' or order.payment_method == 'wave' %}
+          {% elif order.payment_method == 'orange_money' or order.payment_method == 'wave' or order.payment_method == 'moov_money' %}
           <div class="pt-2 border-t border-slate-200 space-y-1.5">
             <div class="text-[11px] text-slate-600">
               Dépôt officiel : <strong class="text-slate-950 font-mono">{{ shop_settings.orange_money_number|default:'+223 92 67 37 99' }}</strong>
