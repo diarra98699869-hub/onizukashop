@@ -1776,7 +1776,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:00.393Z",
-    "updated_at": "2026-11-27T12:29:55.752Z"
+    "updated_at": "2026-11-27T14:21:06.245Z"
   }
 },
 {
@@ -1820,7 +1820,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:01.083Z",
-    "updated_at": "2026-11-27T12:29:56.848Z"
+    "updated_at": "2026-11-27T14:21:06.875Z"
   }
 },
 {
@@ -1863,7 +1863,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:01.611Z",
-    "updated_at": "2026-11-27T12:29:57.461Z"
+    "updated_at": "2026-11-27T14:21:07.334Z"
   }
 },
 {
@@ -1907,7 +1907,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:02.207Z",
-    "updated_at": "2026-11-27T12:29:58.084Z"
+    "updated_at": "2026-11-27T14:21:08.521Z"
   }
 },
 {
@@ -1950,7 +1950,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:02.519Z",
-    "updated_at": "2026-11-27T12:29:58.406Z"
+    "updated_at": "2026-11-27T14:21:09.505Z"
   }
 },
 {
@@ -1992,7 +1992,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:02.863Z",
-    "updated_at": "2026-11-27T12:29:58.665Z"
+    "updated_at": "2026-11-27T14:21:10.189Z"
   }
 },
 {
@@ -2034,7 +2034,7 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:03.637Z",
-    "updated_at": "2026-11-27T12:29:59.648Z"
+    "updated_at": "2026-11-27T14:21:15.800Z"
   }
 },
 {
@@ -2050,6 +2050,7 @@
     "description": "Le Congélateur Vertical Sharp 8 étagères en finition Silver Premium combine l'élégance japonaise et une efficacité thermique remarquable.\n\nConçu avec une isolation isotherme renforcée et la fonction Super Freezing, il permet de surgeler rapidement les nouveaux arrivages sans faire remonter la température des compartiments voisins. Silencieux, économique et durable. Appareil garanti 1 an Onizuka Shop Bamako.",
     "specifications": {
       "Marque": "Sharp",
+      "Modèle": "FR-195X Japan Technology",
       "Type": "Congélateur Vertical Premium Silver",
       "Nombre d’étagères / tiroirs": "8 compartiments ergonomiques",
       "Technologie": "Japan Quality Super Freezing",
@@ -2076,7 +2077,97 @@
     "is_featured": true,
     "is_new": true,
     "created_at": "2026-11-27T12:20:04.905Z",
-    "updated_at": "2026-11-27T12:30:00.904Z"
+    "updated_at": "2026-11-27T14:21:17.184Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 156,
+  "fields": {
+    "name": "Congélateur Vertical Fizzen 220 Litres - 7 Étagères AC",
+    "slug": "congelateur-vertical-fizzen-220-litres-7-etageres-ac",
+    "sku": "ONZ-CONG-FIZZEN-220L-AC",
+    "category": 10,
+    "brand": 17,
+    "short_description": "Congélateur vertical Fizzen 220L 7 étagères secteur AC. Compresseur tropicalisé haute performance -18°C, idéal pour un usage quotidien à Bamako.",
+    "description": "Le Congélateur Vertical Fizzen 220 Litres (Alimentation Secteur AC) offre une excellente capacité de stockage avec ses 7 compartiments ergonomiques.\n\nConçu avec un compresseur tropicalisé robuste et la technologie Fast Freezing descendant jusqu'à -18°C, il conserve vos viandes, poissons et rafraîchissements en toute sécurité. Fonctionne sur le réseau électrique standard EDM avec une consommation optimisée. Appareil garanti 12 mois par Onizuka Shop.",
+    "specifications": {
+      "Marque": "Fizzen",
+      "Modèle": "FZ-220URFAC",
+      "Type": "Congélateur Vertical Armoire",
+      "Alimentation": "Courant Secteur AC 220V-240V / 50Hz",
+      "Capacité": "220 Litres",
+      "Nombre d’étagères / tiroirs": "7 compartiments",
+      "Température": "Fast Freezing jusqu’à -18°C",
+      "Classe climatique": "T (Tropicalisé)",
+      "Garantie": "12 Mois officiel Onizuka Shop"
+    },
+    "price": "238000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T14:21:19.415Z",
+    "updated_at": "2026-11-27T14:21:19.415Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 157,
+  "fields": {
+    "name": "Congélateur Vertical Fizzen 220 Litres Solaire Direct 24V - 7 Étagères DC",
+    "slug": "congelateur-vertical-fizzen-220-litres-solaire-direct-24v-7-etageres-dc",
+    "sku": "ONZ-CONG-FIZZEN-220L-DC",
+    "category": 10,
+    "brand": 17,
+    "short_description": "Congélateur vertical Fizzen 220L 7 étagères 100% Solaire DC 24 Volts. Se branche directement sur batteries et panneaux sans onduleur pour zéro facture d’électricité.",
+    "description": "Le Congélateur Vertical Fizzen 220 Litres Solaire DC 24 Volts est la solution idéale pour en finir définitivement avec les coupures de courant et les factures d'électricité à Bamako et en région.\n\nDoté d'un compresseur spécial courant continu DC 24V haut rendement, il se raccorde directement à votre installation solaire (batteries / régulateur) sans perte d'énergie. Ses 7 compartiments permettent une organisation parfaite de toutes vos denrées à une température constante de -18°C. Écologique, autonome et garanti 12 mois Onizuka Shop.",
+    "specifications": {
+      "Marque": "Fizzen",
+      "Modèle": "FZ-220URFDC Solar",
+      "Type": "Congélateur Vertical 100% Solaire Autonome",
+      "Alimentation": "Solaire Direct DC 24 Volts",
+      "Capacité": "220 Litres",
+      "Nombre d’étagères / tiroirs": "7 compartiments",
+      "Température": "Froid profond -18°C",
+      "Technologie": "Compresseur Solaire Basse Consommation",
+      "Garantie": "12 Mois officiel Onizuka Shop"
+    },
+    "price": "285000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": true,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T14:21:19.856Z",
+    "updated_at": "2026-11-27T14:21:19.856Z"
   }
 },
 {
@@ -3005,10 +3096,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 358,
+  "pk": 398,
   "fields": {
     "product": 148,
-    "image": "products/whatsapp_image_2026-11-27_at_11_jSeBGVi.41.44.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_RgB3HIh.41.44.webp",
     "alt_text": "Congélateur Vertical East Point 245 Litres - 7 Étagères Tiroirs - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3016,10 +3107,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 359,
+  "pk": 399,
   "fields": {
     "product": 148,
-    "image": "products/whatsapp_image_2026-11-27_at_11_aDzMdQS.41.46.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_4aFfDJU.41.46.webp",
     "alt_text": "Congélateur Vertical East Point 245 Litres - 7 Étagères Tiroirs - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3027,10 +3118,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 360,
+  "pk": 400,
   "fields": {
     "product": 149,
-    "image": "products/whatsapp_image_2026-11-27_at_11_MnyxbjP.44.27.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_om2xdzd.44.29.webp",
     "alt_text": "Congélateur Vertical Victoria 300 Litres Grande Taille - 9 Étagères - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3038,10 +3129,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 361,
+  "pk": 401,
   "fields": {
     "product": 149,
-    "image": "products/whatsapp_image_2026-11-27_at_11_G3GolkY.44.27_1.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_tUM1Jyh.44.27_1.webp",
     "alt_text": "Congélateur Vertical Victoria 300 Litres Grande Taille - 9 Étagères - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3049,10 +3140,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 362,
+  "pk": 402,
   "fields": {
     "product": 149,
-    "image": "products/whatsapp_image_2026-11-27_at_11_hbeMpiv.44.29.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_57zKVH3.44.27.webp",
     "alt_text": "Congélateur Vertical Victoria 300 Litres Grande Taille - 9 Étagères - Vue 3",
     "is_primary": false,
     "order": 2
@@ -3060,10 +3151,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 363,
+  "pk": 403,
   "fields": {
     "product": 150,
-    "image": "products/whatsapp_image_2026-11-27_at_11_PJBvh4m.44.30.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_5WvcYix.44.31.webp",
     "alt_text": "Congélateur Vertical LG Smart Inox - 6 Étagères Haute Précision - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3071,10 +3162,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 364,
+  "pk": 404,
   "fields": {
     "product": 150,
-    "image": "products/whatsapp_image_2026-11-27_at_11_dU93ZPH.44.31.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_99Y9gP9.44.30.webp",
     "alt_text": "Congélateur Vertical LG Smart Inox - 6 Étagères Haute Précision - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3082,10 +3173,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 365,
+  "pk": 405,
   "fields": {
     "product": 150,
-    "image": "products/whatsapp_image_2026-11-27_at_11_gMhbQVd.44.31_1.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_c9ne9wr.44.31_1.webp",
     "alt_text": "Congélateur Vertical LG Smart Inox - 6 Étagères Haute Précision - Vue 3",
     "is_primary": false,
     "order": 2
@@ -3093,10 +3184,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 366,
+  "pk": 406,
   "fields": {
     "product": 151,
-    "image": "products/whatsapp_image_2026-11-27_at_11_2RO93uH.48.18.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_HSLYZXO.48.18.webp",
     "alt_text": "Congélateur Vertical Sharp FR-495 Grande Capacité - 10 Étagères - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3104,10 +3195,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 367,
+  "pk": 407,
   "fields": {
     "product": 151,
-    "image": "products/whatsapp_image_2026-11-27_at_11_DczYCMw.48.19.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_FDRbRoy.48.19.webp",
     "alt_text": "Congélateur Vertical Sharp FR-495 Grande Capacité - 10 Étagères - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3115,10 +3206,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 368,
+  "pk": 408,
   "fields": {
     "product": 152,
-    "image": "products/whatsapp_image_2026-11-27_at_11_eaZbv9q.49.26.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_IVjx9k9.49.26.webp",
     "alt_text": "Congélateur Vertical Roch 212 Litres - 8 Étagères Pratiques - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3126,10 +3217,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 369,
+  "pk": 409,
   "fields": {
     "product": 152,
-    "image": "products/whatsapp_image_2026-11-27_at_11_QWHFnR5.49.26_1.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_n5p3n5w.49.26_1.webp",
     "alt_text": "Congélateur Vertical Roch 212 Litres - 8 Étagères Pratiques - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3137,10 +3228,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 370,
+  "pk": 410,
   "fields": {
     "product": 153,
-    "image": "products/whatsapp_image_2026-11-27_at_11_SW7cGq0.51.50.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_TV0lCiC.51.50.webp",
     "alt_text": "Congélateur Vertical Étoile 220 Litres - 8 Étagères - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3148,10 +3239,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 371,
+  "pk": 411,
   "fields": {
     "product": 153,
-    "image": "products/whatsapp_image_2026-11-27_at_11_YTzjQY9.51.50_1.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_fBEUJPl.51.50_1.webp",
     "alt_text": "Congélateur Vertical Étoile 220 Litres - 8 Étagères - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3159,10 +3250,32 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 372,
+  "pk": 412,
+  "fields": {
+    "product": 153,
+    "image": "products/whatsapp_image_2026-11-27_at_11_iIGlZz3.51.51.webp",
+    "alt_text": "Congélateur Vertical Étoile 220 Litres - 8 Étagères - Vue 3",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 413,
+  "fields": {
+    "product": 153,
+    "image": "products/whatsapp_image_2026-11-27_at_11_11WuxpX.51.51_1.webp",
+    "alt_text": "Congélateur Vertical Étoile 220 Litres - 8 Étagères - Vue 4",
+    "is_primary": false,
+    "order": 3
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 414,
   "fields": {
     "product": 154,
-    "image": "products/whatsapp_image_2026-11-27_at_11_iRt0h30.51.51.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_uoiwTbA.51.51_2.webp",
     "alt_text": "Congélateur Vertical Solstar Inox - 8 Étagères Robuste - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3170,10 +3283,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 373,
+  "pk": 415,
   "fields": {
     "product": 154,
-    "image": "products/whatsapp_image_2026-11-27_at_11_3fyvZ4h.51.51_1.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_sQ4v4uk.51.52.webp",
     "alt_text": "Congélateur Vertical Solstar Inox - 8 Étagères Robuste - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3181,21 +3294,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 374,
-  "fields": {
-    "product": 154,
-    "image": "products/whatsapp_image_2026-11-27_at_11_zSNID04.51.51_2.webp",
-    "alt_text": "Congélateur Vertical Solstar Inox - 8 Étagères Robuste - Vue 3",
-    "is_primary": false,
-    "order": 2
-  }
-},
-{
-  "model": "shop.productimage",
-  "pk": 375,
+  "pk": 416,
   "fields": {
     "product": 155,
-    "image": "products/whatsapp_image_2026-11-27_at_11_63bSmvs.51.52.webp",
+    "image": "products/sharp_fr195x_8et_face.webp",
     "alt_text": "Congélateur Vertical Sharp Silver Premium - 8 Étagères - Vue 1",
     "is_primary": true,
     "order": 0
@@ -3203,10 +3305,10 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 376,
+  "pk": 417,
   "fields": {
     "product": 155,
-    "image": "products/whatsapp_image_2026-11-27_at_11_ewK5hiX.51.53.webp",
+    "image": "products/sharp_fr195x_8et_interieur.webp",
     "alt_text": "Congélateur Vertical Sharp Silver Premium - 8 Étagères - Vue 2",
     "is_primary": false,
     "order": 1
@@ -3214,13 +3316,57 @@
 },
 {
   "model": "shop.productimage",
-  "pk": 377,
+  "pk": 418,
   "fields": {
     "product": 155,
-    "image": "products/whatsapp_image_2026-11-27_at_11_Co3g3RV.51.54.webp",
+    "image": "products/whatsapp_image_2026-11-27_at_11_MH2YVoY.51.53.webp",
     "alt_text": "Congélateur Vertical Sharp Silver Premium - 8 Étagères - Vue 3",
     "is_primary": false,
     "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 419,
+  "fields": {
+    "product": 156,
+    "image": "products/fizzen_220l_ac_face.webp",
+    "alt_text": "Congélateur Vertical Fizzen 220 Litres - 7 Étagères AC - Vue 1",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 420,
+  "fields": {
+    "product": 156,
+    "image": "products/fizzen_220l_ac_interieur.webp",
+    "alt_text": "Congélateur Vertical Fizzen 220 Litres - 7 Étagères AC - Vue 2",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 421,
+  "fields": {
+    "product": 157,
+    "image": "products/fizzen_220l_solaire_dc_face.webp",
+    "alt_text": "Congélateur Vertical Fizzen 220 Litres Solaire Direct 24V - 7 Étagères DC - Vue 1",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 422,
+  "fields": {
+    "product": 157,
+    "image": "products/fizzen_220l_solaire_dc_interieur.webp",
+    "alt_text": "Congélateur Vertical Fizzen 220 Litres Solaire Direct 24V - 7 Étagères DC - Vue 2",
+    "is_primary": false,
+    "order": 1
   }
 }
 ]

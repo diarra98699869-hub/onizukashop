@@ -21,8 +21,8 @@
       </div>
     </div>
 
-    {% if client.profile.phone %}
     <div class="grid grid-cols-2 sm:flex items-center gap-2 pt-2 border-t border-slate-100">
+      {% if client.profile.phone %}
       <a href="tel:{{ client.profile.phone }}" class="py-2.5 px-4 rounded-xl bg-slate-900 text-white text-xs font-extrabold text-center">
         Appeler {{ client.profile.phone }}
       </a>
@@ -32,8 +32,16 @@
         rel="noopener"
         class="py-2.5 px-4 rounded-xl bg-emerald-600 text-white text-xs font-extrabold text-center"
       >Écrire sur WhatsApp</a>
+      {% endif %}
+      {% if request.user.is_superuser and client.id != request.user.id and not client.is_superuser %}
+      <a href="{% url 'backoffice:user_impersonate' client.id %}" 
+         onclick="return confirm('Prendre le contrôle du compte de {{ client.username }} ? Vous serez connecté sous son identité.')"
+         class="py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold text-center inline-flex items-center justify-center gap-1.5 shadow-sm sm:ml-auto">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <span>Prendre le Contrôle (IT)</span>
+      </a>
+      {% endif %}
     </div>
-    {% endif %}
   </div>
 
   <!-- 2 COMPTEURS -->

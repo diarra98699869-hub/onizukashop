@@ -2757,3 +2757,69 @@ def emails_center_view(request):
 
 
 
+
+
+from django.contrib.auth.decorators import login_required
+
+
+@login_required
+def user_impersonate_view(request, user_id):
+    """
+    Mode Impersonation / Prise de contrôle :
+    STRICTEMENT RÉSERVÉ au Super-Administrateur Technique IT (is_superuser=True).
+    Permet au Super-Admin IT de se connecter sous l'identité de n'importe quel
+    client ou membre du staff pour diagnostiquer son compte, voir son panier,
+    ses commandes, etc.
+    """
+    if not request.user.is_superuser:
+        messages.error(request, "Accès refusé. Le mode prise de contrôle est strictement réservé au Super-Administrateur IT.")
+        return redirect('backoffice:users')
+    
+    target_user = get_object_or_404(User, id=user_id)
+    if target_user.is_superuser:
+        messages.error(request, "Sécurité : Impossible de prendre le contrôle d'un compte Super-Administrateur IT.")
+        return redirect('backoffice:users')
+    
+    # Mémoriser l'identifiant du superuser pour pouvoir restaurer la session
+    original_id = request.user.id
+    original_username = request.user.username
+    
+    from django.contrib.auth import login
+    login(request, target_user, backend='django.contrib.auth.backends.ModelBackend')
+    
+    # Marquer la session comme impersonnée
+    request.session['is_impersonating'] = True
+    request.session['impersonator_id'] = original_id
+    request.session['impersonator_username'] = original_username
+    request.session.modified = True
+    
+    messages.success(request, f"Mode prise de contrôle activé ! Vous naviguez maintenant en tant que {target_user.username} ({target_user.email or 'Sans email'}).")
+    
+    if target_user.is_staff:
+        return redirect('backoffice:dashboard')
+    return redirect('accounts:dashboard')
+
+
+def stop_impersonate_view(request):
+    """
+    Quitte le mode impersonnation et restaure instantanément la session
+    du Super-Administrateur Technique IT.
+    """
+    impersonator_id = request.session.get('impersonator_id')
+    if not impersonator_id:
+        messages.warning(request, "Aucune session de prise de contrôle active.")
+        return redirect('shop:home')
+    
+    superuser = get_object_or_404(User, id=impersonator_id, is_superuser=True)
+    
+    # Nettoyer les drapeaux d'impersonnation
+    for key in ['is_impersonating', 'impersonator_id', 'impersonator_username']:
+        if key in request.session:
+            del request.session[key]
+    request.session.modified = True
+    
+    from django.contrib.auth import login
+    login(request, superuser, backend='django.contrib.auth.backends.ModelBackend')
+    
+    messages.success(request, f"Prise de contrôle terminée. Vous avez repris votre session Super-Administrateur IT (@{superuser.username}).")
+    return redirect('backoffice:users')

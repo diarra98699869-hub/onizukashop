@@ -214,6 +214,21 @@
   @app-navigated.window="activePath = window.location.pathname; catDrawer = false; searchSheet = false"
   :class="{ 'overflow-hidden': searchSheet || catDrawer }"
 >
+  {% if request.session.is_impersonating %}
+  <!-- BANNIÈRE FLOTTANTE PRISE DE CONTRÔLE IT -->
+  <aside class="bg-gradient-to-r from-indigo-950 via-indigo-900 to-slate-900 text-white px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium flex flex-wrap items-center justify-between sticky top-0 z-[99999] shadow-2xl border-b-2 border-amber-400 gap-2" role="alert">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 font-black text-[10px] tracking-wider uppercase shrink-0">IT Mode</span>
+      <span class="truncate">
+        Mode prise de contrôle actif : Connecté en tant que <strong class="text-amber-300 font-mono">@{{ request.user.username }}</strong> {% if request.user.email %}({{ request.user.email }}){% endif %}
+      </span>
+    </div>
+    <a href="{% url 'backoffice:stop_impersonate' %}" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition text-xs flex items-center gap-1.5 whitespace-nowrap shrink-0 ml-auto">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      <span>Quitter le mode (Reprendre Super-Admin)</span>
+    </a>
+  </aside>
+  {% endif %}
   <!-- Barre de progression native ultra-fluide -->
   <div id="app-progress-bar" aria-hidden="true"></div>
 

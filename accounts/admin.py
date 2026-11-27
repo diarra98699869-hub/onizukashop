@@ -12,7 +12,7 @@ class UserProfileAdmin(ModelAdmin):
     list_display = [
         'user', 'show_full_name', 'phone', 'is_email_verified',
         'date_of_birth', 'newsletter', 'show_orders_count',
-        'show_total_spent', 'created_at'
+        'show_total_spent', 'impersonate_action', 'created_at'
     ]
     list_filter = ['is_email_verified', 'newsletter', 'created_at']
     search_fields = ['user__username', 'user__first_name', 'user__last_name', 'user__email', 'phone']
@@ -45,6 +45,18 @@ class UserProfileAdmin(ModelAdmin):
     @display(description='Total dépensé')
     def show_total_spent(self, obj):
         return obj.get_formatted_total_spent()
+
+    @display(description='Contrôle IT')
+    def impersonate_action(self, obj):
+        from django.utils.html import format_html
+        from django.urls import reverse
+        if not obj.user.is_superuser:
+            url = reverse('backoffice:user_impersonate', args=[obj.user.id])
+            return format_html(
+                '<a href="{}" style="background:#4f46e5;color:white;font-weight:bold;padding:4px 8px;border-radius:6px;font-size:11px;text-decoration:none;display:inline-block;" onclick="return confirm(\'Prendre le contrôle de {}\')">Contrôle IT</a>',
+                url, obj.user.username
+            )
+        return '—'
 
 
 @admin.register(EmailOTP)
