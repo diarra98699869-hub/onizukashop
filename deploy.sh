@@ -42,6 +42,7 @@ python manage.py migrate --noinput
 
 echo ">>> [6/7] Chargement des données du catalogue..."
 python manage.py loaddata fixtures/catalog_data.json || echo "Note : Fixtures déjà chargées ou sautées."
+python manage.py setup_admin_accounts
 
 echo ">>> [7/7] Collecte des fichiers statiques (CSS, JS, images)..."
 python manage.py collectstatic --noinput
