@@ -140,7 +140,7 @@ if DB_ENGINE == 'django.db.backends.sqlite3':
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / config('DB_NAME', default='db.sqlite3'),
-            'CONN_MAX_AGE': config('DB_CONN_MAX_AGE', default=0, cast=int),
+            'CONN_MAX_AGE': config('DB_CONN_MAX_AGE', default=60, cast=int),
         }
     }
 else:
@@ -152,7 +152,7 @@ else:
             'PASSWORD': config('DB_PASSWORD', default=''),
             'HOST': config('DB_HOST', default=''),
             'PORT': config('DB_PORT', default=''),
-            'CONN_MAX_AGE': config('DB_CONN_MAX_AGE', default=0, cast=int),
+            'CONN_MAX_AGE': config('DB_CONN_MAX_AGE', default=60, cast=int),
         }
     }
 
@@ -160,17 +160,27 @@ REDIS_URL = config('REDIS_URL', default='')
 
 
 def _is_redis_reachable(redis_url: str) -> bool:
-    """Vérifie en 150ms si le serveur Redis répond réellement pour éviter les timeouts TCP Windows de 2s par requête."""
+    """Vérifie en 50ms si le serveur Redis répond réellement (socket unix ou TCP)."""
     if not redis_url:
         return False
     try:
-        import socket
+        import os, socket
         from urllib.parse import urlparse
         parsed = urlparse(redis_url)
-        host = parsed.hostname or '127.0.0.1'
-        port = parsed.port or 6379
-        with socket.create_connection((host, port), timeout=0.15):
+        if parsed.scheme == 'unix':
+            sock_path = parsed.path
+            if not sock_path or not os.path.exists(sock_path):
+                return False
+            s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            s.settimeout(0.05)
+            s.connect(sock_path)
+            s.close()
             return True
+        else:
+            host = parsed.hostname or '127.0.0.1'
+            port = parsed.port or 6379
+            with socket.create_connection((host, port), timeout=0.05):
+                return True
     except Exception:
         return False
 
