@@ -10,7 +10,7 @@ from django.views.generic import RedirectView
 
 import os
 import mimetypes
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponse
 
 def serve_media(request, path):
     file_path = os.path.join(str(settings.MEDIA_ROOT), path)
@@ -33,6 +33,7 @@ sitemaps = {
 urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', robots_txt, name='robots_txt'),
+    path('google7d4d405b790d11a0.html', lambda r: HttpResponse('google-site-verification: google7d4d405b790d11a0.html', content_type='text/html')),
     re_path(r'^media/(?P<path>.*)$', serve_media, name='serve_media'),
     path('admin/', admin.site.urls),
     path('gestion/', include('backoffice.urls', namespace='backoffice')),

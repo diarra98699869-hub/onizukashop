@@ -16,7 +16,11 @@
   <meta name="ICBM" content="12.6392, -7.9982">
 
   {% if shop_settings.google_site_verification %}
+    {% if '<meta' in shop_settings.google_site_verification %}
+  {{ shop_settings.google_site_verification|safe }}
+    {% else %}
   <meta name="google-site-verification" content="{{ shop_settings.google_site_verification }}">
+    {% endif %}
   {% endif %}
 
   <!-- PWA Pro & Capacitor Mobile Native Meta -->
