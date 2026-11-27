@@ -177,6 +177,10 @@ def home(request):
                 fam = 'congelateurs_verticaux'
             elif 'vitrine' in c_slug:
                 fam = 'vitrines'
+            elif 'tele' in c_slug or 'tv' in c_slug:
+                fam = 'televiseurs'
+            elif 'meuble' in c_slug or 'armoire' in c_slug:
+                fam = 'meubles_armoires'
             by_family[fam].append(pid)
 
         interleaved_ids = []
@@ -351,9 +355,9 @@ def _get_smart_chips_for_category(category, base_qs):
     elif any(k in cat_key for k in ('frigo', 'refrig', 'congel')):
         presets = ['No Frost', 'Combiné', '2 Portes', 'Américain', 'Inverter', 'Vitrine']
     elif any(k in cat_key for k in ('tele', 'tv', 'image')):
-        presets = ['32"', '43"', '50"', '55"', '65"', '4K', 'Smart TV', 'QLED']
-    elif any(k in cat_key for k in ('meuble', 'mobilier', 'salon', 'literie')):
-        presets = ['Salon', 'Canapé', 'Lit', 'Armoire', 'Table', 'Bureau', 'Bois', 'Cuir', 'Velours']
+        presets = ['32"', '43"', '50"', '55"', '65"', '75"', '85"', '4K', 'Smart TV', 'Google TV', 'webOS']
+    elif any(k in cat_key for k in ('meuble', 'mobilier', 'armoire', 'salon', 'literie')):
+        presets = ['2 Portes', '3 Portes', 'Miroir', 'Penderie', 'Bois Marron', 'Blanc', 'Acajou', 'Bicolore', 'Salon', 'Armoire']
     elif any(k in cat_key for k in ('deco', 'luminaire', 'lustre', 'tapis')):
         presets = ['Lustre', 'LED', 'Tapis', 'Tableau', 'Miroir', 'Rideau', 'Doré', 'Moderne']
     elif any(k in cat_key for k in ('cuisin', 'four', 'petit')):
@@ -640,10 +644,22 @@ def _build_smart_search_q(query_str):
         'congelateurs': ['congelateurs', 'congélateurs', 'coffres'],
         'coffre': ['coffre', 'horizontal', 'congelateur', 'congélateur'],
         'coffres': ['coffres', 'horizontaux', 'congelateur', 'congélateur'],
-        'tele': ['tele', 'télé', 'televiseur', 'téléviseur', 'tv'],
-        'teles': ['teles', 'télés', 'televiseurs', 'téléviseurs', 'tv'],
-        'tv': ['tv', 'televiseur', 'téléviseur', 'smart', 'led'],
-        'televiseur': ['televiseur', 'téléviseur', 'tv', 'smart'],
+        'tele': ['tele', 'télé', 'televiseur', 'téléviseur', 'tv', 'smart', '4k'],
+        'teles': ['teles', 'télés', 'televiseurs', 'téléviseurs', 'tv', 'smart', '4k'],
+        'tv': ['tv', 'televiseur', 'téléviseur', 'smart', 'led', '4k', 'crystal', 'uhd'],
+        'televiseur': ['televiseur', 'téléviseur', 'tv', 'smart', '4k'],
+        'televiseurs': ['televiseurs', 'téléviseurs', 'tv', 'smart', '4k'],
+        'smart': ['smart', 'tv', 'connectee', 'connectée', 'android', 'webos', 'google tv'],
+        'armoire': ['armoire', 'armoires', 'penderie', 'placard', 'dressing', 'meuble'],
+        'armoires': ['armoire', 'armoires', 'penderies', 'placards', 'dressings', 'meubles'],
+        'penderie': ['penderie', 'armoire', 'dressing'],
+        'penderies': ['penderies', 'armoires', 'dressings'],
+        'dressing': ['dressing', 'armoire', 'penderie'],
+        'placard': ['placard', 'armoire'],
+        'google': ['google tv', 'google', 'gtv'],
+        'webos': ['webos', 'fizzen', 'lg'],
+        'crystal': ['crystal', 'samsung', 'uhd', 'u8000'],
+        'acajou': ['acajou', 'rouge', 'armoire'],
         'ventilo': ['ventilo', 'ventilateur'],
         'ventilos': ['ventilos', 'ventilateurs'],
         'ventilateur': ['ventilateur', 'ventilo', 'rechargeable'],
@@ -673,6 +689,8 @@ def _build_smart_search_q(query_str):
 
         # Pour ce token, il doit apparaître dans au moins un des champs
         token_q = Q()
+        if token.isdigit():
+            token_q |= Q(price=int(token)) | Q(sale_price=int(token))
         for v in variants:
             token_q |= (
                 Q(name__icontains=v) |

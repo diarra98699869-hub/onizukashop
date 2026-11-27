@@ -17,7 +17,7 @@
     "updated_at": "2026-09-22T18:07:00.272Z",
     "lft": 1,
     "rght": 4,
-    "tree_id": 2,
+    "tree_id": 4,
     "level": 0
   }
 },
@@ -39,7 +39,7 @@
     "updated_at": "2026-11-27T17:50:28.509Z",
     "lft": 2,
     "rght": 3,
-    "tree_id": 2,
+    "tree_id": 4,
     "level": 1
   }
 },
@@ -61,7 +61,7 @@
     "updated_at": "2026-11-27T12:18:14.682Z",
     "lft": 1,
     "rght": 8,
-    "tree_id": 1,
+    "tree_id": 2,
     "level": 0
   }
 },
@@ -83,7 +83,7 @@
     "updated_at": "2026-11-27T12:18:14.689Z",
     "lft": 2,
     "rght": 3,
-    "tree_id": 1,
+    "tree_id": 2,
     "level": 1
   }
 },
@@ -105,7 +105,7 @@
     "updated_at": "2026-11-27T14:59:16.100Z",
     "lft": 6,
     "rght": 7,
-    "tree_id": 1,
+    "tree_id": 2,
     "level": 1
   }
 },
@@ -127,8 +127,52 @@
     "updated_at": "2026-11-27T16:47:17.606Z",
     "lft": 4,
     "rght": 5,
-    "tree_id": 1,
+    "tree_id": 2,
     "level": 1
+  }
+},
+{
+  "model": "shop.category",
+  "pk": 19,
+  "fields": {
+    "name": "Téléviseurs & Smart TV",
+    "slug": "televiseurs",
+    "parent": null,
+    "image": "",
+    "description": "Téléviseurs 4K UHD, Smart TV Android, webOS, Google TV et écrans LED géants.",
+    "icon": "",
+    "meta_title": "",
+    "meta_description": "",
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-11-27T20:07:42.665Z",
+    "updated_at": "2026-11-27T20:07:42.665Z",
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 3,
+    "level": 0
+  }
+},
+{
+  "model": "shop.category",
+  "pk": 20,
+  "fields": {
+    "name": "Meubles & Armoires",
+    "slug": "meubles-armoires",
+    "parent": null,
+    "image": "",
+    "description": "Armoires de chambre 2 et 3 portes, dressings et mobilier avec livraison et montage offerts à Bamako.",
+    "icon": "",
+    "meta_title": "",
+    "meta_description": "",
+    "is_active": true,
+    "order": 0,
+    "created_at": "2026-11-27T20:07:42.668Z",
+    "updated_at": "2026-11-27T20:07:42.668Z",
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 1,
+    "level": 0
   }
 },
 {
@@ -307,6 +351,18 @@
     "slug": "nafa",
     "logo": "",
     "description": "Marque d'appareils électroménagers robustes et durables avec compresseur garanti 36 mois.",
+    "website": "",
+    "is_active": true
+  }
+},
+{
+  "model": "shop.brand",
+  "pk": 42,
+  "fields": {
+    "name": "Onizouka Confort",
+    "slug": "onizouka-confort",
+    "logo": "",
+    "description": "Ligne de mobilier, armoires et literie de luxe pour la maison par Onizouka Shop.",
     "website": "",
     "is_active": true
   }
@@ -3818,6 +3874,1235 @@
   }
 },
 {
+  "model": "shop.product",
+  "pk": 302,
+  "fields": {
+    "name": "Téléviseur East Point 32\" Simple LED HD - Décodeur Intégré",
+    "slug": "televiseur-east-point-32-pouces-simple-led-hd",
+    "sku": "ONZ-TV-EP-32S",
+    "category": 19,
+    "brand": 18,
+    "short_description": "TV East Point 32 pouces HD avec décodeur intégré TNT/Satellite et double télécommande. Garantie 1 an constructeur.",
+    "description": "Nouvel arrivage officiel chez Onizouka Shop Bamako !\n\nLe téléviseur East Point 32 pouces Simple offre une qualité d'image HD lumineuse et nette, idéale pour le salon, la chambre ou les espaces professionnels.\n\nPoints forts :\n- Double télécommande d'origine incluse\n- Décodeur numérique intégré (TNT / Satellite direct sans box externe)\n- Connectivité complète : HDMI, USB multimédia (vidéos, musiques, photos), AV\n- Basse consommation d'énergie adaptée au réseau électrique malien\n- Garantie officielle 1 an avec service après-vente à Bamako",
+    "specifications": {
+      "Taille écran": "32 pouces (80 cm)",
+      "Résolution": "HD 1366 x 768 pixels",
+      "Décodeur": "Intégré (DVB-T2/S2)",
+      "Accessoires": "2 télécommandes fournies",
+      "Connectique": "2x HDMI, 2x USB, AV, Sortie Audio",
+      "Alimentation": "100-240V, 50/60Hz",
+      "Garantie": "1 an"
+    },
+    "price": "57500",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.671Z",
+    "updated_at": "2026-11-27T20:07:42.671Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 303,
+  "fields": {
+    "name": "Smart TV East Point 32\" Smart LED HD - WiFi & Décodeur Intégré",
+    "slug": "smart-tv-east-point-32-pouces-smart-led-hd-wifi",
+    "sku": "ONZ-TV-EP-32SM",
+    "category": 19,
+    "brand": 18,
+    "short_description": "Smart TV East Point 32\" connectée avec WiFi, YouTube, Prime Video, décodeur intégré et 2 télécommandes. Garantie 1 an.",
+    "description": "Découvrez la Smart TV East Point 32 pouces connectée chez Onizouka Shop Bamako.\n\nProfitez d'un accès direct à YouTube, Netflix et vos applications préférées grâce au WiFi intégré. Livrée avec 2 télécommandes et décodeur intégré direct.\n\nCaractéristiques :\n- Système Smart TV connecté rapide et fluide\n- WiFi intégré et port réseau RJ45\n- 2 télécommandes d'origine incluses\n- Décodeur satellite et terrestre intégré\n- Garantie 1 an assurée par Onizouka Shop",
+    "specifications": {
+      "Taille écran": "32 pouces (80 cm)",
+      "Type": "Smart TV connectée WiFi",
+      "Applications": "YouTube, Netflix, Prime Video, Navigateur",
+      "Décodeur": "Intégré TNT / Satellite",
+      "Accessoires": "2 télécommandes incluses",
+      "Connectique": "WiFi, HDMI, USB, RJ45 Ethernet",
+      "Garantie": "1 an"
+    },
+    "price": "67500",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.689Z",
+    "updated_at": "2026-11-27T20:07:42.689Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 304,
+  "fields": {
+    "name": "Smart TV East Point 43\" 4K Ultra HD Smart - 2 Télécommandes",
+    "slug": "smart-tv-east-point-43-pouces-4k-ultra-hd-smart",
+    "sku": "ONZ-TV-EP-43SM",
+    "category": 19,
+    "brand": 18,
+    "short_description": "Smart TV East Point 43 pouces 4K Ultra HD, 2 télécommandes, décodeur intégré, YouTube, Netflix. Garantie 1 an.",
+    "description": "Arrivage exceptionnel East Point 43 pouces 4K Smart chez Onizouka Shop !\n\nVivez une expérience cinéma avec une résolution 4K Ultra HD éblouissante. Équipée de 2 télécommandes, d'un décodeur intégré et de toutes les applications de streaming.\n\n- Image 4K Ultra HD haute fidélité\n- Smart TV connectée WiFi + Ethernet\n- 2 télécommandes incluses pour un confort d'usage optimal\n- Décodeur TNT et Satellite intégré\n- Garantie 1 an Onizouka Shop",
+    "specifications": {
+      "Taille écran": "43 pouces (108 cm)",
+      "Résolution": "4K Ultra HD (3840 x 2160)",
+      "Système": "Smart TV connectée",
+      "Décodeur": "Intégré DVB-T2/S2",
+      "Accessoires": "2 télécommandes incluses",
+      "Connectivité": "WiFi, HDMI x3, USB x2, Optique, AV",
+      "Garantie": "1 an"
+    },
+    "price": "127500",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.695Z",
+    "updated_at": "2026-11-27T20:07:42.695Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 305,
+  "fields": {
+    "name": "Smart TV East Point 50\" 4K Ultra HD Smart - Décodeur & 2 Télécommandes",
+    "slug": "smart-tv-east-point-50-pouces-4k-ultra-hd-smart",
+    "sku": "ONZ-TV-EP-50SM",
+    "category": 19,
+    "brand": 18,
+    "short_description": "Smart TV East Point 50\" 4K UHD, grand écran connecté WiFi avec décodeur intégré et double télécommande. Garantie 1 an.",
+    "description": "Grand écran 50 pouces East Point 4K Ultra HD Smart TV disponible chez Onizouka Shop Bamako !\n\nProfitez d'un affichage spectaculaire en 4K UHD pour le sport, les films et les séries. Décodeur intégré et 2 télécommandes fournies d'origine.\n\n- Dalle 50 pouces 4K Ultra HD ultra fine\n- Connexion WiFi rapide pour streaming fluide\n- 2 télécommandes officielles incluses\n- Garantie 1 an pièces et main d'œuvre",
+    "specifications": {
+      "Taille écran": "50 pouces (127 cm)",
+      "Résolution": "4K Ultra HD (3840 x 2160)",
+      "Système": "Smart TV avec YouTube, Netflix, Prime Video",
+      "Décodeur": "Intégré",
+      "Accessoires": "2 télécommandes fournies",
+      "Connectique": "WiFi, HDMI x3, USB x2, RJ45",
+      "Garantie": "1 an"
+    },
+    "price": "170000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.700Z",
+    "updated_at": "2026-11-27T20:07:42.700Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 306,
+  "fields": {
+    "name": "Smart TV East Point 55\" 4K Ultra HD Smart - Cadre Fin & Décodeur",
+    "slug": "smart-tv-east-point-55-pouces-4k-ultra-hd-smart",
+    "sku": "ONZ-TV-EP-55SM",
+    "category": 19,
+    "brand": 18,
+    "short_description": "Smart TV East Point 55\" 4K Ultra HD, écran géant frameless, décodeur intégré, 2 télécommandes. Garantie 1 an.",
+    "description": "La Smart TV East Point 55 pouces 4K UHD transforme votre salon en salle de cinéma privée !\n\nUn design élégant sans bordures, une image 4K d'une netteté éclatante et la simplicité de la double télécommande.\n\n- Écran géant 55 pouces 4K Ultra HD\n- Décodeur numérique intégré\n- 2 télécommandes incluses\n- Garantie 1 an",
+    "specifications": {
+      "Taille écran": "55 pouces (140 cm)",
+      "Résolution": "4K Ultra HD (3840 x 2160)",
+      "Design": "Frameless (bords ultra-fins)",
+      "Décodeur": "Intégré TNT / Sat",
+      "Accessoires": "2 télécommandes",
+      "Connectique": "WiFi, HDMI x3, USB x2, Optique",
+      "Garantie": "1 an"
+    },
+    "price": "215000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.704Z",
+    "updated_at": "2026-11-27T20:07:42.704Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 307,
+  "fields": {
+    "name": "Smart TV East Point 65\" 4K Ultra HD Smart - Grand Salon",
+    "slug": "smart-tv-east-point-65-pouces-4k-ultra-hd-smart",
+    "sku": "ONZ-TV-EP-65SM",
+    "category": 19,
+    "brand": 18,
+    "short_description": "Smart TV East Point 65\" 4K UHD, écran immersif 165 cm, 2 télécommandes, décodeur intégré. Garantie 1 an.",
+    "description": "Immense écran 65 pouces East Point 4K Ultra HD Smart TV chez Onizouka Shop Bamako !\n\nUne dalle majestueuse de 165 cm de diagonale avec couleurs éclatantes, HDR et son surround stéréo puissant. Décodeur intégré et 2 télécommandes incluses.\n\n- Diagonale spectaculaire 65 pouces 4K UHD\n- Double télécommande d'origine\n- Décodeur intégré direct\n- Garantie officielle 1 an",
+    "specifications": {
+      "Taille écran": "65 pouces (165 cm)",
+      "Résolution": "4K Ultra HD",
+      "Système": "Smart TV connectée",
+      "Décodeur": "Intégré",
+      "Accessoires": "2 télécommandes incluses",
+      "Garantie": "1 an"
+    },
+    "price": "270000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.709Z",
+    "updated_at": "2026-11-27T20:07:42.709Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 308,
+  "fields": {
+    "name": "Smart TV East Point 65\" 4K Google TV Officiel - Commande Vocale",
+    "slug": "smart-tv-east-point-65-pouces-4k-google-tv-officiel",
+    "sku": "ONZ-TV-EP-65GTV",
+    "category": 19,
+    "brand": 18,
+    "short_description": "East Point 65\" Google TV Officiel avec commande vocale Google Assistant, Play Store, Chromecast intégré, 4K UHD. Garantie 1 an.",
+    "description": "Le summum de la technologie intelligente : East Point 65 pouces avec Google TV officiel !\n\nAccédez à l'ensemble du catalogue Google Play Store, pilotez votre téléviseur à la voix avec Google Assistant et diffusez instantanément vos vidéos depuis votre smartphone grâce au Chromecast intégré.\n\n- Système Google TV officiel fluide et personnalisé\n- Commande vocale intelligente Google Assistant\n- Écran géant 65 pouces 4K UHD HDR10\n- 2 télécommandes d'origine fournies\n- Décodeur intégré et garantie 1 an",
+    "specifications": {
+      "Taille écran": "65 pouces (165 cm)",
+      "Système d'exploitation": "Google TV officiel",
+      "Résolution": "4K Ultra HD (3840 x 2160)",
+      "Fonctionnalités": "Google Assistant vocal, Chromecast, Play Store",
+      "Décodeur": "Intégré",
+      "Accessoires": "2 télécommandes incluses",
+      "Garantie": "1 an"
+    },
+    "price": "305000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.714Z",
+    "updated_at": "2026-11-27T20:07:42.714Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 309,
+  "fields": {
+    "name": "Smart TV East Point 75\" 4K Ultra HD Smart - Écran Géant Prestige",
+    "slug": "smart-tv-east-point-75-pouces-4k-ultra-hd-smart",
+    "sku": "ONZ-TV-EP-75SM",
+    "category": 19,
+    "brand": 18,
+    "short_description": "Écran géant East Point 75 pouces (190 cm) 4K UHD Smart, immersion totale pour salons VIP, décodeur intégré. Garantie 1 an.",
+    "description": "Format XXL de prestige : Smart TV East Point 75 pouces 4K Ultra HD chez Onizouka Shop Bamako !\n\nPrès de 2 mètres de diagonale pour un spectacle grandiose. Finition premium en aluminium brossé, décodeur intégré et 2 télécommandes fournies.\n\n- Diagonale colossale 75 pouces (190 cm)\n- Image 4K Ultra HD lumineuse et dynamique\n- Double télécommande d'origine\n- Garantie officielle 1 an",
+    "specifications": {
+      "Taille écran": "75 pouces (190 cm)",
+      "Résolution": "4K Ultra HD (3840 x 2160)",
+      "Système": "Smart TV connectée WiFi",
+      "Décodeur": "Intégré",
+      "Accessoires": "2 télécommandes incluses",
+      "Garantie": "1 an"
+    },
+    "price": "450000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.719Z",
+    "updated_at": "2026-11-27T20:07:42.719Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 310,
+  "fields": {
+    "name": "Smart TV East Point 75\" 4K Google TV Officiel - Écran Géant 190 cm",
+    "slug": "smart-tv-east-point-75-pouces-4k-google-tv-officiel",
+    "sku": "ONZ-TV-EP-75GTV",
+    "category": 19,
+    "brand": 18,
+    "short_description": "Prestige ultime : East Point 75\" Google TV Officiel 4K, Google Assistant vocal, Chromecast, 2 télécommandes. Garantie 1 an.",
+    "description": "L'expérience cinéma absolue à domicile : East Point 75 pouces avec Google TV officiel !\n\nToute la puissance de Google TV sur un écran magistral de 190 cm. Commande vocale au micro, accès illimité à Netflix, Prime Video, YouTube, Disney+ et applications Android TV.\n\n- Écran géant 75 pouces (190 cm) 4K Ultra HD\n- Google TV officiel avec Google Assistant vocal\n- Chromecast intégré pour projection directe\n- 2 télécommandes d'origine fournies\n- Décodeur numérique intégré\n- Garantie officielle 1 an chez Onizouka Shop",
+    "specifications": {
+      "Taille écran": "75 pouces (190 cm)",
+      "Système d'exploitation": "Google TV officiel",
+      "Résolution": "4K Ultra HD (3840 x 2160)",
+      "Audio": "Dolby Audio Stéréo Puissant",
+      "Fonctionnalités": "Google Assistant, Chromecast, Play Store",
+      "Décodeur": "Intégré TNT / Sat",
+      "Accessoires": "2 télécommandes incluses",
+      "Garantie": "1 an"
+    },
+    "price": "515000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.723Z",
+    "updated_at": "2026-11-27T20:07:42.723Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 311,
+  "fields": {
+    "name": "Téléviseur Fizzen 32\" Simple LED HD - Cadre Fin",
+    "slug": "televiseur-fizzen-32-pouces-simple-led-hd",
+    "sku": "ONZ-TV-FZ-32S",
+    "category": 19,
+    "brand": 17,
+    "short_description": "Téléviseur Fizzen 32 pouces HD, affichage LED haute clarté, ports HDMI et USB multimédia. Garantie 1 an.",
+    "description": "Nouvel arrivage Fizzen chez Onizouka Shop Bamako !\n\nLe téléviseur Fizzen 32 pouces Simple offre une qualité d'image HD remarquable à un prix imbattable à Bamako. Parfait pour la chambre, le bureau ou le salon familial.\n\n- Dalle LED HD nette et contrastée\n- Ports HDMI et USB pour brancher décodeur, clé USB ou console\n- Faible consommation électrique\n- Garantie 1 an Onizouka Shop",
+    "specifications": {
+      "Taille écran": "32 pouces (80 cm)",
+      "Résolution": "HD 1366 x 768",
+      "Connectique": "HDMI, USB multimédia, Entrée AV",
+      "Audio": "Haut-parleurs stéréo intégrés",
+      "Garantie": "1 an"
+    },
+    "price": "55000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.728Z",
+    "updated_at": "2026-11-27T20:07:42.728Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 312,
+  "fields": {
+    "name": "Smart TV Fizzen 32\" Android LED HD - WiFi & Applications",
+    "slug": "smart-tv-fizzen-32-pouces-android-led-hd-wifi",
+    "sku": "ONZ-TV-FZ-32AND",
+    "category": 19,
+    "brand": 17,
+    "short_description": "Smart TV Fizzen 32\" sous Android, connectée WiFi avec YouTube, Netflix et téléchargement d'applications. Garantie 1 an.",
+    "description": "La Smart TV Fizzen 32 pouces Android connectée chez Onizouka Shop Bamako !\n\nProfitez de toute la flexibilité d'Android : YouTube, streaming, réseaux sociaux et jeux. WiFi rapide et partage d'écran depuis smartphone.\n\n- Système Android Smart TV intuitif\n- WiFi intégré et ports HDMI / USB\n- Garantie 1 an",
+    "specifications": {
+      "Taille écran": "32 pouces (80 cm)",
+      "Système": "Android Smart TV",
+      "Connectivité": "WiFi, HDMI, USB, Audio Jack",
+      "Applications": "YouTube, Netflix, Navigateur Web",
+      "Garantie": "1 an"
+    },
+    "price": "70000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.733Z",
+    "updated_at": "2026-11-27T20:07:42.733Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 313,
+  "fields": {
+    "name": "Smart TV Fizzen 43\" 4K UHD Android 15 - WiFi & Bluetooth",
+    "slug": "smart-tv-fizzen-43-pouces-4k-uhd-android",
+    "sku": "ONZ-TV-FZ-43AND",
+    "category": 19,
+    "brand": 17,
+    "short_description": "Smart TV Fizzen 43\" 4K UHD sous Android, WiFi, Bluetooth, HDMI, USB, design moderne sans bordure. Garantie 1 an.",
+    "description": "Élégance et performance : la Smart TV Fizzen 43 pouces 4K UHD chez Onizouka Shop !\n\nAvec son design moderne ultra-fin, sa résolution 4K éblouissante et sa connectivité WiFi + Bluetooth, elle offre un divertissement complet pour toute la famille.\n\n- Résolution 4K Ultra HD\n- Système Android Smart TV réactif\n- Connectivité WiFi, Bluetooth, HDMI x3, USB x2\n- Garantie 1 an constructeur",
+    "specifications": {
+      "Taille écran": "43 pouces (108 cm)",
+      "Résolution": "4K Ultra HD",
+      "Système": "Android TV",
+      "Connectivité": "WiFi, Bluetooth, HDMI x3, USB x2",
+      "Garantie": "1 an"
+    },
+    "price": "117000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.737Z",
+    "updated_at": "2026-11-27T20:07:42.737Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 314,
+  "fields": {
+    "name": "Smart TV Fizzen 50\" 4K UHD Android 14 Gold Series",
+    "slug": "smart-tv-fizzen-50-pouces-4k-uhd-android-gold-series",
+    "sku": "ONZ-TV-FZ-50AND",
+    "category": 19,
+    "brand": 17,
+    "short_description": "Fizzen Gold Series 50\" 4K UHD sous Android 14, processeur ultra-rapide, WiFi, Bluetooth, son surround. Garantie 1 an.",
+    "description": "Fizzen Gold Series 50 pouces 4K UHD chez Onizouka Shop Bamako !\n\nÉquipée d'Android 14 et d'un traitement d'image haute dynamique, cette TV offre une fluidité remarquable pour le sport, le streaming et les jeux vidéo.\n\n- Série Gold officielle Fizzen\n- Dalle 50 pouces 4K Ultra HD lumineuse\n- Système Android 14 dernière génération\n- Garantie 1 an",
+    "specifications": {
+      "Taille écran": "50 pouces (127 cm)",
+      "Résolution": "4K Ultra HD (3840 x 2160)",
+      "Système": "Android 14 Smart TV",
+      "Série": "Gold Series",
+      "Connectivité": "WiFi, Bluetooth, HDMI, USB",
+      "Garantie": "1 an"
+    },
+    "price": "165000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.741Z",
+    "updated_at": "2026-11-27T20:07:42.741Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 315,
+  "fields": {
+    "name": "Smart TV Fizzen 55\" 4K UHD webOS Diamond Series - Magic Remote",
+    "slug": "smart-tv-fizzen-55-pouces-4k-uhd-webos-diamond-series",
+    "sku": "ONZ-TV-FZ-55WOS",
+    "category": 19,
+    "brand": 17,
+    "short_description": "Fizzen Diamond Series 55\" 4K UHD sous webOS Hub avec Magic Remote (souris gyroscopique), ThinQ AI et Dolby Audio. Garantie 1 an.",
+    "description": "L'excellence technologique : Fizzen 55 pouces webOS Diamond Series chez Onizouka Shop Bamako !\n\nLe système d'exploitation webOS Hub sous licence officielle vous fait bénéficier de la fameuse Magic Remote (télécommande pointeur magique type souris d'ordinateur), de l'intelligence artificielle ThinQ et du son Dolby Audio.\n\n- Système webOS Hub ultra-fluide\n- Télécommande Magic Remote avec pointeur gyroscopique et micro\n- Écran 55 pouces 4K Ultra HD QLED / Frameless\n- Son cinéma Dolby Audio certifié\n- Garantie officielle 1 an",
+    "specifications": {
+      "Taille écran": "55 pouces (140 cm)",
+      "Résolution": "4K Ultra HD (3840 x 2160)",
+      "Système": "webOS Hub avec ThinQ AI",
+      "Télécommande": "Magic Remote (pointeur gyroscopique & voix)",
+      "Audio": "Dolby Audio Stéréo Premium",
+      "Série": "Diamond Series",
+      "Garantie": "1 an"
+    },
+    "price": "215000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.747Z",
+    "updated_at": "2026-11-27T20:07:42.747Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 316,
+  "fields": {
+    "name": "Smart TV Fizzen 65\" 4K UHD webOS Diamond Series - Magic Remote",
+    "slug": "smart-tv-fizzen-65-pouces-4k-uhd-webos-diamond-series",
+    "sku": "ONZ-TV-FZ-65WOS",
+    "category": 19,
+    "brand": 17,
+    "short_description": "Fizzen Diamond 65\" 4K UHD webOS Hub, télécommande Magic Remote gyroscopique, ThinQ AI, écran géant 165 cm. Garantie 1 an.",
+    "description": "Majestueuse Smart TV Fizzen 65 pouces webOS Diamond Series chez Onizouka Shop Bamako !\n\nProfitez d'un écran géant de 165 cm combiné à la rapidité légendaire de webOS et de la Magic Remote. Navigateur internet complet, Netflix 4K, YouTube 4K, Apple AirPlay 2.\n\n- Dalle 65 pouces 4K Ultra HD Frameless\n- Système webOS Hub sous licence officielle\n- Télécommande Magic Remote incluse\n- Audio spatial Dolby Audio\n- Garantie 1 an Onizouka Shop",
+    "specifications": {
+      "Taille écran": "65 pouces (165 cm)",
+      "Résolution": "4K Ultra HD (3840 x 2160)",
+      "Système": "webOS Hub officiel",
+      "Télécommande": "Magic Remote pointeur gyroscopique",
+      "Fonctionnalités": "Apple AirPlay, HomeKit, ThinQ AI",
+      "Garantie": "1 an"
+    },
+    "price": "295000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.751Z",
+    "updated_at": "2026-11-27T20:07:42.751Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 317,
+  "fields": {
+    "name": "Smart TV Fizzen 75\" 4K UHD webOS Diamond Series - Grand Cinéma",
+    "slug": "smart-tv-fizzen-75-pouces-4k-uhd-webos-diamond-series",
+    "sku": "ONZ-TV-FZ-75WOS",
+    "category": 19,
+    "brand": 17,
+    "short_description": "Format prestige Fizzen 75\" (190 cm) 4K UHD webOS Hub, Magic Remote, Dolby Audio, design cadre métallique ultra-fin. Garantie 1 an.",
+    "description": "Spectacle d'exception : Fizzen 75 pouces webOS Diamond Series chez Onizouka Shop Bamako !\n\nUne dalle gigantesque de 190 cm avec dalle 4K HDR haute luminosité. Contrôle au pointeur grâce à la Magic Remote. Idéal pour salons luxueux et salles de conférence.\n\n- Écran géant 75 pouces (190 cm) 4K UHD\n- Système webOS avec Magic Remote pointeur magique\n- Traitement d'image HDR10 & Dolby Audio\n- Garantie 1 an constructeur",
+    "specifications": {
+      "Taille écran": "75 pouces (190 cm)",
+      "Résolution": "4K Ultra HD",
+      "Système": "webOS Hub avec ThinQ AI",
+      "Télécommande": "Magic Remote gyroscopique",
+      "Garantie": "1 an"
+    },
+    "price": "465000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.756Z",
+    "updated_at": "2026-11-27T20:07:42.756Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 318,
+  "fields": {
+    "name": "Smart TV Fizzen 85\" 4K UHD webOS Diamond Series - Format Colossal 215 cm",
+    "slug": "smart-tv-fizzen-85-pouces-4k-uhd-webos-diamond-series",
+    "sku": "ONZ-TV-FZ-85WOS",
+    "category": 19,
+    "brand": 17,
+    "short_description": "Le colosse absolu : Fizzen 85 pouces (215 cm de diagonale) 4K UHD webOS Diamond Series, Magic Remote, expérience cinéma totale. Garantie 1 an.",
+    "description": "Le sommet du prestige à Bamako : Fizzen 85 pouces 4K UHD webOS Diamond Series chez Onizouka Shop !\n\nPlus de 2 mètres et 15 centimètres de diagonale ! Une immersion à couper le souffle, une netteté chirurgicale en 4K Ultra HD et l'ergonomie incomparable du système webOS Hub avec sa télécommande Magic Remote gyroscopique.\n\n- Diagonale colossale 85 pouces (215 cm)\n- Système webOS Hub officiel rapide et complet\n- Télécommande Magic Remote incluse\n- Dalle QLED / 4K UHD haute luminosité\n- Garantie officielle 1 an assurée à Bamako",
+    "specifications": {
+      "Taille écran": "85 pouces (215 cm)",
+      "Résolution": "4K Ultra HD (3840 x 2160)",
+      "Système": "webOS Hub avec ThinQ AI",
+      "Télécommande": "Magic Remote avec pointeur gyroscopique",
+      "Audio": "Dolby Audio surround",
+      "Garantie": "1 an"
+    },
+    "price": "690000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.760Z",
+    "updated_at": "2026-11-27T20:07:42.760Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 319,
+  "fields": {
+    "name": "Smart TV Samsung 32\" Full HD Smart (Réf. UA32H5000FUXLY)",
+    "slug": "smart-tv-samsung-32-pouces-full-hd-smart-ua32h5000",
+    "sku": "ONZ-TV-SAM-UA32H5000",
+    "category": 19,
+    "brand": 1,
+    "short_description": "Smart TV Samsung authentique 32 pouces Full HD (UA32H5000FUXLY) avec Tizen OS, WiFi, applications officielles et garantie 1 an Samsung.",
+    "description": "Authentique Smart TV Samsung 32 pouces chez Onizouka Shop Bamako !\n\nModèle original certifié Samsung (Réf. technique : UA32H5000FUXLY). Bénéficiez de la fidélité des couleurs Samsung Wide Color Enhancer et de l'interface connectée intuitive.\n\n- Produit 100% authentique Samsung garanti\n- Qualité d'affichage Full HD nette et éclatante\n- Système Smart TV Samsung avec YouTube, Netflix\n- Connectivité WiFi, HDMI, USB\n- Garantie officielle 1 an constructeur",
+    "specifications": {
+      "Marque": "Samsung Authentique",
+      "Référence constructeur": "UA32H5000FUXLY",
+      "Taille écran": "32 pouces (80 cm)",
+      "Résolution": "Full HD",
+      "Système": "Samsung Smart TV (Tizen)",
+      "Connectique": "WiFi, HDMI x2, USB, Entrée composante / AV",
+      "Garantie": "1 an officiel"
+    },
+    "price": "98000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.766Z",
+    "updated_at": "2026-11-27T20:07:42.766Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 320,
+  "fields": {
+    "name": "Smart TV Samsung 43\" Full HD Smart (Réf. UA43F6000FUXLY)",
+    "slug": "smart-tv-samsung-43-pouces-full-hd-smart-ua43f6000",
+    "sku": "ONZ-TV-SAM-UA43F6000",
+    "category": 19,
+    "brand": 1,
+    "short_description": "Smart TV Samsung authentique 43\" Full HD (UA43F6000FUXLY) avec macaron officiel Authorised Product, design fin, Tizen OS. Garantie 1 an.",
+    "description": "Téléviseur original Samsung 43 pouces Full HD Smart chez Onizouka Shop Bamako !\n\nRéférence constructeur certifiée UA43F6000FUXLY avec macaron bleu d'authenticité Samsung Authorised Product. Une immersion visuelle et sonore de qualité supérieure signée Samsung.\n\n- Produit certifié d'origine Samsung\n- Diagonale 43 pouces (108 cm) Full HD\n- Smart Hub Samsung avec applications officielles de streaming\n- Garantie constructeur 1 an avec SAV officiel",
+    "specifications": {
+      "Marque": "Samsung Authentique",
+      "Référence constructeur": "UA43F6000FUXLY",
+      "Taille écran": "43 pouces (108 cm)",
+      "Résolution": "Full HD 1080p",
+      "Système": "Samsung Smart TV",
+      "Garantie": "1 an officiel"
+    },
+    "price": "165000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.773Z",
+    "updated_at": "2026-11-27T20:07:42.773Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 321,
+  "fields": {
+    "name": "Smart TV Samsung 50\" Crystal UHD 4K (Réf. UA50U8000FUXLY)",
+    "slug": "smart-tv-samsung-50-pouces-crystal-uhd-4k-ua50u8000",
+    "sku": "ONZ-TV-SAM-UA50U8000",
+    "category": 19,
+    "brand": 1,
+    "short_description": "Samsung 50 pouces Crystal UHD 4K authentique (UA50U8000FUXLY), processeur Crystal 4K, HDR, design sans bordure. Garantie 1 an Samsung.",
+    "description": "Authentique Samsung Crystal UHD 4K 50 pouces chez Onizouka Shop Bamako !\n\nRéférence officielle UA50U8000FUXLY. Le processeur Crystal 4K optimise les couleurs et les contrastes pour révéler chaque nuance avec une précision cinématographique.\n\n- Résolution 4K Ultra HD authentique Samsung\n- Processeur Crystal 4K avec Dynamic Crystal Color\n- Prise en charge HDR10+ pour contrastes profonds\n- Système d'exploitation Samsung Tizen OS rapide et sécurisé\n- Garantie 1 an constructeur",
+    "specifications": {
+      "Marque": "Samsung Authentique",
+      "Référence constructeur": "UA50U8000FUXLY",
+      "Taille écran": "50 pouces (127 cm)",
+      "Résolution": "Crystal UHD 4K (3840 x 2160)",
+      "Processeur": "Crystal Processor 4K",
+      "Système": "Samsung Tizen OS",
+      "Connectivité": "WiFi, Bluetooth, HDMI x3, USB x2",
+      "Garantie": "1 an officiel"
+    },
+    "price": "235000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.779Z",
+    "updated_at": "2026-11-27T20:07:42.779Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 322,
+  "fields": {
+    "name": "Smart TV Samsung 55\" Crystal UHD 4K (Réf. UA55U8000FUXLY)",
+    "slug": "smart-tv-samsung-55-pouces-crystal-uhd-4k-ua55u8000",
+    "sku": "ONZ-TV-SAM-UA55U8000",
+    "category": 19,
+    "brand": 1,
+    "short_description": "Samsung 55\" Crystal UHD 4K authentique (UA55U8000FUXLY), design AirSlim ultra-fin, télécommande One Remote, Tizen OS. Garantie 1 an.",
+    "description": "Le bestseller mondial Samsung Crystal UHD 55 pouces chez Onizouka Shop Bamako !\n\nModèle certifié d'origine UA55U8000FUXLY. Avec son profil AirSlim ultra-fin de moins de 3 cm d'épaisseur, il s'intègre harmonieusement sur meuble ou en fixation murale.\n\n- Produit 100% original Samsung\n- Écran 55 pouces (140 cm) Crystal UHD 4K\n- Design AirSlim avec gestion discrète des câbles\n- Tizen OS avec applications Netflix, Prime Video, Apple TV, YouTube en 4K\n- Garantie 1 an officiel",
+    "specifications": {
+      "Marque": "Samsung Authentique",
+      "Référence constructeur": "UA55U8000FUXLY",
+      "Taille écran": "55 pouces (140 cm)",
+      "Résolution": "Crystal UHD 4K (3840 x 2160)",
+      "Technologie": "Dynamic Crystal Color & HDR10+",
+      "Design": "AirSlim ultra-fin",
+      "Garantie": "1 an"
+    },
+    "price": "289000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.786Z",
+    "updated_at": "2026-11-27T20:07:42.787Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 323,
+  "fields": {
+    "name": "Smart TV Samsung 65\" Crystal UHD 4K (Réf. UA65U8000FUXLY)",
+    "slug": "smart-tv-samsung-65-pouces-crystal-uhd-4k-ua65u8000",
+    "sku": "ONZ-TV-SAM-UA65U8000",
+    "category": 19,
+    "brand": 1,
+    "short_description": "Samsung 65\" Crystal UHD 4K authentique (UA65U8000FUXLY), écran 163 cm, Dynamic Crystal Color, AirSlim. Garantie 1 an officiel.",
+    "description": "Grand spectacle cinématographique : Samsung Crystal UHD 65 pouces authentique chez Onizouka Shop Bamako !\n\nRéférence constructeur officielle UA65U8000FUXLY (163 cm de diagonale visible). Une image 4K d'une pureté exceptionnelle pour magnifier votre salon de réception.\n\n- Écran géant 65 pouces 4K UHD authentique Samsung\n- Processeur Crystal 4K avec upscaling intelligent des sources vidéo\n- Son OTS Lite (Object Tracking Sound) pour un réalisme sonore captivant\n- Garantie 1 an assurée par Onizouka Shop",
+    "specifications": {
+      "Marque": "Samsung Authentique",
+      "Référence constructeur": "UA65U8000FUXLY",
+      "Taille écran": "65 pouces (163 cm)",
+      "Résolution": "Crystal UHD 4K (3840 x 2160)",
+      "Son": "Q-Symphony & OTS Lite",
+      "Design": "3-Side Bezelless (sans bordures sur 3 côtés)",
+      "Garantie": "1 an officiel"
+    },
+    "price": "390000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.793Z",
+    "updated_at": "2026-11-27T20:07:42.793Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 324,
+  "fields": {
+    "name": "Smart TV Samsung 75\" Crystal UHD 4K (Réf. UA75U8000FUXLY)",
+    "slug": "smart-tv-samsung-75-pouces-crystal-uhd-4k-ua75u8000",
+    "sku": "ONZ-TV-SAM-UA75U8000",
+    "category": 19,
+    "brand": 1,
+    "short_description": "Samsung 75 pouces Crystal UHD 4K authentique (UA75U8000FUXLY), écran monumental 190 cm, AirSlim, HDR10+, Tizen OS. Garantie 1 an.",
+    "description": "Dimension majestueuse de 75 pouces originale Samsung chez Onizouka Shop Bamako !\n\nRéférence constructeur UA75U8000FUXLY. Vivez chaque match de football, film et série avec une intensité émotionnelle inédite grâce à l'écran de 190 cm et au traitement d'image de pointe Samsung.\n\n- Écran monumental 75 pouces (190 cm)\n- Authenticité garantie Samsung avec certificat et garantie officielle\n- Télécommande One Remote ergonomique\n- Garantie constructeur 1 an avec assistance technique à Bamako",
+    "specifications": {
+      "Marque": "Samsung Authentique",
+      "Référence constructeur": "UA75U8000FUXLY",
+      "Taille écran": "75 pouces (190 cm)",
+      "Résolution": "Crystal UHD 4K (3840 x 2160)",
+      "Connectivité": "WiFi, Bluetooth 5.2, HDMI x3 (eARC), USB x2",
+      "Garantie": "1 an officiel"
+    },
+    "price": "585000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.799Z",
+    "updated_at": "2026-11-27T20:07:42.799Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 325,
+  "fields": {
+    "name": "Smart TV Samsung 85\" Crystal UHD 4K (Réf. UA85U8000FUXLY)",
+    "slug": "smart-tv-samsung-85-pouces-crystal-uhd-4k-ua85u8000",
+    "sku": "ONZ-TV-SAM-UA85U8000",
+    "category": 19,
+    "brand": 1,
+    "short_description": "Le colosse officiel Samsung : 85 pouces (215 cm de diagonale) Crystal UHD 4K (UA85U8000FUXLY). Le summum du luxe et du divertissement. Garantie 1 an.",
+    "description": "Le joyau technologique absolu de Samsung disponible chez Onizouka Shop Bamako !\n\nRéférence originale certifiée UA85U8000FUXLY. Plus de 2,15 mètres de diagonale pour transformer votre salon en un véritable complexe cinématographique d'exception.\n\n- Écran géant 85 pouces (215 cm) 4K Ultra HD\n- Processeur Crystal 4K avec calibrage d'usine de précision\n- Design AirSlim ultra-épuré\n- Audio immersif avec technologie Q-Symphony\n- Garantie 1 an officielle avec service client privilégié à Bamako",
+    "specifications": {
+      "Marque": "Samsung Authentique",
+      "Référence constructeur": "UA85U8000FUXLY",
+      "Taille écran": "85 pouces (215 cm)",
+      "Résolution": "Crystal UHD 4K (3840 x 2160)",
+      "Processeur": "Crystal Processor 4K",
+      "Garantie": "1 an officiel"
+    },
+    "price": "845000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.805Z",
+    "updated_at": "2026-11-27T20:07:42.805Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 326,
+  "fields": {
+    "name": "Armoire de Chambre 2 Portes Bois Marron avec Miroir & Tiroirs",
+    "slug": "armoire-de-chambre-2-portes-bois-marron-miroir-tiroirs",
+    "sku": "ONZ-ARM-2P-BOIS",
+    "category": 20,
+    "brand": 42,
+    "short_description": "Armoire élégante 2 portes en bois marron avec miroir biseauté, 2 tiroirs extérieurs à serrures et penderie. Livraison et installation incluses à Bamako.",
+    "description": "Offrez à votre chambre une touche d'élégance chaleureuse avec l'armoire 2 portes Onizouka Confort !\n\nConçue avec des finitions en bois marron texturé résistant, elle intègre un grand miroir central, deux tiroirs coulissants sécurisés à clé et une spacieuse penderie pour organiser parfaitement vos vêtements.\n\nSERVICE PREMIUM INCLUS :\n- Livraison directement à votre domicile à Bamako\n- Montage et installation complète par nos techniciens qualifiés inclus dans le prix !",
+    "specifications": {
+      "Portes": "2 battants avec poignées en aluminium et serrures à clés",
+      "Miroir": "Grand miroir vertical intégré",
+      "Tiroirs": "2 tiroirs extérieurs coulissants avec serrures",
+      "Rangement intérieur": "Barre de penderie + étagère supérieure",
+      "Matériau": "Bois d'ingénierie haute densité avec finition mélamine vernie",
+      "Couleur": "Bois marron veiné noyer",
+      "Service": "Livraison & Installation offertes à Bamako"
+    },
+    "price": "130000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "Montage & Installation à domicile",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.812Z",
+    "updated_at": "2026-11-27T20:07:42.812Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 327,
+  "fields": {
+    "name": "Grande Armoire de Chambre 3 Portes Bois Marron avec Miroir Central",
+    "slug": "grande-armoire-de-chambre-3-portes-bois-marron-miroir-central",
+    "sku": "ONZ-ARM-3P-BOIS",
+    "category": 20,
+    "brand": 42,
+    "short_description": "Grande armoire familiale 3 portes en bois marron avec façade sculptée en damier, miroir central, tiroir et serrure. Livraison et installation incluses à Bamako.",
+    "description": "Le grand luxe du rangement pour toute la famille : armoire 3 portes Onizouka Confort !\n\nSes façades travaillées avec motifs sculptés en damier et sa teinte marron chaleureuse apportent un cachet exceptionnel à votre chambre. Elle offre une capacité de rangement colossale avec penderie, multiples étagères, tiroir et serrure sécurisée.\n\nSERVICE PREMIUM INCLUS :\n- Livraison à domicile à Bamako\n- Montage et installation complète assurés par nos menuisiers inclus !",
+    "specifications": {
+      "Portes": "3 portes battantes avec panneaux sculptés en damier",
+      "Miroir": "Miroir central vertical de plain-pied",
+      "Tiroir": "Tiroir central avec poignée renforcée",
+      "Rangement": "Grande penderie + étagères de rangement pour linge plié",
+      "Sécurité": "Serrures avec clés d'origine sur les battants",
+      "Couleur": "Bois chaleureux teck / noyer doré",
+      "Service": "Livraison & Installation offertes à Bamako"
+    },
+    "price": "165000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "Montage & Installation à domicile",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.816Z",
+    "updated_at": "2026-11-27T20:07:42.816Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 328,
+  "fields": {
+    "name": "Armoire de Chambre Moderne 2 Portes Blanche avec Miroir & Tiroir",
+    "slug": "armoire-de-chambre-moderne-2-portes-blanche-miroir-tiroir",
+    "sku": "ONZ-ARM-2P-BLANCHE",
+    "category": 20,
+    "brand": 42,
+    "short_description": "Armoire contemporaine 2 portes blanc pur avec façades matelassées en relief, grand miroir, tiroir et penderie. Livraison et installation incluses à Bamako.",
+    "description": "Luminosité et pureté design : l'armoire 2 portes Blanche Onizouka Confort !\n\nSa finition blanche éclatante avec motifs en relief texturés illumine votre chambre à coucher. L'agencement intérieur a été optimisé avec une penderie robuste et des étagères profondes pour vos vêtements.\n\nSERVICE PREMIUM INCLUS :\n- Livraison à domicile à Bamako\n- Montage complet et pose chez vous inclus dans le prix !",
+    "specifications": {
+      "Portes": "2 portes avec finition blanche texturée relief",
+      "Miroir": "Miroir rectangulaire vertical",
+      "Tiroir": "Tiroir inférieur avec poignée chromée",
+      "Intérieur": "Barre de penderie suspendue + étagères pour linge",
+      "Couleur": "Blanc pur brillant et mat",
+      "Service": "Livraison & Installation offertes à Bamako"
+    },
+    "price": "130000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "Montage & Installation à domicile",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.820Z",
+    "updated_at": "2026-11-27T20:07:42.820Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 329,
+  "fields": {
+    "name": "Armoire de Chambre 2 Portes Rouge Acajou Sculptée avec Miroir",
+    "slug": "armoire-de-chambre-2-portes-rouge-acajou-sculptee-miroir",
+    "sku": "ONZ-ARM-2P-ACAJOU",
+    "category": 20,
+    "brand": 42,
+    "short_description": "Armoire raffinée 2 portes rouge acajou verni, panneaux travaillés, miroir vertical, tiroirs et penderie. Livraison et installation incluses à Bamako.",
+    "description": "L'élégance du style classique revisité : armoire 2 portes Rouge Acajou Onizouka Confort !\n\nSa riche teinte acajou vernie met en valeur le veinage naturel du bois et s'accorde magnifiquement avec tous les intérieurs. Équipée d'un miroir de courtoisie, d'un espace penderie et de tiroirs extérieurs faciles d'accès.\n\nSERVICE PREMIUM INCLUS :\n- Livraison à votre adresse à Bamako\n- Montage et assemblage sur place sans frais supplémentaires !",
+    "specifications": {
+      "Portes": "2 battants avec poignées métalliques",
+      "Miroir": "Miroir frontal avec encadrement mouluré",
+      "Tiroirs": "Tiroirs coulissants avec poignées",
+      "Couleur": "Rouge Acajou / Bois sculpté précieux",
+      "Service": "Livraison & Installation offertes à Bamako"
+    },
+    "price": "127000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "Montage & Installation à domicile",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.824Z",
+    "updated_at": "2026-11-27T20:07:42.824Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 330,
+  "fields": {
+    "name": "Armoire Dressing 2 Portes Bicolore Chêne Clair & Portes Blanches",
+    "slug": "armoire-dressing-2-portes-bicolore-chene-clair-blanc",
+    "sku": "ONZ-ARM-2P-BICOLORE",
+    "category": 20,
+    "brand": 42,
+    "short_description": "Dressing moderne 2 portes style scandinave bicolore chêne naturel et portes blanches, double penderie intérieure et étagère. Livraison et installation incluses à Bamako.",
+    "description": "Design scandinave et modernité : armoire dressing 2 portes bicolore Onizouka Confort !\n\nL'alliance intemporelle du bois chêne clair naturel et des portes blanches satinées confère une élégance zen à votre pièce. À l'intérieur, découvrez un double compartiment de penderie pour cintres et une grande étagère supérieure pour couvertures et draps.\n\nSERVICE PREMIUM INCLUS :\n- Livraison rapide à votre domicile à Bamako\n- Montage complet et calage par notre équipe de professionnels inclus dans le prix !",
+    "specifications": {
+      "Design": "Style nordique contemporain bicolore",
+      "Portes": "2 grandes portes battantes blanc satiné avec longues poignées bois",
+      "Structure": "Caisson robuste en chêne clair naturel",
+      "Intérieur": "Compartiment double penderie avec barres métalliques + étagère linge de lit",
+      "Dimensions": "Environ 80 cm (largeur) x 50 cm (profondeur) x 185 cm (hauteur)",
+      "Service": "Livraison & Installation offertes à Bamako"
+    },
+    "price": "127000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "Montage & Installation à domicile",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T20:07:42.829Z",
+    "updated_at": "2026-11-27T20:07:42.829Z"
+  }
+},
+{
   "model": "shop.productimage",
   "pk": 254,
   "fields": {
@@ -5707,6 +6992,721 @@
     "alt_text": "Gamme complète de vitrines Roch Onizouka Shop",
     "is_primary": false,
     "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 660,
+  "fields": {
+    "product": 302,
+    "image": "products/televiseurs/ep_32_box.webp",
+    "alt_text": "Téléviseur East Point 32\" Simple LED HD - Décodeur Intégré - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 661,
+  "fields": {
+    "product": 302,
+    "image": "products/televiseurs/ep_showroom_stack.webp",
+    "alt_text": "Téléviseur East Point 32\" Simple LED HD - Décodeur Intégré - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 662,
+  "fields": {
+    "product": 303,
+    "image": "products/televiseurs/ep_32_box.webp",
+    "alt_text": "Smart TV East Point 32\" Smart LED HD - WiFi & Décodeur Intégré - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 663,
+  "fields": {
+    "product": 303,
+    "image": "products/televiseurs/ep_showroom_stack.webp",
+    "alt_text": "Smart TV East Point 32\" Smart LED HD - WiFi & Décodeur Intégré - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 664,
+  "fields": {
+    "product": 304,
+    "image": "products/televiseurs/ep_43_box.webp",
+    "alt_text": "Smart TV East Point 43\" 4K Ultra HD Smart - 2 Télécommandes - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 665,
+  "fields": {
+    "product": 304,
+    "image": "products/televiseurs/ep_showroom_stack.webp",
+    "alt_text": "Smart TV East Point 43\" 4K Ultra HD Smart - 2 Télécommandes - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 666,
+  "fields": {
+    "product": 305,
+    "image": "products/televiseurs/ep_50_box.webp",
+    "alt_text": "Smart TV East Point 50\" 4K Ultra HD Smart - Décodeur & 2 Télécommandes - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 667,
+  "fields": {
+    "product": 305,
+    "image": "products/televiseurs/ep_showroom_stack.webp",
+    "alt_text": "Smart TV East Point 50\" 4K Ultra HD Smart - Décodeur & 2 Télécommandes - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 668,
+  "fields": {
+    "product": 306,
+    "image": "products/televiseurs/ep_55_box.webp",
+    "alt_text": "Smart TV East Point 55\" 4K Ultra HD Smart - Cadre Fin & Décodeur - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 669,
+  "fields": {
+    "product": 306,
+    "image": "products/televiseurs/ep_showroom_stack.webp",
+    "alt_text": "Smart TV East Point 55\" 4K Ultra HD Smart - Cadre Fin & Décodeur - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 670,
+  "fields": {
+    "product": 307,
+    "image": "products/televiseurs/ep_65_box.webp",
+    "alt_text": "Smart TV East Point 65\" 4K Ultra HD Smart - Grand Salon - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 671,
+  "fields": {
+    "product": 307,
+    "image": "products/televiseurs/ep_showroom_stack.webp",
+    "alt_text": "Smart TV East Point 65\" 4K Ultra HD Smart - Grand Salon - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 672,
+  "fields": {
+    "product": 308,
+    "image": "products/televiseurs/ep_65_box.webp",
+    "alt_text": "Smart TV East Point 65\" 4K Google TV Officiel - Commande Vocale - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 673,
+  "fields": {
+    "product": 308,
+    "image": "products/televiseurs/ep_showroom_stack.webp",
+    "alt_text": "Smart TV East Point 65\" 4K Google TV Officiel - Commande Vocale - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 674,
+  "fields": {
+    "product": 309,
+    "image": "products/televiseurs/ep_75_box.webp",
+    "alt_text": "Smart TV East Point 75\" 4K Ultra HD Smart - Écran Géant Prestige - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 675,
+  "fields": {
+    "product": 309,
+    "image": "products/televiseurs/ep_showroom_stack.webp",
+    "alt_text": "Smart TV East Point 75\" 4K Ultra HD Smart - Écran Géant Prestige - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 676,
+  "fields": {
+    "product": 310,
+    "image": "products/televiseurs/ep_75_box.webp",
+    "alt_text": "Smart TV East Point 75\" 4K Google TV Officiel - Écran Géant 190 cm - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 677,
+  "fields": {
+    "product": 310,
+    "image": "products/televiseurs/ep_showroom_stack.webp",
+    "alt_text": "Smart TV East Point 75\" 4K Google TV Officiel - Écran Géant 190 cm - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 678,
+  "fields": {
+    "product": 311,
+    "image": "products/televiseurs/fizzen_43_lifestyle.webp",
+    "alt_text": "Téléviseur Fizzen 32\" Simple LED HD - Cadre Fin - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 679,
+  "fields": {
+    "product": 311,
+    "image": "products/televiseurs/fizzen_gold_android_box.webp",
+    "alt_text": "Téléviseur Fizzen 32\" Simple LED HD - Cadre Fin - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 680,
+  "fields": {
+    "product": 312,
+    "image": "products/televiseurs/fizzen_43_lifestyle.webp",
+    "alt_text": "Smart TV Fizzen 32\" Android LED HD - WiFi & Applications - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 681,
+  "fields": {
+    "product": 312,
+    "image": "products/televiseurs/fizzen_gold_android_box.webp",
+    "alt_text": "Smart TV Fizzen 32\" Android LED HD - WiFi & Applications - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 682,
+  "fields": {
+    "product": 313,
+    "image": "products/televiseurs/fizzen_43_lifestyle.webp",
+    "alt_text": "Smart TV Fizzen 43\" 4K UHD Android 15 - WiFi & Bluetooth - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 683,
+  "fields": {
+    "product": 313,
+    "image": "products/televiseurs/fizzen_frameless_screen.webp",
+    "alt_text": "Smart TV Fizzen 43\" 4K UHD Android 15 - WiFi & Bluetooth - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 684,
+  "fields": {
+    "product": 314,
+    "image": "products/televiseurs/fizzen_gold_android_box.webp",
+    "alt_text": "Smart TV Fizzen 50\" 4K UHD Android 14 Gold Series - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 685,
+  "fields": {
+    "product": 314,
+    "image": "products/televiseurs/fizzen_frameless_screen.webp",
+    "alt_text": "Smart TV Fizzen 50\" 4K UHD Android 14 Gold Series - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 686,
+  "fields": {
+    "product": 315,
+    "image": "products/televiseurs/fizzen_diamond_webos_box.webp",
+    "alt_text": "Smart TV Fizzen 55\" 4K UHD webOS Diamond Series - Magic Remote - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 687,
+  "fields": {
+    "product": 315,
+    "image": "products/televiseurs/fizzen_webos_hub.webp",
+    "alt_text": "Smart TV Fizzen 55\" 4K UHD webOS Diamond Series - Magic Remote - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 688,
+  "fields": {
+    "product": 316,
+    "image": "products/televiseurs/fizzen_diamond_webos_box.webp",
+    "alt_text": "Smart TV Fizzen 65\" 4K UHD webOS Diamond Series - Magic Remote - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 689,
+  "fields": {
+    "product": 316,
+    "image": "products/televiseurs/fizzen_webos_hub.webp",
+    "alt_text": "Smart TV Fizzen 65\" 4K UHD webOS Diamond Series - Magic Remote - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 690,
+  "fields": {
+    "product": 317,
+    "image": "products/televiseurs/fizzen_diamond_75_box.webp",
+    "alt_text": "Smart TV Fizzen 75\" 4K UHD webOS Diamond Series - Grand Cinéma - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 691,
+  "fields": {
+    "product": 317,
+    "image": "products/televiseurs/fizzen_webos_hub.webp",
+    "alt_text": "Smart TV Fizzen 75\" 4K UHD webOS Diamond Series - Grand Cinéma - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 692,
+  "fields": {
+    "product": 318,
+    "image": "products/televiseurs/fizzen_diamond_75_box.webp",
+    "alt_text": "Smart TV Fizzen 85\" 4K UHD webOS Diamond Series - Format Colossal 215 cm - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 693,
+  "fields": {
+    "product": 318,
+    "image": "products/televiseurs/fizzen_webos_hub.webp",
+    "alt_text": "Smart TV Fizzen 85\" 4K UHD webOS Diamond Series - Format Colossal 215 cm - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 694,
+  "fields": {
+    "product": 318,
+    "image": "products/televiseurs/fizzen_box_large.webp",
+    "alt_text": "Smart TV Fizzen 85\" 4K UHD webOS Diamond Series - Format Colossal 215 cm - Vue secondaire 2",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 695,
+  "fields": {
+    "product": 319,
+    "image": "products/televiseurs/samsung_32_stand.webp",
+    "alt_text": "Smart TV Samsung 32\" Full HD Smart (Réf. UA32H5000FUXLY) - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 696,
+  "fields": {
+    "product": 319,
+    "image": "products/televiseurs/samsung_store_stack.webp",
+    "alt_text": "Smart TV Samsung 32\" Full HD Smart (Réf. UA32H5000FUXLY) - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 697,
+  "fields": {
+    "product": 319,
+    "image": "products/televiseurs/samsung_remote_view.webp",
+    "alt_text": "Smart TV Samsung 32\" Full HD Smart (Réf. UA32H5000FUXLY) - Vue secondaire 2",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 698,
+  "fields": {
+    "product": 320,
+    "image": "products/televiseurs/samsung_store_stack.webp",
+    "alt_text": "Smart TV Samsung 43\" Full HD Smart (Réf. UA43F6000FUXLY) - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 699,
+  "fields": {
+    "product": 320,
+    "image": "products/televiseurs/samsung_smart_hub.webp",
+    "alt_text": "Smart TV Samsung 43\" Full HD Smart (Réf. UA43F6000FUXLY) - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 700,
+  "fields": {
+    "product": 320,
+    "image": "products/televiseurs/samsung_remote_view.webp",
+    "alt_text": "Smart TV Samsung 43\" Full HD Smart (Réf. UA43F6000FUXLY) - Vue secondaire 2",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 701,
+  "fields": {
+    "product": 321,
+    "image": "products/televiseurs/samsung_crystal_front.webp",
+    "alt_text": "Smart TV Samsung 50\" Crystal UHD 4K (Réf. UA50U8000FUXLY) - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 702,
+  "fields": {
+    "product": 321,
+    "image": "products/televiseurs/samsung_store_stack.webp",
+    "alt_text": "Smart TV Samsung 50\" Crystal UHD 4K (Réf. UA50U8000FUXLY) - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 703,
+  "fields": {
+    "product": 321,
+    "image": "products/televiseurs/samsung_living_wall.webp",
+    "alt_text": "Smart TV Samsung 50\" Crystal UHD 4K (Réf. UA50U8000FUXLY) - Vue secondaire 2",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 704,
+  "fields": {
+    "product": 322,
+    "image": "products/televiseurs/samsung_crystal_uhd_face.webp",
+    "alt_text": "Smart TV Samsung 55\" Crystal UHD 4K (Réf. UA55U8000FUXLY) - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 705,
+  "fields": {
+    "product": 322,
+    "image": "products/televiseurs/samsung_slim_wall.webp",
+    "alt_text": "Smart TV Samsung 55\" Crystal UHD 4K (Réf. UA55U8000FUXLY) - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 706,
+  "fields": {
+    "product": 322,
+    "image": "products/televiseurs/samsung_store_stack.webp",
+    "alt_text": "Smart TV Samsung 55\" Crystal UHD 4K (Réf. UA55U8000FUXLY) - Vue secondaire 2",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 707,
+  "fields": {
+    "product": 323,
+    "image": "products/televiseurs/samsung_crystal_uhd_face.webp",
+    "alt_text": "Smart TV Samsung 65\" Crystal UHD 4K (Réf. UA65U8000FUXLY) - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 708,
+  "fields": {
+    "product": 323,
+    "image": "products/televiseurs/samsung_living_wall.webp",
+    "alt_text": "Smart TV Samsung 65\" Crystal UHD 4K (Réf. UA65U8000FUXLY) - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 709,
+  "fields": {
+    "product": 323,
+    "image": "products/televiseurs/samsung_store_stack.webp",
+    "alt_text": "Smart TV Samsung 65\" Crystal UHD 4K (Réf. UA65U8000FUXLY) - Vue secondaire 2",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 710,
+  "fields": {
+    "product": 324,
+    "image": "products/televiseurs/samsung_living_wall.webp",
+    "alt_text": "Smart TV Samsung 75\" Crystal UHD 4K (Réf. UA75U8000FUXLY) - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 711,
+  "fields": {
+    "product": 324,
+    "image": "products/televiseurs/samsung_crystal_uhd_face.webp",
+    "alt_text": "Smart TV Samsung 75\" Crystal UHD 4K (Réf. UA75U8000FUXLY) - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 712,
+  "fields": {
+    "product": 324,
+    "image": "products/televiseurs/samsung_slim_angle.webp",
+    "alt_text": "Smart TV Samsung 75\" Crystal UHD 4K (Réf. UA75U8000FUXLY) - Vue secondaire 2",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 713,
+  "fields": {
+    "product": 325,
+    "image": "products/televiseurs/samsung_living_wall.webp",
+    "alt_text": "Smart TV Samsung 85\" Crystal UHD 4K (Réf. UA85U8000FUXLY) - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 714,
+  "fields": {
+    "product": 325,
+    "image": "products/televiseurs/samsung_crystal_uhd_face.webp",
+    "alt_text": "Smart TV Samsung 85\" Crystal UHD 4K (Réf. UA85U8000FUXLY) - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 715,
+  "fields": {
+    "product": 325,
+    "image": "products/televiseurs/samsung_slim_wall.webp",
+    "alt_text": "Smart TV Samsung 85\" Crystal UHD 4K (Réf. UA85U8000FUXLY) - Vue secondaire 2",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 716,
+  "fields": {
+    "product": 326,
+    "image": "products/meubles/armoire_2p_bois_marron.webp",
+    "alt_text": "Armoire de Chambre 2 Portes Bois Marron avec Miroir & Tiroirs - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 717,
+  "fields": {
+    "product": 327,
+    "image": "products/meubles/armoire_3p_bois_marron.webp",
+    "alt_text": "Grande Armoire de Chambre 3 Portes Bois Marron avec Miroir Central - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 718,
+  "fields": {
+    "product": 328,
+    "image": "products/meubles/armoire_2p_blanche_face.webp",
+    "alt_text": "Armoire de Chambre Moderne 2 Portes Blanche avec Miroir & Tiroir - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 719,
+  "fields": {
+    "product": 328,
+    "image": "products/meubles/armoire_2p_blanche_interieur.webp",
+    "alt_text": "Armoire de Chambre Moderne 2 Portes Blanche avec Miroir & Tiroir - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 720,
+  "fields": {
+    "product": 329,
+    "image": "products/meubles/armoire_2p_rouge_acajou.webp",
+    "alt_text": "Armoire de Chambre 2 Portes Rouge Acajou Sculptée avec Miroir - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 721,
+  "fields": {
+    "product": 330,
+    "image": "products/meubles/armoire_2p_bicolore_fermee.webp",
+    "alt_text": "Armoire Dressing 2 Portes Bicolore Chêne Clair & Portes Blanches - Vue principale",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 722,
+  "fields": {
+    "product": 330,
+    "image": "products/meubles/armoire_2p_bicolore_interieur.webp",
+    "alt_text": "Armoire Dressing 2 Portes Bicolore Chêne Clair & Portes Blanches - Vue secondaire 1",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 723,
+  "fields": {
+    "product": 330,
+    "image": "products/meubles/armoire_2p_bicolore_face.webp",
+    "alt_text": "Armoire Dressing 2 Portes Bicolore Chêne Clair & Portes Blanches - Vue secondaire 2",
+    "is_primary": false,
+    "order": 2
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 724,
+  "fields": {
+    "product": 330,
+    "image": "products/meubles/armoire_2p_bicolore_magasin.webp",
+    "alt_text": "Armoire Dressing 2 Portes Bicolore Chêne Clair & Portes Blanches - Vue secondaire 3",
+    "is_primary": false,
+    "order": 3
   }
 }
 ]
