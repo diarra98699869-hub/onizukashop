@@ -414,7 +414,7 @@
               <input
                 type="email"
                 name="delivery_email"
-                value="{% if ord.delivery_email %}{{ ord.delivery_email }}{% elif ord.user %}{{ ord.user.email }}{% endif %}"
+                value="{{ ord.display_email }}"
                 placeholder="Email du client..."
                 class="px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-mono w-44 sm:w-52"
               >
@@ -460,7 +460,7 @@
           <div class="space-y-1 min-w-0">
             <div class="flex items-center gap-2 flex-wrap">
               <span class="font-bold text-slate-900">
-                {{ c_obj.guest_name|default:c_obj.user.get_full_name|default:c_obj.user.username|default:"Visiteur Boutique" }}
+                {{ c_obj.display_client_name }}
               </span>
               {% if c_obj.guest_phone %}
               <a href="tel:{{ c_obj.guest_phone }}" class="font-mono font-bold text-amber-700">{{ c_obj.guest_phone }}</a>
@@ -487,7 +487,7 @@
               <input
                 type="email"
                 name="guest_email"
-                value="{% if c_obj.guest_email %}{{ c_obj.guest_email }}{% elif c_obj.user %}{{ c_obj.user.email }}{% endif %}"
+                value="{{ c_obj.display_email }}"
                 placeholder="Email pour relancer..."
                 class="px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-mono w-44 sm:w-52"
               >

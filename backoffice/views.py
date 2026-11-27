@@ -4,6 +4,7 @@ Corrections audit : N+1 SQL, erreurs silencieuses, HTML hardcodé, endpoints sé
 """
 import csv
 import io
+import logging
 from functools import wraps
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
@@ -15,6 +16,8 @@ from django.utils import timezone
 from django.core.paginator import Paginator
 from django.views.decorators.http import require_POST
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
 
 from orders.models import Order, OrderItem, Address
 from shop.models import Product, Category, Brand, ProductImage

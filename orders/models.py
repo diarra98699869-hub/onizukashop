@@ -67,6 +67,24 @@ class Cart(models.Model):
         return f"{int(self.get_total()):,} FCFA".replace(",", " ")
 
     @property
+    def display_client_name(self):
+        """Nom d'affichage lisible du propriétaire du panier (invité ou utilisateur)."""
+        if self.guest_name:
+            return self.guest_name
+        if self.user:
+            return self.user.get_full_name() or self.user.username
+        return "Visiteur Boutique"
+
+    @property
+    def display_email(self):
+        """Email de contact du panier pour relance (invité ou utilisateur)."""
+        if self.guest_email:
+            return self.guest_email
+        if self.user and self.user.email:
+            return self.user.email
+        return ""
+
+    @property
     def whatsapp_cart_reminder_url(self):
         """Lien direct WhatsApp pour relancer un panier en attente"""
         try:
@@ -213,6 +231,15 @@ class Order(models.Model):
         WAVE = 'wave', 'Wave'
         MOOV_MONEY = 'moov_money', 'Moov Money'
         BANK_TRANSFER = 'bank_transfer', 'Virement bancaire'
+
+    @property
+    def display_email(self):
+        """Email de contact fiable de la commande"""
+        if self.delivery_email:
+            return self.delivery_email
+        if self.user and self.user.email:
+            return self.user.email
+        return ""
 
     @property
     def whatsapp_client_phone(self):
