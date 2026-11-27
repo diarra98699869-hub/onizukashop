@@ -278,6 +278,18 @@
   }
 },
 {
+  "model": "shop.brand",
+  "pk": 28,
+  "fields": {
+    "name": "NAFA",
+    "slug": "nafa",
+    "logo": "",
+    "description": "Marque d'appareils électroménagers robustes et durables avec compresseur garanti 36 mois.",
+    "website": "",
+    "is_active": true
+  }
+},
+{
   "model": "shop.product",
   "pk": 113,
   "fields": {
@@ -3014,6 +3026,248 @@
   }
 },
 {
+  "model": "shop.product",
+  "pk": 174,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal NAFA BD-398 Couché 348 Litres",
+    "slug": "congelateur-horizontal-nafa-348l-bd-398",
+    "sku": "ONZ-NAFA-CH-348L",
+    "category": 11,
+    "brand": 28,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal NAFA couché d'une capacité de 348 litres (modèle officiel BD-398). Reconnu pour sa durabilité exceptionnelle et sa technologie de conservation longue durée avec compresseur tropicalisé garanti 36 mois. Dispose d'un grand battant étanche avec joint thermique renforcé, d'une cuve intérieure facile d'entretien, d'un panier métallique suspendu et d'une classe énergétique performante. Maintient le froid pendant de longues heures lors des délestages électriques à Bamako. Vendu neuf avec garantie officielle chez Onizuka Shop au Grand Marché (Dibidani).",
+    "specifications": {
+      "Capacité nette": "348 Litres (Brut 398L)",
+      "Modèle": "BD-398 Couché",
+      "Marque": "NAFA (Le Choix Durable)",
+      "Garantie compresseur": "36 Mois constructeur",
+      "Type": "Congélateur coffre horizontal grande capacité",
+      "Porte / Battant": "1 large battant avec charnières équilibrées",
+      "Rangement": "Panier métallique suspendu inclus",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe énergétique": "A+ Faible consommation électrique",
+      "Classe climatique": "T (Tropicalisé Sahel / Bamako)",
+      "Couleur": "Gris Silver métallisé",
+      "Vidange": "Bouchon de purge frontal pratique"
+    },
+    "price": "235000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T15:24:47.595Z",
+    "updated_at": "2026-11-27T15:24:47.595Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 175,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal NAFA BD-298 Couché 248 Litres",
+    "slug": "congelateur-horizontal-nafa-248l-bd-298",
+    "sku": "ONZ-NAFA-CH-248L",
+    "category": 11,
+    "brand": 28,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal NAFA 248 litres (modèle BD-298 couché), le compromis idéal entre encombrement maîtrisé et volume de stockage généreux. Équipé d'un compresseur tropicalisé haute performance garanti 3 ans (36 mois) par NAFA. Offre une descente rapide en température jusqu'à -18°C, une cuve intérieure étanche avec panier de tri, un thermostat réglable en façade et un joint antibactérien amovible. Faible consommation électrique adaptée aux compteurs EDM. Disponible immédiatement au showroom Dibidani avec livraison express partout à Bamako.",
+    "specifications": {
+      "Capacité nette": "248 Litres (Brut 298L)",
+      "Modèle": "BD-298 Couché",
+      "Marque": "NAFA (Le Choix Durable)",
+      "Garantie compresseur": "36 Mois (3 ans)",
+      "Type": "Congélateur coffre horizontal couché",
+      "Porte / Battant": "1 battant avec joint isolant épais",
+      "Rangement": "Panier métallique suspendu",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe énergétique": "A+ Économique",
+      "Classe climatique": "T (Tropicalisé)",
+      "Couleur": "Gris métallisé premium",
+      "Vidange": "Évacuation frontale de dégivrage"
+    },
+    "price": "195000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T15:24:47.735Z",
+    "updated_at": "2026-11-27T15:24:47.735Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 176,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal NAFA BD-198 Couché 148 Litres Compact",
+    "slug": "congelateur-horizontal-nafa-148l-bd-198",
+    "sku": "ONZ-NAFA-CH-148L",
+    "category": 11,
+    "brand": 28,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal NAFA 148 litres (modèle BD-198 couché), compact, robuste et extrêmement économe en énergie. Parfait pour les petits commerces, boutiques, kiosques et foyers à Bamako. Bénéficie de la garantie compresseur 36 mois NAFA assurant une totale tranquillité d'esprit. Cuve intérieure traitée anti-corrosion, panier métallique suspendu, thermostat en façade et isolation thermique épaisse préservant vos produits congelés. Disponible chez Onizuka Shop au Grand Marché de Bamako.",
+    "specifications": {
+      "Capacité nette": "148 Litres (Brut 198L)",
+      "Modèle": "BD-198 Couché",
+      "Marque": "NAFA (Le Choix Durable)",
+      "Garantie compresseur": "36 Mois constructeur",
+      "Type": "Congélateur coffre horizontal compact",
+      "Porte / Battant": "1 battant supérieur équilibré",
+      "Rangement": "Panier métallique pour petits articles",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe énergétique": "A+ Très basse consommation",
+      "Classe climatique": "T (Tropicalisé)",
+      "Couleur": "Gris Silver métallisé",
+      "Vidange": "Bouchon de purge en façade"
+    },
+    "price": "173000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "created_at": "2026-11-27T15:24:47.853Z",
+    "updated_at": "2026-11-27T15:24:47.853Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 177,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal Telimani 650 Litres PRO - 2 Battants Géants",
+    "slug": "congelateur-horizontal-telimani-650l-telimani-star-650l-pro",
+    "sku": "ONZ-TEL-CH-650L",
+    "category": 11,
+    "brand": 27,
+    "short_description": "",
+    "description": "Le géant de la gamme Telimani : congélateur coffre professionnel de 650 litres à deux battants indépendants. Conçu pour un usage commercial lourd (supérettes, grossistes, boucheries, poissonneries, boutiques de glaces et restaurants) à Bamako. Équipé d'une double baie de vitres coulissantes transparentes étanches permettant de conserver l'intégralité du froid lors de l'accès aux vivres. Compresseur tropicalisé ultra-puissant assurant une congélation profonde continue à -18°C même lors des périodes de canicule. Double éclairage LED intérieur, double serrure à clé, cuve en aluminium gaufré martelé et roulettes de déplacement renforcées. Garanti Onizuka Shop à Dibidani avec assistance technique dédiée.",
+    "specifications": {
+      "Capacité brute / nette": "650 Litres",
+      "Marque": "Telimani (Telimani Star)",
+      "Type": "Congélateur coffre professionnel 2 battants géants",
+      "Portes / Battants": "2 très grands battants indépendants",
+      "Isolation thermique": "Vitres coulissantes intérieures transparentes étanches",
+      "Sécurité": "Double serrure à clé individuelle",
+      "Éclairage": "Double éclairage intérieur LED",
+      "Rangement": "Grands paniers métalliques suspendus",
+      "Cuve intérieure": "Aluminium gaufré martelé haute conductivité thermique",
+      "Alimentation": "220V - 240V / 50Hz",
+      "Classe climatique": "T (Tropicalisé lourd spécial Mali)",
+      "Couleur": "Gris Silver métallisé haute durabilité",
+      "Vidange": "Bouchon de dégivrage frontal"
+    },
+    "price": "520000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T15:24:47.969Z",
+    "updated_at": "2026-11-27T15:24:47.969Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 178,
+  "fields": {
+    "name": "Congélateur Coffre Horizontal LG 345 Litres - Inverter Modèle GCS415GQFG",
+    "slug": "congelateur-horizontal-lg-345l-gcs415gqfg",
+    "sku": "ONZ-LG-CH-345L",
+    "category": 11,
+    "brand": 2,
+    "short_description": "",
+    "description": "Congélateur coffre horizontal officiel LG 345 litres (modèle certifié GCS415GQFG) d'une fiabilité exceptionnelle. Doté du compresseur Smart Inverter LG de 190W alliant un silence de fonctionnement parfait et une très faible consommation électrique (1.5A). Capacité de congélation rapide de 17 kg/24h avec fluide écologique R600a et isolation thermique haute densité au Cyclopentane. Finition gris métallisé haute résistance contre la rouille, cuve spacieuse de 1275 x 740 x 825 mm avec paniers métalliques suspendus, éclairage intérieur et contrôle précis en façade. Conçu pour résister aux climats tropicaux et aux variations de tension électrique. Produit 100% authentique LG garanti avec facture officielle Onizuka Shop au Grand Marché de Bamako (Dibidani).",
+    "specifications": {
+      "Capacité ISO stockage": "345 Litres",
+      "Modèle constructeur": "GCS415GQFG (AXGPW / 5N1F901)",
+      "Marque": "LG Electronics (Authentique certifié)",
+      "Puissance moteur": "190W / 1.5A (Basse consommation)",
+      "Gaz réfrigérant": "R600a (98g) écologique",
+      "Capacité de congélation": "17 kg / 24 heures",
+      "Isolation thermique": "Cyclopentane haute densité",
+      "Dimensions (L x P x H)": "1275 x 740 x 825 mm",
+      "Poids net": "55 kg",
+      "Alimentation": "220V - 50Hz",
+      "Classe climatique": "ST (Semi-tropicalisé / Tropical)",
+      "Couleur": "Gris Silver métallisé anti-traces",
+      "Rangement": "Panier métallique suspendu pour tri rapide"
+    },
+    "price": "380000",
+    "sale_price": null,
+    "cost_price": null,
+    "stock": 10,
+    "min_stock": 5,
+    "track_stock": true,
+    "weight": null,
+    "dimensions": "",
+    "video_file": "",
+    "video_url": "",
+    "is_eco_solar": false,
+    "addon_label": "",
+    "addon_price": "0",
+    "meta_title": "",
+    "meta_description": "",
+    "status": "active",
+    "is_active": true,
+    "is_featured": true,
+    "is_new": true,
+    "created_at": "2026-11-27T15:24:48.193Z",
+    "updated_at": "2026-11-27T15:24:48.193Z"
+  }
+},
+{
   "model": "shop.productimage",
   "pk": 254,
   "fields": {
@@ -4595,6 +4849,94 @@
     "alt_text": "Congélateur Coffre Horizontal Telimani 212 Litres - Vitres Coulissantes Intérieures - Vue intérieure vitres coulissantes et panier",
     "is_primary": false,
     "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 483,
+  "fields": {
+    "product": 174,
+    "image": "products/congelateurs_coffres/nafa_coffre_348l_bd398.webp",
+    "alt_text": "Congélateur Coffre Horizontal NAFA BD-398 Couché 348 Litres - Vue studio showroom Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 484,
+  "fields": {
+    "product": 175,
+    "image": "products/congelateurs_coffres/nafa_coffre_248l_bd298.webp",
+    "alt_text": "Congélateur Coffre Horizontal NAFA BD-298 Couché 248 Litres - Vue studio showroom Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 485,
+  "fields": {
+    "product": 176,
+    "image": "products/congelateurs_coffres/nafa_coffre_148l_bd198.webp",
+    "alt_text": "Congélateur Coffre Horizontal NAFA BD-198 Couché 148 Litres Compact - Vue studio showroom Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 486,
+  "fields": {
+    "product": 177,
+    "image": "products/congelateurs_coffres/telimani_coffre_650l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal Telimani 650 Litres PRO - 2 Battants Géants - Vue studio showroom Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 487,
+  "fields": {
+    "product": 177,
+    "image": "products/congelateurs_coffres/telimani_coffre_650l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal Telimani 650 Litres PRO - 2 Battants Géants - Vue studio showroom Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 488,
+  "fields": {
+    "product": 178,
+    "image": "products/congelateurs_coffres/lg_coffre_345l_ferme.webp",
+    "alt_text": "Congélateur Coffre Horizontal LG 345 Litres - Inverter Modèle GCS415GQFG - Vue studio showroom Dibidani",
+    "is_primary": true,
+    "order": 0
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 489,
+  "fields": {
+    "product": 178,
+    "image": "products/congelateurs_coffres/lg_coffre_345l_ouvert.webp",
+    "alt_text": "Congélateur Coffre Horizontal LG 345 Litres - Inverter Modèle GCS415GQFG - Vue studio showroom Dibidani",
+    "is_primary": false,
+    "order": 1
+  }
+},
+{
+  "model": "shop.productimage",
+  "pk": 490,
+  "fields": {
+    "product": 178,
+    "image": "products/congelateurs_coffres/lg_coffre_345l_plaque_technique.webp",
+    "alt_text": "Congélateur Coffre Horizontal LG 345 Litres - Inverter Modèle GCS415GQFG - Vue studio showroom Dibidani",
+    "is_primary": false,
+    "order": 2
   }
 }
 ]
