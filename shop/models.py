@@ -55,11 +55,14 @@ class Category(MPTTModel):
     def short_name(self):
         """Nom concis pour les barres de navigation mobile et onglets"""
         short_map = {
+            'congelateurs-horizontaux': 'Congélateurs Coffres',
+            'congelateurs-verticaux': 'Congélateurs Verticaux',
+            'vitrines-refrigerees': 'Vitrines Réfrigérées',
+            'climatiseurs': 'Climatiseurs',
+            'climatisation': 'Ventilation & Solaire',
             'refrigerateurs': 'Réfrigérateurs',
-            'climatisation': 'Climatiseurs',
             'televiseurs': 'Smart TV',
             'cuisinieres': 'Cuisinières',
-            'congelateurs': 'Congélateurs',
             'petit-electromenager': 'Petit Électro',
             'meubles': 'Meubles',
             'mobilier': 'Mobilier',

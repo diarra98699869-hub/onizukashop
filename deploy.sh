@@ -40,8 +40,8 @@ pip install -r requirements.txt
 echo ">>> [5/7] Application des migrations PostgreSQL..."
 python manage.py migrate --noinput
 
-echo ">>> [6/7] Chargement et fusion du catalogue complet (180+ produits)..."
-python scripts/restore_and_merge_catalog.py
+echo ">>> [6/7] Synchronisation du catalogue réel (78 produits authentiques)..."
+python scripts/clean_and_sync_real_catalog.py
 python manage.py setup_admin_accounts
 
 echo ">>> [7/7] Collecte des fichiers statiques (CSS, JS, images)..."

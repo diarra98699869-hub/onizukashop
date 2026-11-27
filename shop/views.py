@@ -156,8 +156,8 @@ def home(request):
         else:
             feed_qs = feed_qs.order_by('-is_featured', '-created_at')
     else:
-        # Onglet 'Tous' : Entrelacement diversifié et équilibré par familles de produits
-        # Permet aux clients de voir un panaché riche (TV, Clim, Petit électro, Cuisinière, Frigo, Vitrine, etc.)
+        # Onglet 'Tous' : Entrelacement diversifié et équilibré des produits réels d'Onizouka Shop
+        # Permet de voir un panaché riche (Vitrines, Congélateurs coffres, Congélateurs verticaux, Climatiseurs)
         from django.db.models import Case, When
         from collections import defaultdict
         from itertools import zip_longest
@@ -168,13 +168,15 @@ def home(request):
 
         by_family = defaultdict(list)
         for pid, c_slug, p_slug, is_feat, c_date in all_active_meta:
-            fam = p_slug or c_slug
-            if 'vitrine' in c_slug:
+            fam = c_slug
+            if 'clim' in c_slug or (p_slug and 'clim' in p_slug):
+                fam = 'climatiseurs'
+            elif 'coffre' in c_slug or 'horizontal' in c_slug:
+                fam = 'congelateurs_coffres'
+            elif 'vertical' in c_slug or 'verticaux' in c_slug:
+                fam = 'congelateurs_verticaux'
+            elif 'vitrine' in c_slug:
                 fam = 'vitrines'
-            elif 'clim' in fam:
-                fam = 'climatisation'
-            elif 'congelateur' in c_slug or 'refrigerateur' in fam:
-                fam = 'froid'
             by_family[fam].append(pid)
 
         interleaved_ids = []
@@ -245,12 +247,10 @@ def home(request):
     featured_products = fill_up_to(featured_products, 6)
     new_products = fill_up_to(new_products, 6)
 
-    # Catégories racines avec miniature produit 100% dynamique (uniquement celles avec produits)
-    all_roots = list(Category.objects.filter(parent__isnull=True, is_active=True).order_by('order', 'name'))
-    root_categories = [
-        c for c in all_roots
-        if c.get_descendants(include_self=True).filter(products__is_active=True).exists()
-    ][:10]
+    # Catégories actives réelles pour les onglets du mur d'accueil
+    root_categories = list(Category.objects.filter(
+        is_active=True, products__is_active=True
+    ).distinct().order_by('order', 'name'))
 
     # Associer une image représentative et le compteur à chaque catégorie en 1 passe légère
     cat_ids = [c.id for c in root_categories]
