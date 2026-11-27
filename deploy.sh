@@ -41,7 +41,7 @@ echo ">>> [5/7] Application des migrations PostgreSQL..."
 python manage.py migrate --noinput
 
 echo ">>> [6/7] Chargement des données du catalogue..."
-python manage.py loaddata fixtures/demo_data.json || echo "Note : Fixtures déjà chargées ou sautées."
+python manage.py loaddata fixtures/catalog_data.json || echo "Note : Fixtures déjà chargées ou sautées."
 
 echo ">>> [7/7] Collecte des fichiers statiques (CSS, JS, images)..."
 python manage.py collectstatic --noinput
