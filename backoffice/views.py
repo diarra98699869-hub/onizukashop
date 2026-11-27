@@ -2751,7 +2751,7 @@ def emails_center_view(request):
         # --- G. ALERTE STOCK BAS MANUELLE IMMÉDIATE ---
         elif action == 'send_low_stock_digest_now':
             low_prods = list(
-                Product.objects.filter(is_active=True, track_stock=True, stock__lte=models.F('min_stock')).order_by('stock')
+                Product.objects.filter(is_active=True, track_stock=True, stock__lte=F('min_stock')).order_by('stock')
             )
             if not low_prods:
                 low_prods = list(Product.objects.filter(is_active=True).order_by('stock')[:5])
@@ -2763,31 +2763,45 @@ def emails_center_view(request):
 
         # --- H. PURGER LE JOURNAL DES EMAILS ---
         elif action == 'clear_email_logs':
-            EmailLog.objects.all().delete()
-            messages.success(request, "Le journal des envois d'emails a été vidé.")
+            try:
+                EmailLog.objects.all().delete()
+                messages.success(request, "Le journal des envois d'emails a été vidé.")
+            except Exception:
+                messages.error(request, "Impossible de vider le journal (table indisponible).")
             return redirect('/gestion/emails/?tab=logs')
 
     # Données pour l'onglet Rappels de Finalisation
-    pending_orders = (
-        Order.objects
-        .select_related('user')
-        .prefetch_related('items')
-        .filter(status__in=[Order.Status.PENDING, Order.Status.CONFIRMED], payment_status=False)
-        .order_by('-created_at')[:30]
-    )
+    try:
+        pending_orders = list(
+            Order.objects
+            .select_related('user')
+            .prefetch_related('items')
+            .filter(status__in=[Order.Status.PENDING, Order.Status.CONFIRMED], payment_status=False)
+            .order_by('-created_at')[:30]
+        )
+    except Exception:
+        pending_orders = []
 
-    abandoned_carts = (
-        Cart.objects
-        .select_related('user')
-        .prefetch_related('items__product')
-        .annotate(items_cnt=Count('items'))
-        .filter(items_cnt__gt=0)
-        .order_by('-updated_at')[:30]
-    )
+    try:
+        abandoned_carts = list(
+            Cart.objects
+            .select_related('user')
+            .prefetch_related('items__product')
+            .annotate(items_cnt=Count('items'))
+            .filter(items_cnt__gt=0)
+            .order_by('-updated_at')[:30]
+        )
+    except Exception:
+        abandoned_carts = []
 
-    email_logs = EmailLog.objects.all()[:60]
-    logs_sent_count = EmailLog.objects.filter(status=EmailLog.Status.SENT).count()
-    logs_failed_count = EmailLog.objects.filter(status=EmailLog.Status.FAILED).count()
+    try:
+        email_logs = list(EmailLog.objects.all()[:60])
+        logs_sent_count = EmailLog.objects.filter(status=EmailLog.Status.SENT).count()
+        logs_failed_count = EmailLog.objects.filter(status=EmailLog.Status.FAILED).count()
+    except Exception:
+        email_logs = []
+        logs_sent_count = 0
+        logs_failed_count = 0
 
     template_cards = [
         {

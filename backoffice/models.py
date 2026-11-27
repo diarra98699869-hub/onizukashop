@@ -151,9 +151,18 @@ class ShopSetting(models.Model):
 
     @classmethod
     def get_settings(cls):
-        """Récupère l'unique configuration ou la crée avec les valeurs d'origine."""
-        obj, _ = cls.objects.get_or_create(id=1)
-        return obj
+        """Récupère l'unique configuration ou la crée avec les valeurs d'origine de manière ultra-robuste."""
+        try:
+            obj, _ = cls.objects.get_or_create(id=1)
+            return obj
+        except Exception:
+            try:
+                obj = cls.objects.filter(id=1).first()
+                if obj:
+                    return obj
+            except Exception:
+                pass
+            return cls(id=1)
 
     @property
     def whatsapp_raw(self):
