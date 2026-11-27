@@ -121,6 +121,7 @@
 
       <!-- Prix Fort en FCFA -->
       <div class="mt-1.5">
+        {% if product.current_price > 0 %}
         <div class="flex items-baseline gap-1 flex-wrap">
           <span class="font-display text-sm sm:text-base font-black text-slate-950 tracking-tight whitespace-nowrap">
             {{ product.current_price|floatformat:0|intcomma }}
@@ -131,6 +132,13 @@
         {% if product.is_on_sale %}
         <div class="text-[10px] text-slate-400 line-through font-medium leading-tight">
           {{ product.price|floatformat:0|intcomma }} FCFA
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="flex items-baseline gap-1 flex-wrap">
+          <span class="text-xs font-black text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/80">
+            Prix sur demande
+          </span>
         </div>
         {% endif %}
       </div>

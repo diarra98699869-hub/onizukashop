@@ -6,25 +6,26 @@
   {% if feed_products.has_next %}
   <div
     id="load-more-slot"
-    class="col-span-full pt-3 pb-1 text-center"
+    class="col-span-full pt-4 pb-2 text-center"
     hx-get="{% url 'shop:home' %}?tab={{ active_tab }}&amp;page={{ feed_products.next_page_number }}&amp;append=1"
     hx-trigger="revealed, click"
     hx-target="#load-more-slot"
-    hx-indicator="#load-more-slot"
     hx-swap="outerHTML"
   >
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3">
-      <div class="rounded-2xl bg-white p-2.5 border border-slate-100 space-y-2">
-        <div class="aspect-square rounded-xl skeleton-shimmer"></div>
-        <div class="h-3 w-3/4 rounded skeleton-shimmer"></div>
-        <div class="h-4 w-1/2 rounded skeleton-shimmer"></div>
-      </div>
-      <div class="rounded-2xl bg-white p-2.5 border border-slate-100 space-y-2">
-        <div class="aspect-square rounded-xl skeleton-shimmer"></div>
-        <div class="h-3 w-2/3 rounded skeleton-shimmer"></div>
-        <div class="h-4 w-1/2 rounded skeleton-shimmer"></div>
-      </div>
-    </div>
+    <button
+      type="button"
+      class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white border border-slate-200/90 hover:border-amber-400 text-slate-800 font-extrabold text-xs shadow-xs hover:shadow-sm transition cursor-pointer"
+    >
+      <svg class="w-3.5 h-3.5 text-amber-500 animate-spin" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+      </svg>
+      <span>Chargement de la suite...</span>
+    </button>
+  </div>
+  {% else %}
+  <div class="col-span-full py-6 text-center text-xs font-semibold text-slate-400 border-t border-slate-100 mt-4">
+    ✨ Vous avez exploré l'ensemble de cette sélection ({{ feed_products.paginator.count }} produits)
   </div>
   {% endif %}
 {% else %}
@@ -37,17 +38,26 @@
     {% if feed_products.has_next %}
     <div
       id="load-more-slot"
-      class="col-span-full pt-3 pb-1 text-center"
+      class="col-span-full pt-4 pb-2 text-center"
       hx-get="{% url 'shop:home' %}?tab={{ active_tab }}&amp;page={{ feed_products.next_page_number }}&amp;append=1"
-      hx-trigger="revealed"
+      hx-trigger="revealed, click"
       hx-target="#load-more-slot"
-    hx-indicator="#load-more-slot"
       hx-swap="outerHTML"
     >
       <button
         type="button"
-        class="w-full sm:w-auto min-w-[220px] px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-800 font-extrabold text-xs shadow-sm"
-      >Chargement de la suite...</button>
+        class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white border border-slate-200/90 hover:border-amber-400 text-slate-800 font-extrabold text-xs shadow-xs hover:shadow-sm transition cursor-pointer"
+      >
+        <svg class="w-3.5 h-3.5 text-amber-500 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+        </svg>
+        <span>Chargement de la suite...</span>
+      </button>
+    </div>
+    {% else %}
+    <div class="col-span-full py-6 text-center text-xs font-semibold text-slate-400 border-t border-slate-100 mt-4">
+      ✨ Vous avez exploré l'ensemble de cette sélection ({{ feed_products.paginator.count }} produits)
     </div>
     {% endif %}
   </div>
