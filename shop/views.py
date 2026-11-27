@@ -156,7 +156,38 @@ def home(request):
         else:
             feed_qs = feed_qs.order_by('-is_featured', '-created_at')
     else:
-        feed_qs = feed_qs.order_by('-is_featured', '-created_at')
+        # Onglet 'Tous' : Entrelacement diversifié et équilibré par familles de produits
+        # Permet aux clients de voir un panaché riche (TV, Clim, Petit électro, Cuisinière, Frigo, Vitrine, etc.)
+        from django.db.models import Case, When
+        from collections import defaultdict
+        from itertools import zip_longest
+
+        all_active_meta = list(Product.objects.filter(is_active=True).values_list(
+            'id', 'category__slug', 'category__parent__slug', 'is_featured', 'created_at'
+        ).order_by('-is_featured', '-created_at'))
+
+        by_family = defaultdict(list)
+        for pid, c_slug, p_slug, is_feat, c_date in all_active_meta:
+            fam = p_slug or c_slug
+            if 'vitrine' in c_slug:
+                fam = 'vitrines'
+            elif 'clim' in fam:
+                fam = 'climatisation'
+            elif 'congelateur' in c_slug or 'refrigerateur' in fam:
+                fam = 'froid'
+            by_family[fam].append(pid)
+
+        interleaved_ids = []
+        for pids in zip_longest(*by_family.values()):
+            for pid in pids:
+                if pid is not None:
+                    interleaved_ids.append(pid)
+
+        if interleaved_ids:
+            preserved_order = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(interleaved_ids)])
+            feed_qs = feed_qs.filter(id__in=interleaved_ids).order_by(preserved_order)
+        else:
+            feed_qs = feed_qs.order_by('-is_featured', '-created_at')
 
     feed_paginator = Paginator(feed_qs, 20)
     feed_page = feed_paginator.get_page(request.GET.get('page', 1))
@@ -214,10 +245,12 @@ def home(request):
     featured_products = fill_up_to(featured_products, 6)
     new_products = fill_up_to(new_products, 6)
 
-    # Catégories racines avec miniature produit 100% dynamique (zéro chemin codé en dur)
-    root_categories = list(Category.objects.filter(
-        parent__isnull=True, is_active=True
-    ).order_by('order', 'name')[:10])
+    # Catégories racines avec miniature produit 100% dynamique (uniquement celles avec produits)
+    all_roots = list(Category.objects.filter(parent__isnull=True, is_active=True).order_by('order', 'name'))
+    root_categories = [
+        c for c in all_roots
+        if c.get_descendants(include_self=True).filter(products__is_active=True).exists()
+    ][:10]
 
     # Associer une image représentative et le compteur à chaque catégorie en 1 passe légère
     cat_ids = [c.id for c in root_categories]

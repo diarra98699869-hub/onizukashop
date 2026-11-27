@@ -153,9 +153,8 @@ def process_images():
             continue
         try:
             with Image.open(src_path) as img:
-                cropped = img.crop(cfg['crop'])
-                cropped.save(dest_path, 'WEBP', quality=90, method=6)
-                print(f"✅ Généré: {dest_path.relative_to(MEDIA_ROOT)} ({cropped.size[0]}x{cropped.size[1]})")
+                img.save(dest_path, 'WEBP', quality=92, method=6)
+                print(f"✅ Généré brut plein cadre sans rognage: {dest_path.relative_to(MEDIA_ROOT)} ({img.size[0]}x{img.size[1]})")
         except Exception as e:
             print(f"❌ Erreur sur {src_path.name}: {e}")
 
