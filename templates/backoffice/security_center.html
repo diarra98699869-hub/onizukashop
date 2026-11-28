@@ -1,0 +1,282 @@
+{% extends 'backoffice/base.html' %}
+{% load humanize %}
+
+{% block title %}Bouclier Sécurité &amp; Intrusions • IT Onizuka Shop{% endblock %}
+
+{% block content %}
+<div class="space-y-4 sm:space-y-5">
+
+  <!-- EN-TÊTE BOUCLIER ANTI-INTRUSION -->
+  <div class="rounded-2xl bg-[#0d0e12] text-white p-4 sm:p-6 border border-rose-500/30 shadow-md">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[11px] font-extrabold uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Protection WAF / IDS / IPS Active 24h/24</span>
+        </div>
+        <h1 class="font-heading text-xl sm:text-2xl font-black text-white">
+          Bouclier Anti-Intrusion &amp; Traçabilité Attaquants
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-400">
+          Chaque tentative de piratage (SQLi, XSS, LFI, RCE, Bruteforce, Webshell, Scanners) est bloquée et notifiée en temps réel à
+          <strong class="text-amber-300 font-mono">{{ alert_email }}</strong>.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 shrink-0">
+        <form method="post" action="{% url 'backoffice:security_test_alert' %}">
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs inline-flex items-center gap-2 shadow-sm transition cursor-pointer"
+          >
+            <span>🚨 Envoyer une alerte test à {{ alert_email }}</span>
+          </button>
+        </form>
+        {% if total_incidents > 0 %}
+        <form method="post" action="{% url 'backoffice:security_clear_logs' %}" onsubmit="return confirm('Purger tout le journal des incidents de sécurité ?');">
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-rose-500/20 text-slate-300 hover:text-rose-200 border border-white/10 text-xs font-bold transition cursor-pointer"
+          >
+            Purger les logs
+          </button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPTEURS TEMPS RÉEL -->
+  <div class="grid grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-3.5">
+    <div class="bg-white rounded-2xl p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs">
+      <p class="text-[11px] font-bold text-slate-500 uppercase">Total Intrusions</p>
+      <p class="font-heading text-2xl font-black text-slate-950 mt-1">{{ total_incidents }}</p>
+      <p class="text-[11px] text-slate-400 mt-0.5">Interceptées &amp; bloquées</p>
+    </div>
+    <div class="bg-white rounded-2xl p-3.5 sm:p-4 border border-rose-200/80 shadow-2xs">
+      <p class="text-[11px] font-bold text-rose-600 uppercase">Dernières 24h</p>
+      <p class="font-heading text-2xl font-black text-rose-600 mt-1">{{ incidents_24h }}</p>
+      <p class="text-[11px] text-slate-400 mt-0.5">Activité récente</p>
+    </div>
+    <div class="bg-white rounded-2xl p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs">
+      <p class="text-[11px] font-bold text-amber-600 uppercase">Niveau Critique</p>
+      <p class="font-heading text-2xl font-black text-slate-950 mt-1">{{ critical_count }}</p>
+      <p class="text-[11px] text-slate-400 mt-0.5">SQLi / RCE / Bruteforce</p>
+    </div>
+    <div class="bg-white rounded-2xl p-3.5 sm:p-4 border border-slate-200/80 shadow-2xs">
+      <p class="text-[11px] font-bold text-slate-500 uppercase">IPs Bannies</p>
+      <p class="font-heading text-2xl font-black text-slate-950 mt-1">{{ active_bans_count }}</p>
+      <p class="text-[11px] text-slate-400 mt-0.5">Liste noire active</p>
+    </div>
+    <div class="col-span-2 lg:col-span-1 bg-white rounded-2xl p-3.5 sm:p-4 border border-emerald-200/80 shadow-2xs">
+      <p class="text-[11px] font-bold text-emerald-700 uppercase">Alertes Envoyées</p>
+      <p class="font-heading text-2xl font-black text-emerald-700 mt-1">{{ alerts_sent_count }}</p>
+      <p class="text-[11px] text-slate-400 mt-0.5 truncate">{{ alert_email }}</p>
+    </div>
+  </div>
+
+  <!-- GESTION DE LA LISTE NOIRE IP (IPS) -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <!-- Formulaire Bannissement Manuel -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-2xs">
+      <h2 class="font-heading text-sm font-black text-slate-950 mb-1">Bannir une adresse IP</h2>
+      <p class="text-xs text-slate-500 mb-3">Bloque immédiatement tout trafic provenant de l'attaquant.</p>
+      <form method="post" action="{% url 'backoffice:security_block_ip' %}" class="space-y-2.5">
+        {% csrf_token %}
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Adresse IPv4 / IPv6 *</label>
+          <input type="text" name="ip_address" required placeholder="Ex: 185.220.101.42" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono focus:outline-none focus:border-rose-500">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Durée</label>
+            <select name="duration" class="w-full px-2.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold bg-white">
+              <option value="6h">6 heures</option>
+              <option value="24h" selected>24 heures</option>
+              <option value="7d">7 jours</option>
+              <option value="30d">30 jours</option>
+              <option value="permanent">Permanent</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Motif</label>
+            <input type="text" name="reason" placeholder="Tentative d'intrusion" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs">
+          </div>
+        </div>
+        <button type="submit" class="w-full py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs transition cursor-pointer">
+          Bloquer cette IP maintenant
+        </button>
+      </form>
+    </div>
+
+    <!-- Liste des IPs actuellement bannies -->
+    <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200/80 p-4 shadow-2xs flex flex-col">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-heading text-sm font-black text-slate-950">Adresses IP sur Liste Noire ({{ active_bans_count }})</h2>
+        <span class="text-[11px] text-slate-400">Auto-ban après 3 attaques critiques</span>
+      </div>
+      {% if blocked_ips %}
+      <div class="overflow-x-auto max-h-56 overflow-y-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="text-[10px] uppercase text-slate-400 border-b border-slate-100">
+            <tr>
+              <th class="pb-2 pr-3">IP Bannie</th>
+              <th class="pb-2 pr-3">Motif</th>
+              <th class="pb-2 pr-3">Essais</th>
+              <th class="pb-2 pr-3">Expiration</th>
+              <th class="pb-2 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for ban in blocked_ips %}
+            {% if ban.is_currently_blocked %}
+            <tr>
+              <td class="py-2 pr-3 font-mono font-bold text-rose-600">{{ ban.ip_address }}</td>
+              <td class="py-2 pr-3 text-slate-700 max-w-[220px] truncate" title="{{ ban.reason }}">{{ ban.reason }}</td>
+              <td class="py-2 pr-3 font-bold">{{ ban.attempts_count }}</td>
+              <td class="py-2 pr-3 text-slate-500">
+                {% if ban.is_permanent %}Permanent{% elif ban.expires_at %}{{ ban.expires_at|date:"d/m H:i" }}{% else %}Actif{% endif %}
+              </td>
+              <td class="py-2 text-right">
+                <form method="post" action="{% url 'backoffice:security_unblock_ip' ban.id %}" class="inline">
+                  {% csrf_token %}
+                  <button type="submit" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-bold text-[11px] cursor-pointer">
+                    Débloquer
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="flex-1 flex items-center justify-center py-8 text-xs text-slate-400">
+        Aucune adresse IP bannie pour le moment.
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- FILTRES & JOURNAL COMPLET DES INTRUSIONS -->
+  <div class="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
+    <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div>
+        <h2 class="font-heading text-base font-black text-slate-950">Journal Médico-Légal des Intrusions</h2>
+        <p class="text-xs text-slate-500">Cliquez sur « Inspecter l'attaquant » pour voir les en-têtes HTTP complets et le payload.</p>
+      </div>
+      <form method="get" class="flex flex-wrap items-center gap-2">
+        <input
+          type="text"
+          name="q"
+          value="{{ q }}"
+          placeholder="IP, outil, URL, ID..."
+          class="px-3 py-1.5 rounded-xl border border-slate-200 text-xs w-44 sm:w-56 focus:outline-none focus:border-amber-400"
+        >
+        <select name="severity" class="px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs bg-white font-semibold">
+          <option value="">Toutes sévérités</option>
+          <option value="critical" {% if sev_filter == 'critical' %}selected{% endif %}>Critique</option>
+          <option value="high" {% if sev_filter == 'high' %}selected{% endif %}>Élevée</option>
+          <option value="medium" {% if sev_filter == 'medium' %}selected{% endif %}>Moyenne</option>
+        </select>
+        <button type="submit" class="px-3 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-bold cursor-pointer">Filtrer</button>
+      </form>
+    </div>
+
+    {% if incidents %}
+    <div class="divide-y divide-slate-100">
+      {% for inc in incidents %}
+      <div x-data="{ open: false }" class="p-3.5 sm:p-4 hover:bg-slate-50/70 transition">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2.5">
+          <div class="space-y-1 min-w-0">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2 py-0.5 rounded-md text-[10px] font-black uppercase {% if inc.severity == 'critical' %}bg-rose-600 text-white{% elif inc.severity == 'high' %}bg-amber-400 text-slate-950{% else %}bg-slate-200 text-slate-800{% endif %}">
+                {{ inc.get_severity_display }}
+              </span>
+              <span class="font-mono text-[11px] font-bold text-slate-500">{{ inc.incident_id }}</span>
+              <span class="text-xs font-black text-slate-950">{{ inc.attack_type }}</span>
+              {% if inc.ip_auto_banned %}
+              <span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 text-[10px] font-extrabold">IP BANNIE</span>
+              {% endif %}
+              {% if inc.alert_sent %}
+              <span class="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">✉️ Email envoyé</span>
+              {% endif %}
+            </div>
+
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-600">
+              <span>IP : <strong class="font-mono text-rose-600">{{ inc.ip_address }}</strong> {% if inc.country and inc.country != 'Non résolu' %}({{ inc.country }}){% endif %}</span>
+              <span>•</span>
+              <span>Outil : <strong class="text-slate-800">{{ inc.attacker_tool|default:"Inconnu" }}</strong></span>
+              <span>•</span>
+              <span class="font-mono text-[11px] text-slate-700 truncate max-w-xs">{{ inc.method }} {{ inc.path }}</span>
+              <span>•</span>
+              <span class="text-[11px] text-slate-400">{{ inc.created_at|date:"d/m/Y H:i:s" }}</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              @click="open = !open"
+              class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs cursor-pointer"
+            >
+              <span x-text="open ? 'Masquer détails' : 'Inspecter l\'attaquant'">Inspecter l'attaquant</span>
+            </button>
+            <form method="post" action="{% url 'backoffice:security_block_ip' %}" class="inline">
+              {% csrf_token %}
+              <input type="hidden" name="ip_address" value="{{ inc.ip_address }}">
+              <input type="hidden" name="duration" value="7d">
+              <input type="hidden" name="reason" value="{{ inc.attack_type }} ({{ inc.incident_id }})">
+              <button type="submit" class="px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs cursor-pointer">
+                Bannir 7j
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- FICHE FORENSIQUE DÉPLIABLE -->
+        <div x-show="open" x-cloak class="mt-3 p-3.5 rounded-xl bg-[#0d0e12] text-slate-200 text-xs space-y-2.5 border border-slate-800">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+            <div><span class="text-slate-400">Diagnostic :</span> <strong class="text-amber-300">{{ inc.details }}</strong></div>
+            <div><span class="text-slate-400">Mesure :</span> <strong class="text-emerald-300">{{ inc.action_taken }}</strong></div>
+            <div><span class="text-slate-400">Chaîne Proxy :</span> <span class="font-mono">{{ inc.forwarded_ips }}</span></div>
+            <div><span class="text-slate-400">Compte visé :</span> <strong>{{ inc.targeted_user }}</strong></div>
+            <div><span class="text-slate-400">Referer :</span> <span class="font-mono break-all">{{ inc.referer }}</span></div>
+            <div><span class="text-slate-400">Langue :</span> <span>{{ inc.accept_language }}</span></div>
+          </div>
+          <div>
+            <span class="text-slate-400 block mb-0.5">User-Agent complet :</span>
+            <code class="block p-2 rounded bg-black/50 text-slate-300 break-all">{{ inc.user_agent }}</code>
+          </div>
+          {% if inc.query_string or inc.payload_excerpt %}
+          <div>
+            <span class="text-slate-400 block mb-0.5">Query &amp; Payload interceptés :</span>
+            <code class="block p-2 rounded bg-black/50 text-rose-300 break-all">GET: {{ inc.query_string|default:"-" }} | {{ inc.payload_excerpt }}</code>
+          </div>
+          {% endif %}
+          {% if inc.headers_dump %}
+          <div>
+            <span class="text-slate-400 block mb-0.5">En-têtes HTTP complets :</span>
+            <pre class="p-2 rounded bg-black/50 text-[11px] text-slate-400 overflow-x-auto whitespace-pre-wrap">{{ inc.headers_dump }}</pre>
+          </div>
+          {% endif %}
+          <div class="pt-1 flex flex-wrap gap-2">
+            <a href="https://ipinfo.io/{{ inc.ip_address }}" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-[11px]">🌍 Géolocaliser sur IPInfo ↗</a>
+            <a href="https://www.abuseipdb.com/check/{{ inc.ip_address }}" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-[11px]">🛡️ Vérifier sur AbuseIPDB ↗</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="p-10 text-center text-sm text-slate-500">
+      Aucune tentative d'intrusion enregistrée pour le moment. Le bouclier surveille activement toutes les requêtes.
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

@@ -100,9 +100,10 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'onizouka.security_shield.IntrusionDetectionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
@@ -274,8 +275,8 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'tailwind'
 CRISPY_TEMPLATE_PACK = 'tailwind'
 
 UNFOLD = {
-    'SITE_TITLE': 'Onizouka Shop',
-    'SITE_HEADER': 'Onizouka Admin',
+    'SITE_TITLE': 'Onizuka Shop',
+    'SITE_HEADER': 'Onizuka Admin',
     'SITE_URL': '/',
     'SITE_SYMBOL': 'store',
     'THEME': lambda request: 'light',
@@ -372,6 +373,12 @@ LOGGING = {
             'filename': BASE_DIR / 'django_error.log',
             'formatter': 'verbose',
         },
+        'security_file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'security.log',
+            'formatter': 'verbose',
+        },
         'console': {
             'level': 'ERROR',
             'class': 'logging.StreamHandler',
@@ -389,8 +396,18 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': False,
         },
+        'security': {
+            'handlers': ['security_file', 'console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
     },
 }
+
+# Plafonds anti-DoS sur les requêtes entrantes
+DATA_UPLOAD_MAX_MEMORY_SIZE = 15 * 1024 * 1024  # 15 Mo max
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
+SECURITY_ALERT_EMAIL = config('SECURITY_ALERT_EMAIL', default='admin@danayaplus.com')
 
 ORANGE_MONEY_API_KEY = config('ORANGE_MONEY_API_KEY', default='')
 WAVE_API_KEY = config('WAVE_API_KEY', default='')
@@ -398,7 +415,7 @@ CINETPAY_API_KEY = config('CINETPAY_API_KEY', default='')
 CINETPAY_SITE_ID = config('CINETPAY_SITE_ID', default='')
 
 CURRENCY = 'FCFA'
-SHOP_NAME = 'Onizouka Shop'
+SHOP_NAME = 'Onizuka Shop'
 SHOP_TAGLINE = "L'electronique de qualite au Mali"
 PRODUCTS_PER_PAGE = 24
 LOW_STOCK_THRESHOLD = 5

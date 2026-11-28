@@ -3183,3 +3183,170 @@ def stop_impersonate_view(request):
     
     messages.success(request, f"Prise de contrôle terminée. Vous avez repris votre session Super-Administrateur IT (@{superuser.username}).")
     return redirect('backoffice:users')
+
+
+# ---------------------------------------------------------------------------
+# Centre de Sécurité & Anti-Intrusion IT (Réservé Superadmin IT)
+# ---------------------------------------------------------------------------
+
+def _superuser_only(view_func):
+    @wraps(view_func)
+    def _wrapped(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            login_url = getattr(settings, 'LOGIN_URL', '/accounts/login/')
+            return redirect(f"{login_url}?next={request.path}")
+        if not request.user.is_superuser:
+            messages.error(request, "Accès strictement réservé au Super-Administrateur Technique IT.")
+            return redirect('backoffice:dashboard' if request.user.is_staff else 'shop:home')
+        return view_func(request, *args, **kwargs)
+    return _wrapped
+
+
+@_superuser_only
+def security_center_view(request):
+    """Tableau de bord médico-légal des intrusions, attaques bloquées et IPs bannies."""
+    from datetime import timedelta
+    from .models import SecurityIncident, BlockedIP
+    from onizouka.security_shield import SECURITY_ALERT_EMAIL
+
+    now = timezone.now()
+    last_24h = now - timedelta(hours=24)
+
+    q = (request.GET.get('q') or '').strip()
+    sev_filter = (request.GET.get('severity') or '').strip()
+
+    incidents_qs = SecurityIncident.objects.all()
+    if q:
+        incidents_qs = incidents_qs.filter(
+            Q(ip_address__icontains=q)
+            | Q(attack_type__icontains=q)
+            | Q(path__icontains=q)
+            | Q(user_agent__icontains=q)
+            | Q(incident_id__icontains=q)
+            | Q(targeted_user__icontains=q)
+        )
+    if sev_filter in {'critical', 'high', 'medium', 'low'}:
+        incidents_qs = incidents_qs.filter(severity=sev_filter)
+
+    total_incidents = SecurityIncident.objects.count()
+    incidents_24h = SecurityIncident.objects.filter(created_at__gte=last_24h).count()
+    critical_count = SecurityIncident.objects.filter(severity='critical').count()
+    alerts_sent_count = SecurityIncident.objects.filter(alert_sent=True).count()
+
+    blocked_ips = BlockedIP.objects.filter(is_active=True).order_by('-created_at')
+    active_bans_count = sum(1 for b in blocked_ips if b.is_currently_blocked)
+
+    paginator = Paginator(incidents_qs, 30)
+    page_obj = paginator.get_page(request.GET.get('page'))
+
+    return render(request, 'backoffice/security_center.html', {
+        'incidents': page_obj,
+        'page_obj': page_obj,
+        'blocked_ips': blocked_ips,
+        'total_incidents': total_incidents,
+        'incidents_24h': incidents_24h,
+        'critical_count': critical_count,
+        'alerts_sent_count': alerts_sent_count,
+        'active_bans_count': active_bans_count,
+        'alert_email': SECURITY_ALERT_EMAIL,
+        'q': q,
+        'sev_filter': sev_filter,
+        'current_page': 'security',
+    })
+
+
+@_superuser_only
+@require_POST
+def security_block_ip_view(request):
+    """Bannit manuellement une adresse IP suspecte (temporaire ou permanent)."""
+    from datetime import timedelta
+    from django.core.cache import cache
+    from .models import BlockedIP
+
+    ip = (request.POST.get('ip_address') or '').strip()
+    reason = (request.POST.get('reason') or 'Bannissement manuel par Superadmin IT').strip()
+    duration = (request.POST.get('duration') or '24h').strip()
+
+    if not ip:
+        messages.error(request, "Veuillez saisir une adresse IP valide à bannir.")
+        return redirect('backoffice:security_center')
+
+    if ip in {'127.0.0.1', '::1', 'localhost'}:
+        messages.warning(request, "Protection système : impossible de bannir l'adresse locale de bouclage (127.0.0.1).")
+        return redirect('backoffice:security_center')
+
+    is_perm = duration == 'permanent'
+    hours_map = {'6h': 6, '24h': 24, '7d': 168, '30d': 720}
+    hours = hours_map.get(duration, 24)
+    expires = None if is_perm else (timezone.now() + timedelta(hours=hours))
+
+    ban, created = BlockedIP.objects.get_or_create(
+        ip_address=ip,
+        defaults={
+            'reason': reason[:250],
+            'is_active': True,
+            'is_permanent': is_perm,
+            'expires_at': expires,
+        },
+    )
+    if not created:
+        ban.reason = reason[:250]
+        ban.is_active = True
+        ban.is_permanent = is_perm
+        ban.expires_at = expires
+        ban.save()
+
+    cache.set(f"sec_blocked_ip_{ip}", True, timeout=86400 * 30 if is_perm else hours * 3600)
+    messages.success(request, f"Adresse IP {ip} bannie avec succès ({'Permanent' if is_perm else duration}).")
+    return redirect('backoffice:security_center')
+
+
+@_superuser_only
+@require_POST
+def security_unblock_ip_view(request, ban_id):
+    """Lève immédiatement le bannissement d'une adresse IP."""
+    from django.core.cache import cache
+    from .models import BlockedIP
+
+    ban = get_object_or_404(BlockedIP, id=ban_id)
+    ban.is_active = False
+    ban.is_permanent = False
+    ban.save(update_fields=['is_active', 'is_permanent', 'updated_at'])
+    cache.delete(f"sec_blocked_ip_{ban.ip_address}")
+    cache.delete(f"sec_strikes_{ban.ip_address}")
+    messages.success(request, f"Le blocage de l'adresse IP {ban.ip_address} a été levé.")
+    return redirect('backoffice:security_center')
+
+
+@_superuser_only
+@require_POST
+def security_test_alert_view(request):
+    """Envoie un email de simulation d'intrusion à admin@danayaplus.com pour valider la chaîne SMTP."""
+    from onizouka.security_shield import collect_forensic_summary, record_and_alert_intrusion, SECURITY_ALERT_EMAIL
+
+    summary = collect_forensic_summary(
+        request,
+        attack_type="Test de Simulation Anti-Intrusion (Vérification IT)",
+        details="Simulation volontaire déclenchée depuis le Centre de Sécurité IT pour vérifier la réception temps réel et la fiche complète de traçabilité attaquant.",
+        severity='high',
+        targeted_user=f"{request.user.username} (Test Superadmin IT)",
+        action_taken="Simulation réussie • Bouclier WAF/IDS opérationnel",
+        ip_auto_banned=False,
+    )
+    ok = record_and_alert_intrusion(summary, bypass_throttle=True, sync=True)
+    if ok:
+        messages.success(request, f"Alerte de test ({summary['incident_id']}) envoyée avec succès à {SECURITY_ALERT_EMAIL} !")
+    else:
+        messages.error(request, f"L'incident a été enregistré ({summary['incident_id']}), mais l'envoi SMTP vers {SECURITY_ALERT_EMAIL} a échoué. Vérifiez la configuration SMTP dans .env.")
+    return redirect('backoffice:security_center')
+
+
+@_superuser_only
+@require_POST
+def security_clear_logs_view(request):
+    """Archive / purge l'historique des incidents de sécurité résolus."""
+    from .models import SecurityIncident
+    count = SecurityIncident.objects.count()
+    SecurityIncident.objects.all().delete()
+    messages.success(request, f"Journal nettoyé ({count} incident(s) supprimé(s)).")
+    return redirect('backoffice:security_center')

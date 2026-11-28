@@ -203,6 +203,7 @@ class EmailLog(models.Model):
         ADMIN_NEW_ORDER = 'admin_new_order', 'Alerte Nouvelle Commande (Direction)'
         ADMIN_LOW_STOCK = 'admin_low_stock', 'Alerte Stock Bas / Rupture (Direction)'
         ADMIN_CONTACT = 'admin_contact', 'Message Contact Visiteur (Direction)'
+        SECURITY_ALERT = 'security_alert', 'Alerte Sécurité / Anti-Intrusion (IT)'
         TEST_EMAIL = 'test_email', 'Email de test & vérification'
 
     class Status(models.TextChoices):
@@ -225,4 +226,84 @@ class EmailLog(models.Model):
 
     def __str__(self):
         return f"[{self.get_email_type_display()}] -> {self.recipient} ({self.status})"
+
+
+class SecurityIncident(models.Model):
+    """Journal médico-légal complet des tentatives d'intrusion, scans, injections et attaques bloquées."""
+
+    class Severity(models.TextChoices):
+        LOW = 'low', 'Faible'
+        MEDIUM = 'medium', 'Moyenne'
+        HIGH = 'high', 'Élevée'
+        CRITICAL = 'critical', 'Critique'
+
+    incident_id = models.CharField("ID Incident", max_length=32, db_index=True)
+    severity = models.CharField("Sévérité", max_length=16, choices=Severity.choices, default=Severity.HIGH)
+    attack_type = models.CharField("Type d'intrusion", max_length=140)
+    details = models.TextField("Diagnostic technique", blank=True, default="")
+
+    # Informations complètes sur l'attaquant
+    ip_address = models.CharField("Adresse IP réelle", max_length=64, db_index=True)
+    forwarded_ips = models.CharField("Chaîne Proxy / X-Forwarded-For", max_length=255, blank=True, default="")
+    country = models.CharField("Pays / Code Réseau", max_length=32, blank=True, default="")
+    user_agent = models.TextField("User-Agent complet", blank=True, default="")
+    attacker_tool = models.CharField("Outil / Système détecté", max_length=120, blank=True, default="")
+    referer = models.TextField("Referer / Origine", blank=True, default="")
+    accept_language = models.CharField("Langue navigateur", max_length=120, blank=True, default="")
+
+    # Cible & Payload assaini
+    method = models.CharField("Méthode HTTP", max_length=12, default="GET")
+    host = models.CharField("Hôte visé", max_length=150, blank=True, default="")
+    path = models.TextField("Chemin / URL ciblée")
+    query_string = models.TextField("Paramètres GET", blank=True, default="")
+    payload_excerpt = models.TextField("Extrait Payload assaini", blank=True, default="")
+    targeted_user = models.CharField("Compte / Utilisateur visé", max_length=150, blank=True, default="Anonyme")
+    headers_dump = models.TextField("En-têtes HTTP complets", blank=True, default="")
+
+    # Réponse défensive
+    action_taken = models.CharField("Mesure appliquée", max_length=160, default="Bloqué (HTTP 403)")
+    ip_auto_banned = models.BooleanField("IP bannie automatiquement", default=False)
+    alert_sent = models.BooleanField("Alerte email envoyée", default=False)
+    created_at = models.DateTimeField("Date & Heure", auto_now_add=True, db_index=True)
+
+    class Meta:
+        verbose_name = "Incident de Sécurité / Intrusion"
+        verbose_name_plural = "Incidents de Sécurité / Intrusions"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"[{self.incident_id}] {self.attack_type} - IP {self.ip_address}"
+
+
+class BlockedIP(models.Model):
+    """Liste noire des adresses IP bannies suite à une tentative de piratage ou blocage manuel IT."""
+
+    ip_address = models.CharField("Adresse IP bannie", max_length=64, unique=True, db_index=True)
+    reason = models.CharField("Motif du bannissement", max_length=255)
+    attempts_count = models.PositiveIntegerField("Nombre d'attaques relevées", default=1)
+    user_agent_sample = models.CharField("Dernier User-Agent", max_length=255, blank=True, default="")
+    is_active = models.BooleanField("Blocage actif", default=True, db_index=True)
+    is_permanent = models.BooleanField("Bannissement permanent", default=False)
+    expires_at = models.DateTimeField("Fin du blocage automatique", null=True, blank=True)
+    created_at = models.DateTimeField("Date du bannissement", auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Adresse IP Bannie"
+        verbose_name_plural = "Adresses IP Bannies"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        status = "ACTIF" if self.is_active else "LEVÉ"
+        return f"{self.ip_address} ({status}) - {self.reason}"
+
+    @property
+    def is_currently_blocked(self):
+        if not self.is_active:
+            return False
+        if self.is_permanent or not self.expires_at:
+            return True
+        from django.utils import timezone
+        return self.expires_at > timezone.now()
+
 

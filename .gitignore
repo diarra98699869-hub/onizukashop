@@ -27,6 +27,7 @@ backups/
 
 # Scratch scripts
 test_*.py
+!shop/management/commands/*.py
 scratch_*
 populate_*.py
 media/test_preview/

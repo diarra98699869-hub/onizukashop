@@ -242,6 +242,19 @@
             <span>↗</span>
           </a>
           {% if request.user.is_superuser %}
+          <a href="{% url 'backoffice:security_center' %}" class="flex items-center justify-between px-3 py-2 rounded-xl transition {% if current_page == 'security' %}bg-rose-500/20 text-rose-300 font-bold border border-rose-500/30{% else %}text-rose-400/90 hover:text-rose-300 hover:bg-rose-500/10{% endif %}">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+              </svg>
+              <span>Bouclier Sécurité</span>
+            </span>
+            {% if bo_security_alerts_24h and bo_security_alerts_24h > 0 %}
+            <span class="px-1.5 py-0.5 rounded-full bg-rose-500 text-white text-[10px] font-black">{{ bo_security_alerts_24h }}</span>
+            {% else %}
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-rose-500/15 text-rose-300">WAF</span>
+            {% endif %}
+          </a>
           <a href="/admin/" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-500 hover:text-slate-300 hover:bg-white/[0.06] transition">
             <span>Django Admin IT</span>
             <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/10">ROOT</span>
@@ -489,6 +502,16 @@
         <a href="{% url 'backoffice:users' %}" @click="moreSheet = false" class="p-3 rounded-2xl bg-slate-100 text-slate-900 font-bold flex items-center gap-2">
           <span>Équipe &amp; Accès</span>
         </a>
+        {% if request.user.is_superuser %}
+        <a href="{% url 'backoffice:security_center' %}" @click="moreSheet = false" class="col-span-2 p-3 rounded-2xl bg-rose-950 text-rose-200 border border-rose-800 font-extrabold flex items-center justify-between">
+          <span>🛡️ Bouclier Sécurité &amp; Intrusions (IT)</span>
+          {% if bo_security_alerts_24h and bo_security_alerts_24h > 0 %}
+          <span class="px-2 py-0.5 rounded-full bg-rose-500 text-white text-[10px] font-black">{{ bo_security_alerts_24h }} (24h)</span>
+          {% else %}
+          <span>→</span>
+          {% endif %}
+        </a>
+        {% endif %}
       </div>
 
       <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">

@@ -68,4 +68,11 @@ urlpatterns = [
     path('utilisateurs/<int:user_id>/toggle-status/', views.user_toggle_status_view, name='user_toggle_status'),
     path('utilisateurs/<int:user_id>/impersonate/', views.user_impersonate_view, name='user_impersonate'),
     path('quitter-impersonation/', views.stop_impersonate_view, name='stop_impersonate'),
+
+    # Centre de Sécurité & Anti-Intrusion IT (Réservé Superadmin)
+    path('securite/', views.security_center_view, name='security_center'),
+    path('securite/bloquer-ip/', views.security_block_ip_view, name='security_block_ip'),
+    path('securite/debloquer-ip/<int:ban_id>/', views.security_unblock_ip_view, name='security_unblock_ip'),
+    path('securite/tester-alerte/', views.security_test_alert_view, name='security_test_alert'),
+    path('securite/purger/', views.security_clear_logs_view, name='security_clear_logs'),
 ]

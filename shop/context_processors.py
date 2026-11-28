@@ -70,6 +70,13 @@ def shop_settings(request):
             ctx['bo_low_stock'] = Product.objects.filter(
                 track_stock=True, stock__lte=F('min_stock'), is_active=True
             ).count()
+            if request.user.is_superuser:
+                from django.utils import timezone
+                from datetime import timedelta
+                from backoffice.models import SecurityIncident
+                ctx['bo_security_alerts_24h'] = SecurityIncident.objects.filter(
+                    created_at__gte=timezone.now() - timedelta(hours=24)
+                ).count()
         except Exception:
             pass
     return ctx
