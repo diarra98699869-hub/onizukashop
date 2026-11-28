@@ -6,9 +6,15 @@ dans tous les modèles Django de la base de données.
 """
 import os
 import sys
-import django
+from pathlib import Path
+
+# Assure que la racine du projet est dans sys.path quel que soit l'environnement
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'onizouka.settings')
+
+import django
 django.setup()
 
 from django.contrib.auth.models import User
