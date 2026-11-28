@@ -673,7 +673,7 @@
         <div class="flex items-center gap-2">
           <div class="w-7 h-7 rounded-lg bg-amber-400 text-slate-950 font-black text-xs flex items-center justify-center">O</div>
           <div>
-            <p class="font-display text-sm font-black leading-none">Rayons Onizouka</p>
+            <p class="font-display text-sm font-black leading-none">Rayons Onizuka</p>
             <p class="text-[10px] text-slate-400 mt-0.5">Grand Marché de Bamako</p>
           </div>
         </div>
@@ -692,12 +692,44 @@
           <span>%</span>
         </a>
 
-        <p class="px-2 pt-3 pb-1 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Catégories</p>
+        <p class="px-2 pt-3 pb-1 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Rayons &amp; Catégories</p>
         {% for cat in menu_categories %}
-        <a href="{{ cat.get_absolute_url }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-slate-100 text-slate-800 font-semibold text-xs transition">
-          <span>{{ cat.name }}</span>
-          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </a>
+          {% if cat.children.all %}
+          <div x-data="{ open: false }" class="rounded-xl overflow-hidden border border-slate-100 bg-slate-50/60">
+            <div class="flex items-center justify-between px-3 py-2">
+              <a href="{{ cat.get_absolute_url }}" class="flex-1 text-slate-900 font-bold text-xs hover:text-amber-600 transition">
+                {{ cat.name }}
+              </a>
+              <button
+                type="button"
+                @click="open = !open"
+                class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-200/70 text-slate-500 transition cursor-pointer"
+                :aria-expanded="open"
+                aria-label="Voir les sous-catégories"
+              >
+                <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="open ? 'rotate-90 text-amber-600' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+            <div x-show="open" x-cloak class="px-2.5 pb-2 pt-0.5 space-y-1 border-t border-slate-100 bg-white">
+              <a href="{{ cat.get_absolute_url }}" class="block px-3 py-1.5 rounded-lg text-[11px] font-extrabold text-amber-600 hover:bg-amber-50">
+                Tout voir dans {{ cat.name }} →
+              </a>
+              {% for sub in cat.children.all %}
+                {% if sub.is_active %}
+                <a href="{{ sub.get_absolute_url }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-[11px] font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-950 transition">
+                  <span>{{ sub.name }}</span>
+                  <span class="text-[10px] text-slate-400">→</span>
+                </a>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          {% else %}
+          <a href="{{ cat.get_absolute_url }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-slate-100 text-slate-800 font-semibold text-xs transition">
+            <span>{{ cat.name }}</span>
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </a>
+          {% endif %}
         {% endfor %}
 
         <div class="pt-3 mt-2 border-t border-slate-100 space-y-1" x-data="{ pwaAvail: false, iosGuide: false }" @pwa-install-available.window="pwaAvail = true" @pwa-installed.window="pwaAvail = false" @pwa-show-ios-guide.window="iosGuide = true">

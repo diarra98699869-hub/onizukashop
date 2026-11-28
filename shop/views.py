@@ -1019,9 +1019,9 @@ def pwa_manifest(request):
     site_name = cfg.site_name or "ONIZUKA SHOP"
     manifest = {
         "id": "/?source=pwa",
-        "name": f"{site_name} • Électroménager & Climatisation Bamako",
+        "name": f"{site_name} • Électroménager, Meubles & Climatisation Bamako",
         "short_name": "Onizuka Shop",
-        "description": "Application officielle Onizuka Shop au Grand Marché de Bamako (Dibidani). Climatiseurs, Ventilateurs Solaires, Réfrigérateurs, Smart TV et commande rapide WhatsApp.",
+        "description": "Application officielle Onizuka Shop au Grand Marché de Bamako (Dibidani). Meubles, Climatiseurs, Ventilateurs Solaires, Réfrigérateurs, Smart TV et commande rapide WhatsApp.",
         "start_url": "/?source=pwa",
         "scope": "/",
         "display": "standalone",

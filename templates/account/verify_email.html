@@ -1,26 +1,31 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Vérification par Code PIN • Onizouka Shop{% endblock %}
+{% block title %}Vérification par Code PIN • Onizuka Shop{% endblock %}
 
 {% block content %}
 <div class="min-h-[75vh] flex items-center justify-center px-4 py-8 sm:py-16">
   
   <div class="w-full max-w-md">
 
-    <!-- Carte Signature Onizouka Shop -->
+    <!-- Carte Signature Onizuka Shop -->
     <div class="bg-white rounded-3xl border border-neutral-100 p-6 sm:p-10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] relative overflow-hidden">
       
       <!-- Liseré supérieur or signature -->
       <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600"></div>
 
-      <!-- Icône de Sécurité & En-tête -->
+      <!-- En-tête avec Logo Officiel -->
       <div class="text-center mb-6 sm:mb-8">
-        <div class="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200/60 text-amber-600 flex items-center justify-center mx-auto mb-4 shadow-xs">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-          </svg>
-        </div>
+        <a href="{% url 'shop:home' %}" class="inline-flex items-center gap-2.5 mb-4 select-none group">
+          <img src="{% static 'images/logo_icon.png' %}" alt="Onizuka Shop" class="w-10 h-10 object-contain shrink-0 filter drop-shadow-[0_2px_8px_rgba(245,158,11,0.25)]">
+          <div class="flex flex-col text-left leading-none">
+            <div class="flex items-center">
+              <span class="text-xl font-black tracking-tight text-neutral-900 font-display">ONIZUKA</span>
+              <span class="text-amber-500 text-xl font-black ml-0.5 font-display">SHOP</span>
+            </div>
+            <span class="text-[10px] font-semibold text-neutral-400 tracking-wide mt-0.5">Grand Marché • Dibidani</span>
+          </div>
+        </a>
 
         <h1 class="text-2xl font-black text-neutral-900 tracking-tight">
           Vérification de Sécurité
