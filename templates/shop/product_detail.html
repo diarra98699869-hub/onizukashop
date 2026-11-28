@@ -239,7 +239,7 @@
       x-data="{
         mediaMode: (window.location.hash === '#video' && {{ product.has_video|yesno:'true,false' }}) ? 'video' : 'photo',
         activeIdx: 0,
-        activeImg: '{{ product.primary_image.large.url|default:product.primary_image.image.url|default:'' }}'
+        activeImg: '{% if product.primary_image %}{{ product.primary_image.large.url|default:product.primary_image.image.url }}{% endif %}'
       }"
     >
       <div class="relative aspect-square rounded-xl bg-[#f8f9fb] flex items-center justify-center p-2 sm:p-4 overflow-hidden">
