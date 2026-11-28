@@ -40,8 +40,12 @@ MEDIA_PRODUCTS.mkdir(parents=True, exist_ok=True)
 USER_UPLOADED_DIR = Path(r"C:\Users\a\.gemini\antigravity\brain\507b0a9b-c11c-4a9e-a9ab-0b97eff9541e\.user_uploaded")
 
 def copy_and_convert_image(src_name, dest_filename):
-    src_path = USER_UPLOADED_DIR / src_name
     dest_path = MEDIA_PRODUCTS / dest_filename
+    if dest_path.exists():
+        # L'image existe déjà dans media/products (ex: issue du repo Git ou d'un import précédent)
+        return f"products/{dest_filename}"
+
+    src_path = USER_UPLOADED_DIR / src_name
     if src_path.exists():
         try:
             with Image.open(src_path) as img:
@@ -54,7 +58,7 @@ def copy_and_convert_image(src_name, dest_filename):
             shutil.copy2(src_path, dest_path)
             return f"products/{dest_filename}"
     else:
-        print(f"Fichier source introuvable : {src_path}")
+        print(f"Fichier image introuvable dans uploads ({src_path}) et media ({dest_path})")
         return None
 
 def get_or_create_cat(name, parent_slug=None, icon=None):
