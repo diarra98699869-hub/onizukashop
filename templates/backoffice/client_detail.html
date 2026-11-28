@@ -1,7 +1,7 @@
 {% extends "backoffice/base.html" %}
 {% load humanize %}
 
-{% block title %}{{ client.get_full_name|default:client.username }} • Gestion Onizouka{% endblock %}
+{% block title %}{{ client.get_full_name|default:client.username }} • Gestion Onizuka{% endblock %}
 
 {% block content %}
 <div class="space-y-3.5">
@@ -27,7 +27,7 @@
         Appeler {{ client.profile.phone }}
       </a>
       <a
-        href="https://wa.me/{{ client.profile.phone|cut:' '|cut:'+' }}?text={{ 'Bonjour '|urlencode }}{{ client.get_full_name|default:client.username|urlencode }}{{ ', ici Onizouka Shop (Grand Marché Bamako).'|urlencode }}"
+        href="https://wa.me/{{ client.profile.phone|cut:' '|cut:'+' }}?text={{ 'Bonjour '|urlencode }}{{ client.get_full_name|default:client.username|urlencode }}{{ ', ici Onizuka Shop (Grand Marché Bamako).'|urlencode }}"
         target="_blank"
         rel="noopener"
         class="py-2.5 px-4 rounded-xl bg-emerald-600 text-white text-xs font-extrabold text-center"

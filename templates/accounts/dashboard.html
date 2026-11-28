@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static humanize %}
 
-{% block title %}Mon Compte • Onizouka Store Mali{% endblock %}
+{% block title %}Mon Compte • Onizuka Store Mali{% endblock %}
 
 {% block content %}
 <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
@@ -27,7 +27,7 @@
           <p class="text-[11px] sm:text-xs text-neutral-400 mt-0.5 truncate">{{ user.email }}</p>
         </div>
 
-        <!-- Si l'utilisateur fait partie de la Direction Onizouka Shop -->
+        <!-- Si l'utilisateur fait partie de la Direction Onizuka Shop -->
         {% if user.is_staff %}
         <div class="mb-4 p-3 bg-gradient-to-r from-amber-600 to-amber-600 rounded-2xl text-white shadow-xs">
           <div class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-200">

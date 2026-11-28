@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Modele Profil utilisateur etendu
+ONIZUKA SHOP - Modele Profil utilisateur etendu
 App: accounts
 """
 from django.db import models

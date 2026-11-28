@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Views du shop
+ONIZUKA SHOP - Views du shop
 homepage, catalog, product_detail, search, category
 """
 
@@ -156,7 +156,7 @@ def home(request):
         else:
             feed_qs = feed_qs.order_by('-is_featured', '-created_at')
     else:
-        # Onglet 'Tous' : Entrelacement diversifié et équilibré des produits réels d'Onizouka Shop
+        # Onglet 'Tous' : Entrelacement diversifié et équilibré des produits réels d'Onizuka Shop
         # Permet de voir un panaché riche (Vitrines, Congélateurs coffres, Congélateurs verticaux, Climatiseurs)
         from django.db.models import Case, When
         from collections import defaultdict
@@ -328,8 +328,8 @@ def home(request):
         'root_categories': root_categories,
         'brands': brands,
         'total_active_products': total_active_products,
-        'page_title': 'Onizouka Shop • Électroménager, Meubles, Déco & Maison à Bamako',
-        'meta_description': "Onizouka Shop au Grand Marché de Bamako : Électroménager, Meubles, Décoration, Climatiseurs, Frigos et Smart TV au meilleur prix en FCFA. Vidéos réelles et livraison 24h.",
+        'page_title': 'Onizuka Shop • Électroménager, Meubles, Déco & Maison à Bamako',
+        'meta_description': "Onizuka Shop au Grand Marché de Bamako : Électroménager, Meubles, Décoration, Climatiseurs, Frigos et Smart TV au meilleur prix en FCFA. Vidéos réelles et livraison 24h.",
     }
     return render(request, 'shop/home.html', context)
 
@@ -468,7 +468,7 @@ def catalog(request):
         'total_count': products_filtered.count(),
         'sort': sort,
         'append_mode': request.GET.get('append') == '1',
-        'page_title': 'Boutique Complète • Électroménager, Meubles & Déco - Onizouka Shop',
+        'page_title': 'Boutique Complète • Électroménager, Meubles & Déco - Onizuka Shop',
         'meta_description': 'Parcourez tous nos rayons : électroménager, meubles, salons, décoration et électronique à Bamako.',
     }
 
@@ -531,7 +531,7 @@ def category_detail(request, slug):
         'sort': sort,
         'append_mode': request.GET.get('append') == '1',
         'breadcrumbs': list(category.get_ancestors(include_self=True)),
-        'page_title': f'{category.name} - Onizouka Shop Bamako',
+        'page_title': f'{category.name} - Onizuka Shop Bamako',
         'meta_description': category.meta_description or f'Découvrez notre rayon {category.name} au Grand Marché de Bamako.',
     }
 
@@ -605,7 +605,7 @@ def product_detail(request, slug):
         'can_review': can_review,
         'stars_range': range(1, 6),
         'breadcrumbs': list(product.category.get_ancestors(include_self=True)),
-        'page_title': product.meta_title or f'{product.name} - Onizouka Shop',
+        'page_title': product.meta_title or f'{product.name} - Onizuka Shop',
         'meta_description': product.meta_description or product.short_description,
     }
     return render(request, 'shop/product_detail.html', context)
@@ -815,7 +815,7 @@ def search(request):
         'products': products,
         'total': total,
         'append_mode': request.GET.get('append') == '1',
-        'page_title': f'Recherche : {query} - Onizouka Shop' if query else 'Recherche - Onizouka Shop',
+        'page_title': f'Recherche : {query} - Onizuka Shop' if query else 'Recherche - Onizuka Shop',
     }
 
     if request.htmx and request.GET.get('append') == '1':
@@ -852,7 +852,7 @@ def contact(request):
             messages.error(request, "Veuillez renseigner au minimum votre nom, votre numéro de téléphone et votre message.")
 
     context = {
-        'page_title': 'Contact & Boutique Grand Marché - Onizouka Shop',
+        'page_title': 'Contact & Boutique Grand Marché - Onizuka Shop',
         'meta_description': 'Contactez notre boutique au Grand Marché de Bamako. Service client WhatsApp 7j/7, devis et assistance après-vente garantie.',
     }
     return render(request, 'shop/contact.html', context)
@@ -860,22 +860,22 @@ def contact(request):
 
 def terms_view(request):
     """Conditions Générales de Vente (CGV)."""
-    return render(request, 'shop/cgv.html', {'page_title': 'Conditions Générales de Vente - Onizouka Shop'})
+    return render(request, 'shop/cgv.html', {'page_title': 'Conditions Générales de Vente - Onizuka Shop'})
 
 
 def privacy_view(request):
     """Politique de Confidentialité et Protection des Données."""
-    return render(request, 'shop/privacy.html', {'page_title': 'Politique de Confidentialité - Onizouka Shop'})
+    return render(request, 'shop/privacy.html', {'page_title': 'Politique de Confidentialité - Onizuka Shop'})
 
 
 def legal_view(request):
     """Mentions Légales de la Société."""
-    return render(request, 'shop/legal.html', {'page_title': 'Mentions Légales - Onizouka Shop'})
+    return render(request, 'shop/legal.html', {'page_title': 'Mentions Légales - Onizuka Shop'})
 
 
 def shipping_warranty_view(request):
     """Politique de Livraison à Bamako, Retrait Magasin & Garantie Constructeur."""
-    return render(request, 'shop/shipping_warranty.html', {'page_title': 'Livraison & Garantie - Onizouka Shop'})
+    return render(request, 'shop/shipping_warranty.html', {'page_title': 'Livraison & Garantie - Onizuka Shop'})
 
 
 @login_required
@@ -984,7 +984,7 @@ def wishlist_view(request):
     context = {
         'products': products,
         'total_count': len(products),
-        'page_title': 'Mes Favoris - Onizouka Shop',
+        'page_title': 'Mes Favoris - Onizuka Shop',
     }
     return render(request, 'shop/wishlist.html', context)
 

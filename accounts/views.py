@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Views du compte utilisateur
+ONIZUKA SHOP - Views du compte utilisateur
 dashboard, profile_edit, address management
 """
 from django.shortcuts import render, redirect, get_object_or_404
@@ -28,7 +28,7 @@ def dashboard(request):
         'addresses': addresses,
         'orders_count': request.user.orders.count(),
         'total_spent': profile.get_formatted_total_spent(),
-        'page_title': 'Mon compte - Onizouka Shop',
+        'page_title': 'Mon compte - Onizuka Shop',
     }
     return render(request, 'accounts/dashboard.html', context)
 
@@ -57,7 +57,7 @@ def profile_edit(request):
 
     context = {
         'profile': profile,
-        'page_title': 'Modifier mon profil - Onizouka Shop',
+        'page_title': 'Modifier mon profil - Onizuka Shop',
     }
     return render(request, 'accounts/profile_edit.html', context)
 
@@ -96,7 +96,7 @@ def address_add(request):
         messages.success(request, 'Adresse ajoutee.')
         return redirect('accounts:dashboard')
 
-    context = {'page_title': 'Ajouter une adresse - Onizouka Shop'}
+    context = {'page_title': 'Ajouter une adresse - Onizuka Shop'}
     return render(request, 'accounts/address_form.html', context)
 
 
@@ -133,7 +133,7 @@ def order_list(request):
 
     context = {
         'orders': orders,
-        'page_title': 'Mes commandes - Onizouka Shop',
+        'page_title': 'Mes commandes - Onizuka Shop',
     }
     return render(request, 'accounts/order_list.html', context)
 
@@ -243,7 +243,7 @@ def verify_email(request):
             if 'pending_verification_user_id' in request.session:
                 del request.session['pending_verification_user_id']
 
-            messages.success(request, "Votre adresse email a été confirmée avec succès ! Bienvenue sur Onizouka Shop.")
+            messages.success(request, "Votre adresse email a été confirmée avec succès ! Bienvenue sur Onizuka Shop.")
 
             next_url = request.POST.get('next') or request.GET.get('next')
             if next_url and next_url != '/' and not next_url.startswith('/accounts/login'):
@@ -260,7 +260,7 @@ def verify_email(request):
     context = {
         'masked_email': mask_email(target_user.email),
         'email': target_user.email,
-        'page_title': 'Vérification Email par Code PIN - Onizouka Shop',
+        'page_title': 'Vérification Email par Code PIN - Onizuka Shop',
     }
     return render(request, 'account/verify_email.html', context)
 

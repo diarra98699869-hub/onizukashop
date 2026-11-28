@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - URLs du compte
+ONIZUKA SHOP - URLs du compte
 """
 from django.urls import path
 from accounts import views

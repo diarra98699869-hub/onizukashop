@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Admin Paiements
+ONIZUKA SHOP - Admin Paiements
 """
 from django.contrib import admin
 from unfold.admin import ModelAdmin

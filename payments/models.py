@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Paiements
+ONIZUKA SHOP - Paiements
 App: payments
 """
 from django.db import models

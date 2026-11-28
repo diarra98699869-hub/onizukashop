@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Vues du Backoffice Direction & Gestion
+ONIZUKA SHOP - Vues du Backoffice Direction & Gestion
 Corrections audit : N+1 SQL, erreurs silencieuses, HTML hardcodé, endpoints sécurisés
 """
 import csv
@@ -33,7 +33,7 @@ from .forms import ProductForm, StockSupplyForm, OrderUpdateForm
 # ---------------------------------------------------------------------------
 
 def staff_required(view_func):
-    """Décorateur : seul le personnel Onizouka Shop (is_staff) peut accéder."""
+    """Décorateur : seul le personnel Onizuka Shop (is_staff) peut accéder."""
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -41,7 +41,7 @@ def staff_required(view_func):
             login_url = getattr(settings, 'LOGIN_URL', '/accounts/login/')
             return redirect(f"{login_url}?next={request.path}")
         if not request.user.is_staff:
-            messages.error(request, "Accès refusé : espace réservé exclusivement à la Direction Onizouka Shop.")
+            messages.error(request, "Accès refusé : espace réservé exclusivement à la Direction Onizuka Shop.")
             return redirect('/')
         return view_func(request, *args, **kwargs)
     return _wrapped_view
@@ -53,7 +53,7 @@ def staff_required(view_func):
 
 @staff_required
 def dashboard_view(request):
-    """Tableau de bord exécutif de la Direction Onizouka Shop avec filtre de caisse journalier."""
+    """Tableau de bord exécutif de la Direction Onizuka Shop avec filtre de caisse journalier."""
     from datetime import timedelta
     now = timezone.localtime(timezone.now())
     start_of_today = now.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -377,7 +377,7 @@ def order_delete_view(request, order_id):
 
 @staff_required
 def order_invoice_view(request, order_id):
-    """Bordereau de livraison / Facture officiel Onizouka Shop imprimable."""
+    """Bordereau de livraison / Facture officiel Onizuka Shop imprimable."""
     order = get_object_or_404(
         Order.objects.select_related('user').prefetch_related('items__product'),
         id=order_id,
@@ -2148,7 +2148,7 @@ def download_product_template_csv_view(request):
         'Description_Courte',
     ])
 
-    # Exemples types représentatifs du magasin Onizouka Dibidani
+    # Exemples types représentatifs du magasin Onizuka Dibidani
     writer.writerow([
         'ONZ-REF-SAM-385',
         'Réfrigérateur Combiné Samsung 385L NoFrost Digital Inverter',

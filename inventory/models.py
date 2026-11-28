@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Gestion du Stock
+ONIZUKA SHOP - Gestion du Stock
 App: inventory
 """
 from django.db import models

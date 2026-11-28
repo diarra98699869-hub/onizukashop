@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - URLs Backoffice Direction (/gestion/)
+ONIZUKA SHOP - URLs Backoffice Direction (/gestion/)
 """
 from django.urls import path
 from . import views

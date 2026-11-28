@@ -1,7 +1,7 @@
 {% extends "backoffice/base.html" %}
 {% load humanize %}
 
-{% block title %}Produits &amp; Prix • Gestion Onizouka{% endblock %}
+{% block title %}Produits &amp; Prix • Gestion Onizuka{% endblock %}
 
 {% block content %}
 <div
@@ -43,7 +43,7 @@
       // En-tête Marque
       ctx.fillStyle = '#ffffff';
       ctx.font = '900 46px Outfit, Arial, sans-serif';
-      ctx.fillText('ONIZOUKA', 65, 95);
+      ctx.fillText('ONIZUKA', 65, 95);
       ctx.fillStyle = '#facc15';
       ctx.fillText('SHOP', 330, 95);
       ctx.fillStyle = '#94a3b8';
@@ -140,20 +140,20 @@
       if (!c) return;
       c.toBlob(async (blob) => {
         if (!blob) return;
-        const file = new File([blob], 'onizouka-statut.png', { type: 'image/png' });
+        const file = new File([blob], 'onizuka-statut.png', { type: 'image/png' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           try {
             await navigator.share({
               files: [file],
               title: this.posterItem.name,
-              text: this.posterItem.name + ' - Disponible chez Onizouka Shop Bamako (+223 92 67 37 99)'
+              text: this.posterItem.name + ' - Disponible chez Onizuka Shop Bamako (+223 92 67 37 99)'
             });
             return;
           } catch (e) {}
         }
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = 'onizouka-' + (this.posterItem.name || 'produit').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.png';
+        a.download = 'onizuka-' + (this.posterItem.name || 'produit').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.png';
         a.click();
       }, 'image/png');
     }
@@ -449,7 +449,7 @@
         </div>
 
         <div class="grid grid-cols-2 gap-2">
-          <a :href="posterDataUrl" :download="'onizouka-affiche.png'" class="py-2.5 px-3 rounded-xl bg-slate-900 text-white font-bold text-xs text-center">
+          <a :href="posterDataUrl" :download="'onizuka-affiche.png'" class="py-2.5 px-3 rounded-xl bg-slate-900 text-white font-bold text-xs text-center">
             Télécharger PNG
           </a>
           <button type="button" @click="sharePoster()" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs cursor-pointer">

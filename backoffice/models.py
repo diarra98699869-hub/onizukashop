@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Modèles du Backoffice & Paramètres Direction
+ONIZUKA SHOP - Modèles du Backoffice & Paramètres Direction
 """
 from django.db import models
 
@@ -8,8 +8,8 @@ class ShopSetting(models.Model):
     """Configuration centrale de la boutique et paramètres opérationnels de l'entreprise."""
 
     # Entreprise & Siège Bamako
-    site_name = models.CharField("Nom de la boutique", max_length=150, default="ONIZOUKA SHOP")
-    company_name = models.CharField("Raison sociale légale", max_length=200, default="ONIZOUKA SHOP SARL")
+    site_name = models.CharField("Nom de la boutique", max_length=150, default="ONIZUKA SHOP")
+    company_name = models.CharField("Raison sociale légale", max_length=200, default="ONIZUKA SHOP SARL")
     nif = models.CharField("Numéro d'Identification Fiscale (NIF)", max_length=100, blank=True, default="085123456M")
     rccm = models.CharField("Registre du Commerce (RCCM)", max_length=100, blank=True, default="MA-BKO-2024-B-12345")
     address = models.CharField(
@@ -19,8 +19,8 @@ class ShopSetting(models.Model):
     )
     phone_contact = models.CharField("Téléphone Service Client", max_length=50, default="+223 92 67 37 99")
     phone_whatsapp = models.CharField("WhatsApp Commercial", max_length=50, default="+223 92 67 37 99")
-    email_contact = models.EmailField("Email officiel", default="contact@onizoukashop.com")
-    email_orders = models.EmailField("Email alertes commandes Direction", default="direction@onizoukashop.com")
+    email_contact = models.EmailField("Email officiel", default="contact@onizukashop.com")
+    email_orders = models.EmailField("Email alertes commandes Direction", default="direction@onizukashop.com")
 
     # Logistique & Livraison
     currency = models.CharField("Devise", max_length=10, default="FCFA")

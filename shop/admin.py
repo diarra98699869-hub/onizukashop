@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Admin Shop (Unfold premium)
+ONIZUKA SHOP - Admin Shop (Unfold premium)
 Gestion: Category, Brand, Product, ProductImage, Review
 """
 from django.contrib import admin

@@ -1,7 +1,7 @@
 {% extends "backoffice/base.html" %}
 {% load humanize %}
 
-{% block title %}Commandes • Gestion Onizouka{% endblock %}
+{% block title %}Commandes • Gestion Onizuka{% endblock %}
 
 {% block content %}
 <div class="space-y-3">
@@ -147,7 +147,7 @@
           {% endif %}
 
           {% if order.delivery_phone %}
-          <a href="https://wa.me/{{ order.whatsapp_client_phone }}?text={{ 'Bonjour '|urlencode }}{{ order.delivery_name|urlencode }}{{ ', ici Onizouka Shop concernant votre commande #'|urlencode }}{{ order.order_number|urlencode }}" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 text-[11px] font-bold">WA</a>
+          <a href="https://wa.me/{{ order.whatsapp_client_phone }}?text={{ 'Bonjour '|urlencode }}{{ order.delivery_name|urlencode }}{{ ', ici Onizuka Shop concernant votre commande #'|urlencode }}{{ order.order_number|urlencode }}" target="_blank" rel="noopener" class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 text-[11px] font-bold">WA</a>
           {% endif %}
           <a href="{% url 'backoffice:order_invoice' order.id %}" target="_blank" class="px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-[11px] font-semibold">Reçu</a>
         </div>

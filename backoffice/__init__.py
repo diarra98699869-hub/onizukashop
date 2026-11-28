@@ -1,3 +1,3 @@
 """
-ONIZOUKA SHOP - Application Gestion & Administration Direction
+ONIZUKA SHOP - Application Gestion & Administration Direction
 """

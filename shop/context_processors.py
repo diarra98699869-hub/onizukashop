@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Context Processors
+ONIZUKA SHOP - Context Processors
 Injecte dans tous les templates : panier, categories, etc.
 """
 from shop.models import Category

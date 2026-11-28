@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Views Paiements
+ONIZUKA SHOP - Views Paiements
 Gestion Orange Money, Wave, Paiement a la livraison
 """
 from django.shortcuts import render, redirect
@@ -21,7 +21,7 @@ def payment_process(request, order_number):
 
     context = {
         'order': order,
-        'page_title': f'Paiement commande #{order.order_number} - Onizouka Shop',
+        'page_title': f'Paiement commande #{order.order_number} - Onizuka Shop',
     }
     return render(request, 'payments/process.html', context)
 

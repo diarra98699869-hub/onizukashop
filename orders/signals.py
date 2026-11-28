@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Signaux pour l'application Orders
+ONIZUKA SHOP - Signaux pour l'application Orders
 Fusionne automatiquement le panier anonyme pré-connexion avec le compte utilisateur connecté
 """
 from django.contrib.auth.signals import user_logged_in

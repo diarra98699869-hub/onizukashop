@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Modeles de donnees
+ONIZUKA SHOP - Modeles de donnees
 App: shop
 Contient: Category, Brand, Product, ProductImage, Review
 """

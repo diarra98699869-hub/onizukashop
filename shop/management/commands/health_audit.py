@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Commande Management : health_audit
+ONIZUKA SHOP - Commande Management : health_audit
 Execution:
   python manage.py health_audit
   python manage.py health_audit --remote https://onizouka.danayaplus.com
@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 class Command(BaseCommand):
-    help = "Exécute la suite de tests de haut niveau et l'audit de santé du système Onizouka Shop"
+    help = "Exécute la suite de tests de haut niveau et l'audit de santé du système Onizuka Shop"
 
     def add_arguments(self, parser):
         parser.add_argument('--remote', type=str, help="URL du serveur de production pour le scan HTTP distant")

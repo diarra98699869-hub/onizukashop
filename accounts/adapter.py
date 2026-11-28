@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Allauth Account Adapter
+ONIZUKA SHOP - Allauth Account Adapter
 Routage intelligent unifié post-connexion selon le statut de l'utilisateur :
 - Direction / Staff / Superadmin -> Espace de Gestion ERP (/gestion/)
 - Client Acheteur -> Tableau de bord client (/compte/)

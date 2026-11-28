@@ -17,17 +17,17 @@ DEFAULT_ACCOUNTS = [
     },
     {
         'username': 'admin_onizouka',
-        'email': 'direction@onizoukashop.com',
+        'email': 'direction@onizukashop.com',
         'password': 'onizouka123',
         'first_name': 'Direction',
-        'last_name': 'Onizouka',
+        'last_name': 'Onizuka',
         'is_staff': True,
         'is_superuser': False,
         'phone': '+223 92 67 37 99',
     },
     {
         'username': 'client',
-        'email': 'client@onizoukashop.com',
+        'email': 'client@onizukashop.com',
         'password': 'client123',
         'first_name': 'Client',
         'last_name': 'Acheteur',
@@ -38,7 +38,7 @@ DEFAULT_ACCOUNTS = [
 ]
 
 class Command(BaseCommand):
-    help = "Initialise ou réinitialise les 3 comptes officiels d'Onizouka Shop (IT, Direction, Client Test)"
+    help = "Initialise ou réinitialise les 3 comptes officiels d'Onizuka Shop (IT, Direction, Client Test)"
 
     def handle(self, *args, **options):
         self.stdout.write(self.style.NOTICE(">>> Configuration des comptes système officiels..."))

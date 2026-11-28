@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Modeles Analytics
+ONIZUKA SHOP - Modeles Analytics
 App: analytics
 """
 from django.db import models

@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Formulaires du Backoffice Professionnel (Optimisés Mobile & Tactile)
+ONIZUKA SHOP - Formulaires du Backoffice Professionnel (Optimisés Mobile & Tactile)
 """
 from django import forms
 from shop.models import Product, Category, Brand
@@ -158,7 +158,7 @@ class ProductForm(forms.ModelForm):
 
         if not (cleaned.get('description') or '').strip():
             short = (cleaned.get('short_description') or '').strip()
-            name = (cleaned.get('name') or 'Appareil certifié Onizouka Shop').strip()
+            name = (cleaned.get('name') or 'Appareil certifié Onizuka Shop').strip()
             cleaned['description'] = short if short else f"{name} — Disponible au Grand Marché de Bamako (Dibidani) avec garantie officielle."
 
         return cleaned

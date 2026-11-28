@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - URLs paiements
+ONIZUKA SHOP - URLs paiements
 """
 from django.urls import path
 from payments import views

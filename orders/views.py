@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Views Commandes
+ONIZUKA SHOP - Views Commandes
 cart_add, cart_remove, cart_update, cart_detail,
 checkout, order_confirm, order_history, apply_coupon
 """
@@ -83,7 +83,7 @@ def cart_detail(request):
         'discount': discount,
         'delivery_fee': delivery_fee,
         'total': total,
-        'page_title': 'Mon panier - Onizouka Shop',
+        'page_title': 'Mon panier - Onizuka Shop',
     }
     return render(request, 'orders/cart.html', context)
 
@@ -360,7 +360,7 @@ def checkout(request):
         'discount': discount,
         'total': total,
         'payment_methods': Order.PaymentMethod.choices,
-        'page_title': 'Finaliser la commande - Onizouka Shop',
+        'page_title': 'Finaliser la commande - Onizuka Shop',
     }
     return render(request, 'orders/checkout.html', context)
 
@@ -519,7 +519,7 @@ def order_confirmation(request, order_number):
     context = {
         'order': order,
         'items': items,
-        'page_title': f'Commande #{order.order_number} confirmée - Onizouka Shop',
+        'page_title': f'Commande #{order.order_number} confirmée - Onizuka Shop',
     }
     return render(request, 'orders/confirmation.html', context)
 
@@ -535,7 +535,7 @@ def order_history(request):
 
     context = {
         'orders': orders,
-        'page_title': 'Mes commandes - Onizouka Shop',
+        'page_title': 'Mes commandes - Onizuka Shop',
     }
     return render(request, 'orders/history.html', context)
 
@@ -548,7 +548,7 @@ def order_detail(request, order_number):
     context = {
         'order': order,
         'items': items,
-        'page_title': f'Commande #{order.order_number} - Onizouka Shop',
+        'page_title': f'Commande #{order.order_number} - Onizuka Shop',
     }
     return render(request, 'orders/order_detail.html', context)
 
@@ -618,6 +618,6 @@ def track_order_public(request):
         'phone_val': phone_input,
         'searched': searched,
         'error_msg': error_msg,
-        'page_title': 'Suivre ma commande - Onizouka Shop',
+        'page_title': 'Suivre ma commande - Onizuka Shop',
     })
 

@@ -1,7 +1,7 @@
 {% extends "backoffice/base.html" %}
 {% load humanize %}
 
-{% block title %}Commande #{{ order.order_number }} • Gestion Onizouka{% endblock %}
+{% block title %}Commande #{{ order.order_number }} • Gestion Onizuka{% endblock %}
 
 {% block content %}
 <div class="space-y-3.5">
@@ -36,7 +36,7 @@
         <span>Appeler {{ order.delivery_phone }}</span>
       </a>
       <a
-        href="https://wa.me/{{ client_wa_phone|default:order.whatsapp_client_phone }}?text={{ 'Bonjour '|urlencode }}{{ order.delivery_name|urlencode }}{{ ', ici Onizouka Shop (Grand Marché Bamako). Votre commande #'|urlencode }}{{ order.order_number|urlencode }}{{ ' d\'un montant de '|urlencode }}{{ order.total|floatformat:0 }}{{ ' FCFA est bien prise en charge.'|urlencode }}"
+        href="https://wa.me/{{ client_wa_phone|default:order.whatsapp_client_phone }}?text={{ 'Bonjour '|urlencode }}{{ order.delivery_name|urlencode }}{{ ', ici Onizuka Shop (Grand Marché Bamako). Votre commande #'|urlencode }}{{ order.order_number|urlencode }}{{ ' d\'un montant de '|urlencode }}{{ order.total|floatformat:0 }}{{ ' FCFA est bien prise en charge.'|urlencode }}"
         target="_blank"
         rel="noopener"
         class="py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold flex items-center justify-center gap-1.5 active:scale-95 transition"

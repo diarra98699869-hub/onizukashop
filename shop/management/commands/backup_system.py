@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Commande de Sauvegarde Automatisée du Système
+ONIZUKA SHOP - Commande de Sauvegarde Automatisée du Système
 App: shop / Command: backup_system
 Usage: python manage.py backup_system [--with-media] [--clean-old 30]
 """
@@ -13,7 +13,7 @@ from django.conf import settings
 
 
 class Command(BaseCommand):
-    help = "Sauvegarde sécurisée de la base de données et des médias de Onizouka Shop."
+    help = "Sauvegarde sécurisée de la base de données et des médias de Onizuka Shop."
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -29,7 +29,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        self.stdout.write(self.style.NOTICE("Demarrage de la sauvegarde securisee Onizouka Shop..."))
+        self.stdout.write(self.style.NOTICE("Demarrage de la sauvegarde securisee Onizuka Shop..."))
 
         base_dir = settings.BASE_DIR
         backups_dir = os.path.join(base_dir, 'backups')

@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Envoi des emails pour les comptes utilisateurs
+ONIZUKA SHOP - Envoi des emails pour les comptes utilisateurs
 """
 import logging
 from django.conf import settings
@@ -14,8 +14,8 @@ def send_otp_email(user, email, code):
     """
     Envoie le code PIN OTP de vérification de compte par email via SMTP.
     """
-    subject = f"Votre code de vérification Onizouka Shop : {code}"
-    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'Onizouka Shop <admin@onizouka.danayaplus.com>')
+    subject = f"Votre code de vérification Onizuka Shop : {code}"
+    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'Onizuka Shop <admin@onizouka.danayaplus.com>')
     to = [email]
 
     user_name = user.get_full_name() or user.username
@@ -32,8 +32,8 @@ def send_otp_email(user, email, code):
         text_content = render_to_string('emails/otp_verification.txt', context)
     except Exception as e:
         logger.error(f"Erreur rendu template email OTP: {e}")
-        text_content = f"Votre code de vérification Onizouka Shop est : {code} (valable 10 minutes)."
-        html_content = f"<p>Votre code de vérification Onizouka Shop est : <strong>{code}</strong> (valable 10 minutes).</p>"
+        text_content = f"Votre code de vérification Onizuka Shop est : {code} (valable 10 minutes)."
+        html_content = f"<p>Votre code de vérification Onizuka Shop est : <strong>{code}</strong> (valable 10 minutes).</p>"
 
     msg = EmailMultiAlternatives(subject, text_content, from_email, to)
     msg.attach_alternative(html_content, "text/html")

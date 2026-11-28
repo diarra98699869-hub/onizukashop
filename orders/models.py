@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Modeles Commandes
+ONIZUKA SHOP - Modeles Commandes
 App: orders
 Contient: Cart, CartItem, Order, OrderItem, Coupon, Address
 """

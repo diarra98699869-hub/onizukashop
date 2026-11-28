@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static humanize %}
 
-{% block title %}{{ product.name }} • Onizouka Shop{% endblock %}
+{% block title %}{{ product.name }} • Onizuka Shop{% endblock %}
 {% block meta_description %}{{ product.short_description|default:product.description|striptags|truncatewords:25 }}{% endblock %}
 
 {% block open_graph %}
@@ -192,7 +192,7 @@
       const optLine = (this.withAddon && this.addonLabel)
         ? `*Option choisie :* ${this.addonLabel} (+${this.formatPrice(this.addonPrice)})\n`
         : '';
-      const msg = `*COMMANDE DIRECTE - ONIZOUKA SHOP*\n` +
+      const msg = `*COMMANDE DIRECTE - ONIZUKA SHOP*\n` +
                   `----------------------------------------\n` +
                   `*Article :* {{ product.name|escapejs }}\n` +
                   `*Reference :* {{ product.sku|default:'N/A'|escapejs }}\n` +
@@ -207,7 +207,7 @@
                   `*Mode de Paiement :* ${this.paymentChoice}\n` +
                   `*Lien :* ${window.location.origin}{{ product.get_absolute_url }}\n` +
                   `----------------------------------------\n` +
-                  `Bonjour Onizouka Shop, je souhaite commander cet article. Merci de me confirmer la livraison.`;
+                  `Bonjour Onizuka Shop, je souhaite commander cet article. Merci de me confirmer la livraison.`;
       window.open(`https://wa.me/${dest}?text=${encodeURIComponent(msg)}`, '_blank');
       this.whatsappModalOpen = false;
     }

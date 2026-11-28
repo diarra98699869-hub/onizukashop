@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Commande pour initialiser des données de démo ultra-réalistes
+ONIZUKA SHOP - Commande pour initialiser des données de démo ultra-réalistes
 """
 from django.core.management.base import BaseCommand
 from shop.models import Category, Brand, Product
@@ -194,7 +194,7 @@ class Command(BaseCommand):
             }
         )
         Coupon.objects.get_or_create(
-            code='ONIZOUKA5000',
+            code='ONIZUKA5000',
             defaults={
                 'discount_type': 'fixed',
                 'discount_value': 5000,

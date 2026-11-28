@@ -1,5 +1,5 @@
 """
-ONIZOUKA SHOP - Admin Comptes Utilisateurs (Unfold premium)
+ONIZUKA SHOP - Admin Comptes Utilisateurs (Unfold premium)
 """
 from django.contrib import admin
 from unfold.admin import ModelAdmin
